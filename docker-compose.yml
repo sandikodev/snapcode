@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  snapcode:
+    build: .
+    container_name: snapcode
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+    environment:
+      - PORT=8000
+    volumes:
+      - ./content:/app/content:ro
+      - ./docs:/app/docs:ro
+    healthcheck:
+      test: ["CMD", "python3", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000')"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 5s
+    labels:
+      - "com.snapcode.description=SnapCode Markdown Beautifier"
+      - "com.snapcode.version=1.0"
+
+  # Optional: Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: snapcode-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./deployment/docker/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - snapcode
+    restart: unless-stopped
+    profiles:
+      - with-nginx
+
+networks:
+  default:
+    name: snapcode-network

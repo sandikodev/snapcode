@@ -1,0 +1,10 @@
+# robots.txt for snapcode.me
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://snapcode.me/sitemap.xml
+
+# Crawl-delay (optional, be nice to servers)
+Crawl-delay: 1

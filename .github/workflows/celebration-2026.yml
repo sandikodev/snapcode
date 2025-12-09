@@ -1,0 +1,95 @@
+name: Celebration 2026 Auto-Deploy
+
+on:
+  schedule:
+    # Run at 00:00 on January 1st, 2026 (UTC)
+    - cron: '0 0 1 1 2026'
+  
+  # Allow manual trigger
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  deploy-celebration:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - name: Check if 2026 or later
+      id: check_year
+      run: |
+        CURRENT_YEAR=$(date +%Y)
+        if [ $CURRENT_YEAR -ge 2026 ]; then
+          echo "ready=true" >> $GITHUB_OUTPUT
+        else
+          echo "ready=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Make celebration.html the main page
+      if: steps.check_year.outputs.ready == 'true'
+      run: |
+        # Backup original index.html
+        cp index.html index-app.html
+        
+        # Make celebration page the main page
+        cp celebration.html index.html
+        
+        # Update link in celebration page
+        sed -i 's|href="index.html"|href="index-app.html"|g' index.html
+    
+    - name: Commit changes
+      if: steps.check_year.outputs.ready == 'true'
+      run: |
+        git config --local user.email "github-actions[bot]@users.noreply.github.com"
+        git config --local user.name "github-actions[bot]"
+        git add index.html index-app.html
+        git commit -m "🎉 Happy New Year 2026! 10 Years Celebration Auto-Deploy"
+    
+    - name: Push changes
+      if: steps.check_year.outputs.ready == 'true'
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        branch: main
+    
+    - name: Create celebration announcement
+      if: steps.check_year.outputs.ready == 'true'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.repos.createRelease({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            tag_name: 'v10.0.0-celebration',
+            name: '🎉 10 Years Celebration - 2016-2026',
+            body: `# 🎉 10 Years in Computer Science!
+
+## The Journey
+From SMK student to DevOps engineer.
+From dropout to 10 years of experience.
+From struggle to comprehensive knowledge.
+From passion to this learning resource.
+
+## The Reality
+- Dropped out twice
+- Struggled financially
+- ADHD diagnosis (2025)
+- Never stopped learning
+- Unbreakable persistence
+
+## The Vision
+PT Koneksi Jaringan Indonesia - 2031
+
+---
+
+**Made with ❤️ and 10 years of experience**
+**@sandikodev • 2016-2026-2031**
+
+[Read Full Journey](JOURNEY.md)`,
+            draft: false,
+            prerelease: false
+          });

@@ -1,0 +1,44 @@
+===========================================
+SNAPCODE - FILE EXPLORER FEATURE
+===========================================
+
+✅ SELESAI DIIMPLEMENTASI
+
+📋 PERUBAHAN:
+-------------
+1. Tab Switcher (Markdown | File Explorer)
+2. File Explorer dengan fitur:
+   - Upload file
+   - List files dengan nama & ukuran
+   - Select file untuk edit
+   - Delete file
+   - Visual feedback
+
+📁 FILES:
+---------
+- index.html (modified)
+- index.html.backup (original backup)
+- FILE_EXPLORER_FEATURE.md (dokumentasi lengkap)
+- apply_patch.py (script yang sudah dijalankan)
+- file-explorer-patch.html (reference)
+
+🔧 TECHNICAL:
+-------------
+- Alpine.js state: editorMode, files[], selectedFileIndex
+- Methods: addFile(), selectFile(), removeFile(), formatFileSize()
+- UI: Tab switcher + File list dengan hover effects
+
+🚀 NEXT STEP:
+-------------
+Siap untuk ditambahkan Code Editor sebagai tab ketiga
+(Monaco Editor / CodeMirror / Ace Editor)
+
+📝 TESTING:
+-----------
+Buka index.html di browser dan test:
+1. Switch tab Markdown <-> File Explorer
+2. Upload file (.md, .txt, .js, dll)
+3. Klik file untuk load
+4. Hover dan delete file
+
+===========================================
