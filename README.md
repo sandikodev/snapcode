@@ -10,7 +10,7 @@
 
 Create beautiful images of your markdown with authentic OS window simulations, Fira Code ligatures, Mermaid diagrams, and KaTeX math formulas.
 
-🌐 **Live Demo:** [snapcode.me](https://snapcode.me)
+🌐 **Live Demo:** [sandikodev.github.io/snapcode](https://sandikodev.github.io/snapcode)
 
 [Features](#-features) • [Quick Start](#-quick-start) • [Contributing](CONTRIBUTING.md) • [License](#-license)
 
@@ -100,7 +100,7 @@ The `server.py` is **OPTIONAL** and only for:
 ## 🚀 Quick Start
 
 ### Option 1: Use Online
-Visit [snapcode.me](https://snapcode.me) and start creating!
+Visit [sandikodev.github.io/snapcode](https://sandikodev.github.io/snapcode) and start creating!
 
 ### Option 2: Self-Host
 ```bash
@@ -224,7 +224,7 @@ Custom filename displayed in window title bar (default: README.md)
 ## 📦 File Structure
 
 ```
-snapcode.me/
+sandikodev.github.io/snapcode/
 ├── index.html          # Complete app (52KB)
 └── README.md          # This file
 ```
@@ -304,7 +304,7 @@ MIT License - feel free to use for personal or commercial projects.
 
 **@sandikodev**
 
-- Website: [snapcode.me](https://snapcode.me)
+- Website: [sandikodev.github.io/snapcode](https://sandikodev.github.io/snapcode)
 - Twitter: [@sandikodev](https://twitter.com/sandikodev)
 
 ---
@@ -391,7 +391,7 @@ MIT License - feel free to use for personal or commercial projects.
 
 - 🐛 **Bug Reports:** [GitHub Issues](https://github.com/sandikodev/snapcode/issues)
 - 💬 **Discussions:** [GitHub Discussions](https://github.com/sandikodev/snapcode/discussions)
-- 📧 **Email:** hello@snapcode.me
+- 📧 **Email:** hello@sandikodev.com
 - 🐦 **Twitter:** [@sandikodev](https://twitter.com/sandikodev)
 
 ---

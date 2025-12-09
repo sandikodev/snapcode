@@ -4,7 +4,7 @@ User-agent: *
 Allow: /
 
 # Sitemap
-Sitemap: https://snapcode.me/sitemap.xml
+Sitemap: https://sandikodev.github.io/snapcode/sitemap.xml
 
 # Crawl-delay (optional, be nice to servers)
 Crawl-delay: 1
