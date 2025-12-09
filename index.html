@@ -306,6 +306,9 @@
               @dragover.prevent
               class="w-full h-96 bg-gray-900 text-gray-100 p-4 rounded-lg font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-purple-500"
               placeholder="Start typing, paste content, or drop a file..."
+              aria-label="Markdown content editor"
+              role="textbox"
+              aria-multiline="true"
             ></textarea>
 
             </div>
@@ -565,8 +568,9 @@
                 <button
                   @click="exportImage"
                   class="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition flex items-center gap-2 text-sm"
+                  aria-label="Export as PNG image"
                 >
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                     <polyline points="7 10 12 15 17 10"></polyline>
                     <line x1="12" y1="15" x2="12" y2="3"></line>
@@ -1254,6 +1258,25 @@
           // Load default content
           this.loadDefault();
           
+          // Keyboard shortcuts
+          document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + E: Export PNG
+            if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
+              e.preventDefault();
+              this.exportImage();
+            }
+            // Ctrl/Cmd + Shift + C: Copy Image
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'c') {
+              e.preventDefault();
+              this.copyImage();
+            }
+            // Ctrl/Cmd + Shift + T: Copy Text
+            if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 't') {
+              e.preventDefault();
+              this.copyText();
+            }
+          });
+          
           // Initialize Mermaid
           mermaid.initialize({ 
             startOnLoad: false,
@@ -1580,6 +1603,21 @@
           }
         },
       }
+    }
+  </script>
+  
+  <!-- Service Worker Registration -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js')
+          .then((registration) => {
+            console.log('SW registered:', registration);
+          })
+          .catch((error) => {
+            console.log('SW registration failed:', error);
+          });
+      });
     }
   </script>
 </body>
