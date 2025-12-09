@@ -1,10 +1,20 @@
 # SnapCode
 
+<div align="center">
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+[![GitHub Stars](https://img.shields.io/github/stars/sandikodev/snapcode?style=social)](https://github.com/sandikodev/snapcode)
+
 > **ngode-ngide kode ngadi-ngadi**
 
 Create beautiful images of your markdown with authentic OS window simulations, Fira Code ligatures, Mermaid diagrams, and KaTeX math formulas.
 
 🌐 **Live Demo:** [snapcode.me](https://snapcode.me)
+
+[Features](#-features) • [Quick Start](#-quick-start) • [Contributing](CONTRIBUTING.md) • [License](#-license)
+
+</div>
 
 ---
 
@@ -258,14 +268,29 @@ function app() {
 
 ## 🤝 Contributing
 
-Contributions welcome! Since this is a single HTML file:
+**Contributions are welcome!** This is an open-source project built for the community.
 
-1. Fork the repo
-2. Edit `index.html`
-3. Test in browser
-4. Submit PR
+### Ways to Contribute
 
-No build setup needed!
+- 🎨 **Features** - New OS themes, color themes, export formats
+- 🐛 **Bug Fixes** - Browser compatibility, rendering issues
+- 📝 **Documentation** - Improve clarity, add examples, translations
+- 💡 **Ideas** - Suggest features, share use cases
+
+### Quick Start
+
+Since this is a single HTML file, contributing is easy:
+
+1. **Fork** the repository
+2. **Edit** `index.html` in your browser or editor
+3. **Test** by opening in browser (no build needed!)
+4. **Submit** a Pull Request
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+
+### Code of Conduct
+
+We follow a [Code of Conduct](CODE_OF_CONDUCT.md) to ensure a welcoming environment for all contributors.
 
 ---
 
