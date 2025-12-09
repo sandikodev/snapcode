@@ -1,0 +1,3796 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Inner Universe - @sandikodev | 10 Years Journey</title>
+
+  <!-- Performance -->
+  <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+
+  <!-- SEO -->
+  <meta name="description"
+    content="Enter the Inner Universe - 10 years (2016-2026) journey through Web Technology. A cosmic exploration of passion, ADHD, consciousness, and the pursuit of truth.">
+  <meta name="theme-color" content="#0a0a0f">
+  <link rel="canonical" href="https://snapcode.me/celebration">
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="static/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="static/apple-touch-icon.png">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="The Inner Universe - @sandikodev">
+  <meta property="og:description" content="Episode 1: Web Technology Universe (2016-2026)">
+  <meta property="og:image" content="https://snapcode.me/static/brand.png">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap"
+    rel="stylesheet">
+
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+  <!-- Post-processing for DoF -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/EffectComposer.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/RenderPass.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/ShaderPass.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/postprocessing/BokehPass.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/CopyShader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/shaders/BokehShader.js"></script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+            mono: ['Fira Code', 'monospace'],
+          },
+          colors: {
+            void: '#0a0a0f',
+            nebula: '#8b5cf6',
+            star: '#3b82f6',
+            cosmic: '#ec4899',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: transparent;
+      color: #fff;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    /* Dark background on html for fallback */
+    html {
+      background: #0a0a0f;
+    }
+
+    /* Scroll Snap Container */
+    .content-layer {
+      position: relative;
+      z-index: 3;
+      background: transparent;
+      transition: transform 0.12s ease-out;
+    }
+
+    .universe-section {
+      background: transparent;
+    }
+
+    /* Transition Overlay - for cinematic feel */
+    #transition-overlay {
+      position: fixed !important;
+      inset: 0 !important;
+      background: transparent !important;
+      pointer-events: none !important;
+      z-index: 2 !important;
+      transition: background 0.3s !important;
+    }
+
+    /* Momentum Indicator */
+    #momentum-indicator {
+      position: fixed;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0), transparent);
+      z-index: 1001;
+      transition: all 0.2s;
+      opacity: 0;
+    }
+
+    #momentum-indicator.active {
+      opacity: 1;
+      background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.8), transparent);
+    }
+
+    /* Section Transition State */
+    .section-transitioning .glass {
+      filter: blur(2px);
+      opacity: 0.7;
+    }
+
+    /* Vignette Effect - Subtle */
+    #vignette {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 60%, rgba(10, 10, 15, 0.2) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Loading Screen */
+    #loading-screen {
+      position: fixed;
+      inset: 0;
+      background: #0a0a0f;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s, visibility 0.8s;
+    }
+
+    #loading-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .loader {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(139, 92, 246, 0.2) !important;
+      border-top-color: #a855f7 !important;
+      border-radius: 50%;
+      animation: spin 1s linear infinite !important;
+    }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    /* Three.js Canvas */
+    #universe-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      transition: transform 0.3s ease-out, filter 0.3s ease-out;
+    }
+
+    /* Section Styles */
+    .universe-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      /* padding-top: 4rem; */
+      padding-bottom: 4rem;
+      position: relative;
+    }
+
+    /* Glass Card - Enhanced */
+    .glass {
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 1.5rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #project-details.glass {
+      overflow: visible;
+    }
+
+    .glass::before {
+      content: '';
+      position: absolute;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(transparent, rgba(168, 85, 247, 0.03), transparent);
+      animation: scanline 8s linear infinite !important;
+      pointer-events: none;
+    }
+
+    .glass:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(139, 92, 246, 0.3);
+      box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);
+    }
+
+    /* Text Gradient */
+    .text-gradient {
+      background: linear-gradient(135deg, #a855f7, #6366f1, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Glow Effects */
+    .glow-purple {
+      box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+      transition: box-shadow 0.3s ease;
+    }
+
+    .glow-purple:hover {
+      box-shadow: 0 0 40px rgba(139, 92, 246, 0.5);
+    }
+
+    .glow-text {
+      text-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+    }
+
+    /* Typography */
+    h1,
+    h2,
+    h3 {
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      color: rgba(255, 255, 255, 0.7);
+    }
+
+    /* Animations */
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 0.5;
+      }
+
+      50% {
+        opacity: 1;
+      }
+    }
+
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes shimmer {
+      0% {
+        background-position: -200% 0;
+      }
+
+      100% {
+        background-position: 200% 0;
+      }
+    }
+
+    @keyframes cosmicGlow {
+
+      0%,
+      100% {
+        text-shadow: 0 0 10px rgba(168, 85, 247, 0.5), 0 0 20px rgba(168, 85, 247, 0.3);
+      }
+
+      50% {
+        text-shadow: 0 0 20px rgba(168, 85, 247, 0.8), 0 0 40px rgba(168, 85, 247, 0.5), 0 0 60px rgba(236, 72, 153, 0.3);
+      }
+    }
+
+    @keyframes warpSpeed {
+      0% {
+        transform: scaleY(1);
+      }
+
+      50% {
+        transform: scaleY(1.02);
+      }
+
+      100% {
+        transform: scaleY(1);
+      }
+    }
+
+    @keyframes glitchText {
+
+      0%,
+      90%,
+      100% {
+        transform: translate(0);
+        opacity: 1;
+      }
+
+      92% {
+        transform: translate(-2px, 1px);
+        opacity: 0.8;
+      }
+
+      94% {
+        transform: translate(2px, -1px);
+        opacity: 0.9;
+      }
+
+      96% {
+        transform: translate(-1px, 2px);
+        opacity: 0.8;
+      }
+
+      98% {
+        transform: translate(1px, -2px);
+        opacity: 0.9;
+      }
+    }
+
+    @keyframes scanline {
+      0% {
+        top: -100%;
+      }
+
+      100% {
+        top: 100%;
+      }
+    }
+
+    @keyframes borderGlow {
+
+      0%,
+      100% {
+        border-color: rgba(168, 85, 247, 0.3);
+        box-shadow: 0 0 10px rgba(168, 85, 247, 0.2);
+      }
+
+      50% {
+        border-color: rgba(236, 72, 153, 0.5);
+        box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
+      }
+    }
+
+    .cosmic-glow {
+      animation: cosmicGlow 3s ease-in-out infinite !important;
+    }
+
+    .warp-speed {
+      animation: warpSpeed 2s ease-in-out infinite !important;
+    }
+
+    .glitch-text {
+      animation: glitchText 5s ease-in-out infinite !important;
+    }
+
+    .border-glow {
+      animation: borderGlow 2s ease-in-out infinite !important;
+    }
+
+    /* Override Tailwind animations */
+    .animate-pulse {
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;
+    }
+
+    .animate-spin {
+      animation: spin 1s linear infinite !important;
+    }
+
+    /* Flying effect */
+    @keyframes flying {
+
+      0%,
+      100% {
+        transform: rotate(-6deg) translateY(0);
+      }
+
+      50% {
+        transform: rotate(-4deg) translateY(-10px);
+      }
+    }
+
+    .flying {
+      animation: flying 4s ease-in-out infinite !important;
+    }
+
+    /* Orbit floating - multiple variants for varied movement */
+    @keyframes orbit-1 {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+
+      33% {
+        transform: translate(20px, -15px) rotate(8deg);
+      }
+
+      66% {
+        transform: translate(-10px, -25px) rotate(-5deg);
+      }
+
+      100% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+    }
+
+    @keyframes orbit-2 {
+      0% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+      }
+
+      50% {
+        transform: translate(-25px, -10px) rotate(-10deg) scale(1.1);
+      }
+
+      100% {
+        transform: translate(0, 0) rotate(0deg) scale(1);
+      }
+    }
+
+    @keyframes orbit-3 {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+
+      25% {
+        transform: translate(10px, -30px) rotate(5deg);
+      }
+
+      75% {
+        transform: translate(-20px, -5px) rotate(-8deg);
+      }
+
+      100% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+    }
+
+    @keyframes orbit-4 {
+
+      0%,
+      100% {
+        transform: translateY(0) rotate(-3deg);
+      }
+
+      30% {
+        transform: translateY(-20px) rotate(6deg);
+      }
+
+      70% {
+        transform: translateY(-35px) rotate(-6deg);
+      }
+    }
+
+    @keyframes orbit-5 {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+
+      40% {
+        transform: translate(15px, -20px) scale(0.9);
+      }
+
+      80% {
+        transform: translate(-15px, -15px) scale(1.05);
+      }
+
+      100% {
+        transform: translate(0, 0) scale(1);
+      }
+    }
+
+    .orbit-1 {
+      animation: orbit-1 7s ease-in-out infinite !important;
+    }
+
+    .orbit-2 {
+      animation: orbit-2 9s ease-in-out infinite !important;
+    }
+
+    .orbit-3 {
+      animation: orbit-3 6s ease-in-out infinite !important;
+    }
+
+    .orbit-4 {
+      animation: orbit-4 8s ease-in-out infinite !important;
+    }
+
+    .orbit-5 {
+      animation: orbit-5 10s ease-in-out infinite !important;
+    }
+
+    /* Planet orbit spin */
+    @keyframes spin-slow {
+      from {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+
+      to {
+        transform: translate(-50%, -50%) rotate(360deg);
+      }
+    }
+
+    @keyframes spin-slow-reverse {
+      from {
+        transform: translate(-50%, -50%) rotate(0deg);
+      }
+
+      to {
+        transform: translate(-50%, -50%) rotate(-360deg);
+      }
+    }
+
+    @keyframes counter-spin {
+      from {
+        transform: translate(-50%, 0) rotate(0deg);
+      }
+
+      to {
+        transform: translate(-50%, 0) rotate(-360deg);
+      }
+    }
+
+    @keyframes counter-spin-reverse {
+      from {
+        transform: translate(-50%, 0) rotate(0deg);
+      }
+
+      to {
+        transform: translate(-50%, 0) rotate(360deg);
+      }
+    }
+
+    .spin-20 {
+      animation: spin-slow 20s linear infinite !important;
+    }
+
+    .spin-35-rev {
+      animation: spin-slow-reverse 35s linear infinite !important;
+    }
+
+    .counter-20 {
+      animation: counter-spin 20s linear infinite !important;
+    }
+
+    .counter-35-rev {
+      animation: counter-spin-reverse 35s linear infinite !important;
+    }
+
+    /* Animated Planet Textures */
+    @keyframes planet-rotate {
+      from {
+        background-position: 0% 50%;
+      }
+
+      to {
+        background-position: 200% 50%;
+      }
+    }
+
+    .planet {
+      border-radius: 50%;
+      box-shadow: inset -8px -8px 20px rgba(0, 0, 0, 0.6), inset 4px 4px 10px rgba(255, 255, 255, 0.2), 0 0 20px rgba(139, 92, 246, 0.3);
+      animation: planet-rotate 10s linear infinite !important;
+      background-size: 200% 100%;
+    }
+
+    .planet-purple {
+      background: linear-gradient(90deg, #7c3aed, #a855f7, #6366f1, #8b5cf6, #7c3aed);
+    }
+
+    .planet-blue {
+      background: linear-gradient(90deg, #3b82f6, #6366f1, #0ea5e9, #4f46e5, #3b82f6);
+    }
+
+    .planet-pink {
+      background: linear-gradient(90deg, #ec4899, #f472b6, #db2777, #f43f5e, #ec4899);
+    }
+
+    .planet-amber {
+      background: linear-gradient(90deg, #f59e0b, #fbbf24, #d97706, #eab308, #f59e0b);
+    }
+
+    .planet-violet {
+      background: linear-gradient(90deg, #8b5cf6, #a78bfa, #7c3aed, #6d28d9, #8b5cf6);
+    }
+
+    .planet-cyan {
+      background: linear-gradient(90deg, #06b6d4, #22d3ee, #0891b2, #14b8a6, #06b6d4);
+    }
+
+    /* Smooth parallax transitions for main content */
+    .universe-section h2,
+    .universe-section .glass,
+    .universe-section blockquote,
+    .universe-section .rounded-full.bg-gradient-to-br {
+      transition: transform 0.15s ease-out;
+    }
+      will-change: transform;
+    }
+
+    /* INSANE EFFECTS */
+    @keyframes textStroke {
+
+      0%,
+      100% {
+        -webkit-text-stroke: 1px rgba(168, 85, 247, 0.3);
+      }
+
+      50% {
+        -webkit-text-stroke: 2px rgba(236, 72, 153, 0.5);
+      }
+    }
+
+    @keyframes gradientShift {
+      0% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
+
+      100% {
+        background-position: 0% 50%;
+      }
+    }
+
+    @keyframes breathe {
+
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.5;
+      }
+
+      50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+      }
+    }
+
+    @keyframes orbit {
+      0% {
+        transform: rotate(0deg) translateX(30px) rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg) translateX(30px) rotate(-360deg);
+      }
+    }
+
+    @keyframes typewriter {
+      from {
+        width: 0;
+      }
+
+      to {
+        width: 100%;
+      }
+    }
+
+    @keyframes blink {
+
+      0%,
+      50% {
+        border-color: transparent;
+      }
+
+      51%,
+      100% {
+        border-color: #a855f7;
+      }
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      25% {
+        transform: translateX(-2px) rotate(-1deg);
+      }
+
+      75% {
+        transform: translateX(2px) rotate(1deg);
+      }
+    }
+
+    @keyframes neonPulse {
+
+      0%,
+      100% {
+        box-shadow: 0 0 3px rgba(168, 85, 247, 0.4), 0 0 6px rgba(168, 85, 247, 0.2);
+      }
+
+      50% {
+        box-shadow: 0 0 5px rgba(236, 72, 153, 0.4), 0 0 10px rgba(236, 72, 153, 0.2);
+      }
+    }
+
+    @keyframes slideInLeft {
+      from {
+        transform: translateX(-100px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        transform: translateX(100px);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes zoomPulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.02);
+      }
+    }
+
+    .text-stroke {
+      animation: textStroke 3s ease-in-out infinite !important;
+      -webkit-text-stroke: 1px rgba(168, 85, 247, 0.3);
+    }
+
+    .gradient-shift {
+      background-size: 200% 200%;
+      animation: gradientShift 5s ease infinite !important;
+    }
+
+    .breathe {
+      animation: breathe 4s ease-in-out infinite !important;
+    }
+
+    .orbit-slow {
+      animation: orbit 20s linear infinite !important;
+    }
+
+    .orbit-fast {
+      animation: orbit 10s linear infinite !important;
+    }
+
+    .neon-pulse {
+      animation: neonPulse 2s ease-in-out infinite !important;
+    }
+
+    .shake-hover:hover {
+      animation: shake 0.3s ease-in-out !important;
+    }
+
+    .zoom-pulse {
+      animation: zoomPulse 3s ease-in-out infinite !important;
+    }
+
+    /* Typewriter effect */
+    .typewriter {
+      overflow: hidden;
+      white-space: nowrap;
+      border-right: 2px solid transparent;
+      animation: typewriter 3s steps(30) forwards, blink 0.8s step-end infinite !important;
+    }
+
+    /* Gradient text with animation */
+    .gradient-text-animated {
+      background: linear-gradient(90deg, #a855f7, #ec4899, #6366f1, #a855f7);
+      background-size: 300% 100%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 4s ease infinite !important;
+    }
+
+    /* Glassmorphism with neon border */
+    .glass-neon {
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(20px);
+      border: 1px solid transparent;
+      border-image: linear-gradient(135deg, rgba(168, 85, 247, 0.5), rgba(236, 72, 153, 0.5)) 1;
+      border-radius: 1rem;
+    }
+
+    /* Floating orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(40px);
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
+    /* Diagonal stripe background */
+    .diagonal-stripes {
+      background: repeating-linear-gradient(45deg,
+          transparent,
+          transparent 10px,
+          rgba(168, 85, 247, 0.03) 10px,
+          rgba(168, 85, 247, 0.03) 20px);
+    }
+
+    /* Hover lift effect */
+    .hover-lift {
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .hover-lift:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+    }
+
+    /* Perspective tilt on hover */
+    .tilt-hover {
+      transition: transform 0.3s ease;
+      transform-style: preserve-3d;
+    }
+
+    .tilt-hover:hover {
+      transform: perspective(1000px) rotateX(5deg) rotateY(-5deg);
+    }
+
+    /* Marquee effect */
+    @keyframes marquee {
+      0% {
+        transform: translateX(100%);
+      }
+
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+
+    .marquee {
+      animation: marquee 20s linear infinite !important;
+    }
+
+    .float {
+      animation: float 4s ease-in-out infinite !important;
+    }
+
+    .pulse {
+      animation: pulse 2s ease-in-out infinite !important;
+    }
+
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Stagger delays for children */
+    .fade-in.visible:nth-child(1) {
+      transition-delay: 0s;
+    }
+
+    .fade-in.visible:nth-child(2) {
+      transition-delay: 0.1s;
+    }
+
+    .fade-in.visible:nth-child(3) {
+      transition-delay: 0.2s;
+    }
+
+    .fade-in.visible:nth-child(4) {
+      transition-delay: 0.3s;
+    }
+
+    /* Scroll Dot Animation - Very Smooth */
+    @keyframes scrollDot {
+      0% {
+        transform: translateY(0);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateY(16px);
+        opacity: 0;
+      }
+    }
+
+    .scroll-dot-anim {
+      animation: scrollDot 1.5s ease-in-out infinite !important;
+    }
+
+    /* Section Indicators - Fixed Position */
+    .section-indicator {
+      position: fixed;
+      right: 1.5rem;
+      top: 50vh;
+      transform: translateY(-50%);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1rem;
+    }
+
+    .section-dot-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+    }
+
+    .section-dot-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: transparent;
+      transition: color 0.3s;
+      white-space: nowrap;
+    }
+
+    .section-dot-wrapper:hover .section-dot-label,
+    .section-dot-wrapper.active .section-dot-label {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .section-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .section-dot::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+
+    .section-dot-wrapper:hover .section-dot {
+      background: rgba(255, 255, 255, 0.4);
+    }
+
+    .section-dot-wrapper.active .section-dot {
+      background: #a855f7;
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+    }
+
+    .section-dot-wrapper.active .section-dot::after {
+      border-color: rgba(168, 85, 247, 0.3);
+    }
+
+    /* Current Section Label */
+    #current-section-label {
+      position: fixed;
+      left: 2rem;
+      bottom: 2rem;
+      z-index: 100;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: rgba(255, 255, 255, 0.3);
+      transition: opacity 0.3s;
+    }
+
+    /* Scroll Progress */
+    #scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #a855f7, #ec4899);
+      z-index: 1000;
+      width: 0%;
+      transition: width 0.1s ease-out;
+    }
+
+    /* Black Hole Section - Smooth transition */
+    .black-hole-section {
+      background: transparent;
+    }
+
+    .black-hole-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.6) 0%, rgba(10, 10, 15, 0.3) 50%, transparent 100%);
+      pointer-events: none;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, #a855f7, #6366f1);
+      padding: 0.875rem 1.75rem;
+      border-radius: 0.75rem;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      color: white;
+      text-decoration: none;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .section-indicator {
+        right: 0.75rem;
+      }
+
+      .section-dot-label {
+        display: none;
+      }
+
+      #current-section-label {
+        left: 1rem;
+        bottom: 1rem;
+      }
+
+      .universe-section {
+        padding: 1.5rem;
+      }
+    }
+
+    /* Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #0a0a0f;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: linear-gradient(180deg, #a855f7, #6366f1);
+      border-radius: 3px;
+    }
+
+    /* Selection */
+    ::selection {
+      background: rgba(139, 92, 246, 0.3);
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Countdown Banner -->
+  <div id="countdown-banner" class="fixed top-0 left-0 right-0 text-white text-center py-3 z-50 hidden" style="background: linear-gradient(90deg, #7c3aed, #6366f1, #8b5cf6, #6366f1, #7c3aed); background-size: 200% 100%; animation: shimmer 3s linear infinite;">
+    <p class="text-sm md:text-base font-medium">
+      🎉 <span id="countdown-text"></span> 🎉
+    </p>
+  </div>
+
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <div class="loader"></div>
+    <p id="loading-text" style="margin-top: 1.5rem; color: rgba(255,255,255,0.5); font-size: 0.8rem;">Initializing universe...</p>
+    <div style="width: 200px; height: 2px; background: rgba(139,92,246,0.2); margin-top: 1rem; border-radius: 2px; overflow: hidden;">
+      <div id="loading-progress" style="width: 0%; height: 100%; background: linear-gradient(90deg, #a855f7, #ec4899); transition: width 0.3s;"></div>
+    </div>
+  </div>
+
+  <!-- Three.js Universe Canvas -->
+  <canvas id="universe-canvas"></canvas>
+
+  <!-- Cinematic Effects Layer -->
+  <div id="vignette"></div>
+  <div id="transition-overlay"></div>
+  <div id="momentum-indicator"></div>
+
+  <!-- Scroll Progress -->
+  <div id="scroll-progress"></div>
+
+  <!-- Current Section Label -->
+  <div id="current-section-label">Overview</div>
+
+  <!-- Section Navigation - Enhanced -->
+  <nav class="section-indicator" aria-label="Section navigation">
+    <div class="section-dot-wrapper active" data-section="hero">
+      <span class="section-dot-label">Overview</span>
+      <div class="section-dot"></div>
+    </div>
+    <div class="section-dot-wrapper" data-section="stats">
+      <span class="section-dot-label">Achievements</span>
+      <div class="section-dot"></div>
+    </div>
+    <div class="section-dot-wrapper" data-section="hud">
+      <span class="section-dot-label">Observation</span>
+      <div class="section-dot"></div>
+    </div>
+    <div class="section-dot-wrapper" data-section="timeline">
+      <span class="section-dot-label">Journey</span>
+      <div class="section-dot"></div>
+    </div>
+    <div class="section-dot-wrapper" data-section="reality">
+      <span class="section-dot-label">Reality</span>
+      <div class="section-dot"></div>
+    </div>
+    <div class="section-dot-wrapper" data-section="philosophy">
+      <span class="section-dot-label">Core</span>
+      <div class="section-dot"></div>
+    </div>
+    <div class="section-dot-wrapper" data-section="project">
+      <span class="section-dot-label">Creation</span>
+      <div class="section-dot"></div>
+    </div>
+    <div class="section-dot-wrapper" data-section="dedication">
+      <span class="section-dot-label">Dedication</span>
+      <div class="section-dot"></div>
+    </div>
+    <div class="section-dot-wrapper" data-section="footer">
+      <span class="section-dot-label">End</span>
+      <div class="section-dot"></div>
+    </div>
+  </nav>
+
+  <!-- Content Layer -->
+  <main class="content-layer">
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- HERO: Universe Overview - See the entire galaxy from afar -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <section id="hero" class="universe-section flex-col justify-between py-8 pt-16 relative overflow-visible"
+      data-celestial="galaxy-overview">
+
+      <!-- FLOATING ORBS - Blurred color blobs -->
+      <div class="orb w-64 h-64 bg-purple-500 -left-32 top-1/4 breathe"></div>
+      <div class="orb w-48 h-48 bg-pink-500 -right-24 top-1/3 breathe" style="animation-delay: -2s;"></div>
+      <div class="orb w-32 h-32 bg-blue-500 left-1/4 bottom-1/4 breathe" style="animation-delay: -1s;"></div>
+
+      <!-- ORBITING ELEMENTS -->
+      <div
+        class="hidden lg:block absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] pointer-events-none">
+        <div class="absolute inset-0 orbit-slow">
+          <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-purple-500/50"></div>
+        </div>
+        <div class="absolute inset-0 orbit-fast" style="animation-direction: reverse;">
+          <div class="absolute top-0 left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-pink-500/50"></div>
+        </div>
+      </div>
+
+      <!-- Author - Floating Left Side -->
+      <div class="fade-in absolute left-8 md:left-16 lg:left-24 top-1/3 z-10 flying">
+        <div class="flex items-center gap-3 glass px-5 py-3 hover:scale-105 transition-transform neon-pulse">
+          <img src="https://avatars.githubusercontent.com/u/33443311?v=4" alt="sandikodev"
+            class="w-14 h-14 rounded-full glow-purple border-2 border-purple-500/20">
+          <div class="text-left">
+            <p class="font-semibold">@sandikodev</p>
+            <p class="text-xs text-gray-500 font-mono">&lt;Explorer /&gt;</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Floating Code Snippets - Right Side -->
+      <div class="hidden md:block absolute right-8 lg:right-16 top-1/4 z-10 flying" style="animation-delay: -2s;">
+        <div class="glass px-4 py-2 font-mono text-xs text-purple-400/60 shake-hover" style="transform: rotate(8deg);">
+          const passion = true;
+        </div>
+      </div>
+
+      <div class="hidden md:block absolute right-12 lg:right-24 top-1/2 z-10 flying" style="animation-delay: -1s;">
+        <div class="glass px-4 py-2 font-mono text-xs text-pink-400/60 shake-hover" style="transform: rotate(-5deg);">
+          await dream();
+        </div>
+      </div>
+
+      <!-- Floating Year Badge - Bottom Left -->
+      <div class="hidden lg:block absolute left-12 bottom-1/4 z-10 flying" style="animation-delay: -3s;">
+        <div class="glass px-6 py-3 font-mono text-sm hover-lift" style="transform: rotate(-8deg);">
+          <span class="text-purple-500">10</span><span class="text-gray-500">.years</span>
+        </div>
+      </div>
+
+      <!-- Decorative Circles with orbit -->
+      <div class="absolute right-1/4 top-20 w-32 h-32 rounded-full border border-purple-500/10 breathe"></div>
+      <div class="absolute left-1/3 bottom-32 w-20 h-20 rounded-full border border-pink-500/10 breathe"
+        style="animation-delay: -1.5s;"></div>
+
+      <!-- Episode Badge - Top -->
+      <div class="fade-in text-center">
+        <span
+          class="inline-block px-4 py-2 glass text-xs tracking-widest text-purple-300 uppercase font-mono transform hover:scale-105 transition-transform cursor-default">
+          <span class="text-purple-500/50">&lt;/&gt;</span> Episode 1 • Web Technology Universe <span
+            class="text-purple-500/50">&lt;/&gt;</span>
+        </span>
+      </div>
+
+      <!-- Main Content - Center -->
+      <div class="text-center max-w-5xl mx-auto">
+
+        <!-- Ligature Decoration Top -->
+        <p class="fade-in text-purple-500/30 font-mono text-sm mt-4 mb-4 tracking-widest glitch-text">{:: =&gt; |&gt;
+          &lt;| ::}</p>
+
+        <!-- Main Title - BIGGER with animated gradient -->
+        <h1 class="fade-in text-6xl md:text-8xl lg:text-9xl font-serif font-bold mb-6 zoom-pulse">
+          <span class="gradient-text-animated">The Inner Universe</span>
+        </h1>
+
+        <!-- Subtitle -->
+        <p class="fade-in text-xl md:text-2xl text-gray-400 mb-2">
+          10 Years in Computer Science
+        </p>
+
+        <!-- Ligature Decoration -->
+        <p class="fade-in text-purple-500/20 font-mono text-xs mb-10 tracking-widest">&lt;=&gt; === !== &lt;-&gt;</p>
+
+        <!-- Year Range - BIGGER & More dramatic -->
+        <div class="fade-in flex items-center justify-center gap-6 mb-8">
+          <span
+            class="text-5xl md:text-7xl font-light text-purple-400 transform hover:-rotate-3 transition-transform">2016</span>
+          <div class="flex flex-col items-center gap-1">
+            <span class="font-mono text-purple-500/50 text-xl">=&gt;&gt;</span>
+            <div class="w-24 h-0.5 bg-gradient-to-r from-purple-500 to-pink-500"></div>
+            <span class="font-mono text-purple-500/30 text-xs">journey()</span>
+          </div>
+          <span
+            class="text-5xl md:text-7xl font-light text-pink-400 transform hover:rotate-3 transition-transform">2026</span>
+        </div>
+      </div>
+
+      <!-- Scroll Prompt - Bottom -->
+      <div class="fade-in text-center">
+        <div class="flex flex-col items-center gap-3 cursor-pointer group"
+          onclick="document.getElementById('stats').scrollIntoView({behavior:'smooth'})">
+          <p
+            class="text-gray-500 text-xs uppercase tracking-widest group-hover:text-purple-400 transition-colors font-mono">
+            |&gt; Begin the journey &lt;|</p>
+          <div
+            class="w-6 h-10 border-2 border-gray-600 rounded-full flex justify-center pt-2 group-hover:border-purple-500 transition-colors">
+            <div class="w-1.5 h-3 bg-purple-500 rounded-full"
+              style="animation: scrollDot 2s ease-in-out infinite !important;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- STATS: Asteroid Belt - Fragments of achievements -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <section id="stats" class="universe-section relative overflow-visible" data-celestial="asteroid-belt">
+
+      <!-- Floating Decorations -->
+      <div class="hidden md:block absolute left-8 top-1/4 flying" style="animation-delay: -1s;">
+        <div class="glass px-3 py-2 font-mono text-xs text-purple-400/50" style="transform: rotate(-10deg);">stats.map()
+        </div>
+      </div>
+      <div class="hidden md:block absolute right-16 bottom-16 flying" style="animation-delay: -2s;">
+        <div class="glass px-3 py-2 font-mono text-xs text-pink-400/50" style="transform: rotate(6deg);">
+          [...achievements]</div>
+      </div>
+      <div class="hidden lg:block absolute right-8 top-20 flying" style="animation-delay: -0.5s;">
+        <span class="text-3xl opacity-20">🪨</span>
+      </div>
+      <div class="hidden lg:block absolute left-16 bottom-24 flying" style="animation-delay: -3s;">
+        <span class="text-2xl opacity-25">💎</span>
+      </div>
+      <div class="hidden lg:block absolute right-1/4 top-1/3 w-16 h-16 rounded-full border border-purple-500/10 flying"
+        style="animation-delay: -1.5s;"></div>
+      <div class="hidden lg:block absolute left-1/4 bottom-1/4 w-3 h-3 rounded-full bg-pink-500/20 flying"
+        style="animation-delay: -2.5s;"></div>
+      <div class="hidden md:block absolute left-1/3 top-16 flying" style="animation-delay: -0.8s;">
+        <span class="font-mono text-xs text-purple-500/30">.filter()</span>
+      </div>
+
+      <div class="max-w-6xl mx-auto w-full">
+        <p class="fade-in text-center text-purple-500/20 font-mono text-xs mb-2 glitch-text">&lt;*&gt; :: &lt;*&gt;</p>
+        <h2 class="fade-in text-center text-3xl md:text-4xl font-serif mb-2">
+          <span class="text-gray-500">Passing through the</span>
+          <span class="text-gradient"> Asteroid Belt</span>
+        </h2>
+        <p class="fade-in text-center text-purple-500/20 font-mono text-xs mb-12">[...fragments]</p>
+
+        <!-- Crazy grid with varied sizes -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 items-end">
+          <div
+            class="fade-in glass p-8 text-center hover:glow-purple transition-all transform hover:scale-105 hover:-rotate-2">
+            <p class="text-6xl md:text-8xl font-bold text-gradient">10</p>
+            <p class="text-gray-400 text-sm mt-3 font-mono">years.length</p>
+          </div>
+          <div
+            class="fade-in glass p-6 text-center hover:glow-purple transition-all transform hover:scale-105 hover:rotate-2 md:-mt-8">
+            <p class="text-5xl md:text-6xl font-bold text-gradient">7+</p>
+            <p class="text-gray-400 text-sm mt-2 font-mono">roles.count</p>
+          </div>
+          <div
+            class="fade-in glass p-10 text-center hover:glow-purple transition-all transform hover:scale-105 hover:-rotate-1 md:col-span-1"
+            style="background: rgba(139, 92, 246, 0.05);">
+            <p class="text-7xl md:text-9xl font-bold text-gradient">∞</p>
+            <p class="text-gray-400 text-sm mt-3 font-mono">lessons.infinite()</p>
+          </div>
+          <div
+            class="fade-in glass p-6 text-center hover:glow-purple transition-all transform hover:scale-105 hover:rotate-3 md:-mt-4">
+            <p class="text-5xl md:text-7xl font-bold text-gradient">1</p>
+            <p class="text-gray-400 text-sm mt-2 font-mono">passion.only()</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- HUD DASHBOARD: Universe Observation Deck -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <section id="hud" class="universe-section relative" data-celestial="observation-deck"
+      style="background: transparent;">
+
+      <!-- Floating Tech Icons -->
+      <div class="absolute inset-0 pointer-events-none overflow-hidden">
+        <div class="absolute top-[15%] left-[10%] orbit-1" style="animation-delay: -1s;">
+          <span class="text-5xl opacity-50" title="Next.js">▲</span>
+          <span class="block text-xs text-white/40 font-mono mt-1">Next.js</span>
+        </div>
+        <div class="absolute top-[25%] right-[15%] orbit-2" style="animation-delay: -3s;">
+          <span class="text-5xl opacity-50" style="color: #ff3e00;">🔥</span>
+          <span class="block text-xs text-white/40 font-mono mt-1">SvelteKit</span>
+        </div>
+        <div class="absolute top-[60%] left-[8%] orbit-3" style="animation-delay: -0.5s;">
+          <span class="text-5xl opacity-50" style="color: #61dafb;">⚛</span>
+          <span class="block text-xs text-white/40 font-mono mt-1">React</span>
+        </div>
+        <div class="absolute top-[70%] right-[12%] orbit-4" style="animation-delay: -4s;">
+          <span class="text-5xl opacity-50" style="color: #18b6f6;">⚡</span>
+          <span class="block text-xs text-white/40 font-mono mt-1">Qwik</span>
+        </div>
+        <div class="absolute top-[40%] left-[5%] orbit-5" style="animation-delay: -2s;">
+          <span class="text-5xl opacity-50">🐧</span>
+          <span class="block text-xs text-white/40 font-mono mt-1">Linux</span>
+        </div>
+        <div class="absolute top-[20%] left-[28%] orbit-2" style="animation-delay: -5s;">
+          <span class="text-5xl opacity-50" style="color: #2496ed;">🐳</span>
+          <span class="block text-xs text-white/40 font-mono mt-1">Docker</span>
+        </div>
+        <div class="absolute top-[75%] left-[22%] orbit-4" style="animation-delay: -1.5s;">
+          <span class="text-4xl opacity-50">🔐</span>
+          <span class="block text-xs text-white/40 font-mono mt-1">SSH</span>
+        </div>
+        <div class="absolute top-[50%] right-[8%] orbit-1" style="animation-delay: -6s;">
+          <span class="text-4xl opacity-50" style="color: #4eaa25;">$_</span>
+          <span class="block text-xs text-white/40 font-mono mt-1">Bash</span>
+        </div>
+        <div class="absolute top-[35%] right-[25%] orbit-3" style="animation-delay: -2.5s;">
+          <span class="text-5xl opacity-50" style="color: #007acc;">◆</span>
+          <span class="block text-xs text-white/40 font-mono mt-1">VSCode</span>
+        </div>
+      </div>
+
+      <!-- Minimal HUD overlay -->
+      <div class="absolute inset-0 pointer-events-none">
+        <!-- Corner brackets -->
+        <div class="absolute top-8 left-8 w-16 h-16 border-l-2 border-t-2 border-purple-500/30"></div>
+        <div class="absolute top-8 right-8 w-16 h-16 border-r-2 border-t-2 border-purple-500/30"></div>
+        <div class="absolute bottom-8 left-8 w-16 h-16 border-l-2 border-b-2 border-purple-500/30"></div>
+        <div class="absolute bottom-8 right-8 w-16 h-16 border-r-2 border-b-2 border-purple-500/30"></div>
+
+        <!-- Top HUD info -->
+        <div class="absolute top-8 left-1/2 -translate-x-1/2 text-center">
+          <p class="font-mono text-xs text-purple-500/50 tracking-widest">OBSERVATION DECK</p>
+          <p class="font-mono text-[10px] text-purple-500/30 mt-1">// enjoy the universe</p>
+        </div>
+
+        <!-- Left stats -->
+        <div class="absolute left-8 top-1/2 -translate-y-1/2 font-mono text-[10px] text-purple-500/40 space-y-2">
+          <p>STARS: 4000</p>
+          <p>GALAXY: 15000</p>
+          <p>ASTEROIDS: 30</p>
+        </div>
+
+        <!-- Right stats -->
+        <div
+          class="absolute right-8 top-1/2 -translate-y-1/2 font-mono text-[10px] text-purple-500/40 space-y-2 text-right">
+          <p>FOV: 60°</p>
+          <p>DEPTH: ∞</p>
+          <p>TIME: <span id="hud-time">00:00</span></p>
+        </div>
+
+        <!-- Bottom center -->
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 text-center">
+          <p class="font-mono text-[10px] text-purple-500/30">scroll to continue</p>
+          <div class="w-px h-8 bg-gradient-to-b from-purple-500/30 to-transparent mx-auto mt-2"></div>
+        </div>
+
+        <!-- Crosshair center -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          <div class="w-8 h-px bg-purple-500/20"></div>
+          <div class="w-px h-8 bg-purple-500/20 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"></div>
+          <div
+            class="w-16 h-16 rounded-full border border-purple-500/10 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- TIMELINE: Planetary System - Each planet is an era -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <section id="timeline" class="universe-section relative overflow-visible" data-celestial="planetary-system">
+
+      <!-- Floating orbit line decoration -->
+      <div
+        class="hidden lg:block absolute left-0 right-0 top-1/2 h-px bg-gradient-to-r from-transparent via-purple-500/20 to-transparent">
+      </div>
+
+      <!-- Floating code comments -->
+      <div class="hidden md:block absolute left-8 bottom-24 flying" style="animation-delay: -0.5s;">
+        <span class="font-mono text-xs text-purple-500/30" style="transform: rotate(12deg); display: block;">//
+          evolution</span>
+      </div>
+      <div class="hidden md:block absolute left-4 bottom-20 flying" style="animation-delay: -2.5s;">
+        <span class="font-mono text-xs text-pink-500/30" style="transform: rotate(-8deg); display: block;">/* growth
+          */</span>
+      </div>
+      <div class="hidden lg:block absolute left-8 top-1/3 flying" style="animation-delay: -1s;">
+        <span class="text-2xl opacity-20">🪐</span>
+      </div>
+      <div class="hidden lg:block absolute right-12 bottom-1/4 flying" style="animation-delay: -3s;">
+        <span class="text-2xl opacity-20">🌍</span>
+      </div>
+      <div class="hidden lg:block absolute left-1/4 top-24 w-20 h-20 rounded-full border border-amber-500/10 flying"
+        style="animation-delay: -1.8s;"></div>
+      <div class="hidden lg:block absolute right-1/3 bottom-20 w-4 h-4 rounded-full bg-blue-500/15 flying"
+        style="animation-delay: -0.3s;"></div>
+      <div class="hidden md:block absolute right-1/4 top-24 flying" style="animation-delay: -2s;">
+        <div class="glass px-2 py-1 font-mono text-xs text-cyan-400/40" style="transform: rotate(4deg);">.next()</div>
+      </div>
+      <div class="hidden lg:block absolute left-20 bottom-1/3 w-2 h-2 rounded-full bg-purple-500/25 flying"
+        style="animation-delay: -1.2s;"></div>
+
+      <div class="max-w-5xl mx-auto w-full">
+        <p class="fade-in text-center text-purple-500/20 font-mono text-xs mb-2 glitch-text">for (era in life) {</p>
+        <h2 class="fade-in text-center text-3xl md:text-4xl font-serif mb-2">
+          <span class="text-gray-500">Orbiting the</span>
+          <span class="text-gradient"> Planetary System</span>
+        </h2>
+        <p class="fade-in text-center text-purple-500/20 font-mono text-xs mb-12">=&gt; orbit()</p>
+
+        <div class="space-y-6">
+          <!-- Planet 1: Origin - LEFT -->
+          <div class="fade-in flex items-center gap-6 md:w-3/4 transform hover:scale-102 transition-transform">
+            <div
+              class="w-14 h-14 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex-shrink-0 glow-purple animate-pulse">
+            </div>
+            <div class="glass p-5 flex-1 hover:border-amber-500/30 transition-colors">
+              <p class="text-amber-400 text-xs font-mono">// CHILDHOOD</p>
+              <h3 class="font-semibold text-lg">The Spark</h3>
+              <p class="text-gray-400 text-sm">Built first PC in 2nd grade. Intel Pentium 2.</p>
+            </div>
+          </div>
+
+          <!-- Planet 2: Education - RIGHT -->
+          <div
+            class="fade-in flex items-center gap-6 flex-row-reverse md:w-3/4 md:ml-auto transform hover:scale-102 transition-transform">
+            <div
+              class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 flex-shrink-0 glow-purple animate-pulse">
+            </div>
+            <div class="glass p-5 flex-1 hover:border-blue-500/30 transition-colors text-right">
+              <p class="text-blue-400 text-xs font-mono">// 2016</p>
+              <h3 class="font-semibold text-lg">SMK Negeri 3 Yogyakarta</h3>
+              <p class="text-gray-400 text-sm">Teknik Komputer Jaringan. The right path.</p>
+            </div>
+          </div>
+
+          <!-- Planet 3: Growth - CENTER BIG -->
+          <div
+            class="fade-in flex flex-col items-center gap-4 md:w-4/5 mx-auto transform hover:scale-102 transition-transform">
+            <div
+              class="w-24 h-24 rounded-full bg-gradient-to-br from-purple-500 to-violet-600 flex-shrink-0 glow-purple animate-pulse">
+            </div>
+            <div class="glass p-6 w-full text-center hover:border-purple-500/30 transition-colors">
+              <p class="text-violet-400 text-xs font-mono">// 2016-2026</p>
+              <h3 class="font-semibold text-xl">10 Years of Evolution</h3>
+              <p class="text-gray-400 text-sm">IT Support → NOC → Sysadmin → Frontend → Backend → Full-Stack → DevOps
+              </p>
+            </div>
+          </div>
+
+          <!-- Planet 4: Awakening - LEFT -->
+          <div class="fade-in flex items-center gap-6 md:w-3/4 transform hover:scale-102 transition-transform">
+            <div
+              class="w-14 h-14 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex-shrink-0 glow-purple animate-pulse">
+            </div>
+            <div class="glass p-5 flex-1 hover:border-pink-500/30 transition-colors">
+              <p class="text-pink-400 text-xs font-mono">// 2025</p>
+              <h3 class="font-semibold text-lg">ADHD Diagnosis</h3>
+              <p class="text-gray-400 text-sm">Understanding myself. Strengthening RUH.</p>
+            </div>
+          </div>
+
+          <!-- Planet 5: Vision - RIGHT -->
+          <div
+            class="fade-in flex items-center gap-6 flex-row-reverse md:w-3/4 md:ml-auto transform hover:scale-102 transition-transform">
+            <div
+              class="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex-shrink-0 glow-purple animate-pulse">
+            </div>
+            <div class="glass p-5 flex-1 hover:border-emerald-500/30 transition-colors text-right">
+              <p class="text-emerald-400 text-xs font-mono">// 2031</p>
+              <h3 class="font-semibold text-lg">The Vision</h3>
+              <p class="text-gray-400 text-sm">PT Koneksi Jaringan Indonesia. Wait for me.</p>
+            </div>
+          </div>
+        </div>
+
+        <p class="fade-in text-center text-purple-500/20 font-mono text-xs mt-12">} // end orbit</p>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- REALITY: Nebula (Struggles) + Star Cluster (Strengths) -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <section id="reality" class="universe-section relative overflow-visible" data-celestial="nebula-cluster">
+
+      <!-- Floating struggle/strength symbols -->
+      <div class="hidden md:block absolute left-6 top-1/4 flying" style="animation-delay: -1s;">
+        <span class="text-2xl opacity-30">🌫️</span>
+      </div>
+      <div class="hidden md:block absolute right-6 top-1/3 flying" style="animation-delay: -2.5s;">
+        <span class="text-2xl opacity-30">✨</span>
+      </div>
+      <div class="hidden md:block absolute left-12 bottom-1/4 flying" style="animation-delay: -0.5s;">
+        <div class="glass px-3 py-1 font-mono text-xs text-red-400/40" style="transform: rotate(-8deg);">catch(err)
+        </div>
+      </div>
+      <div class="hidden md:block absolute right-1/4 top-24 flying" style="animation-delay: -3s;">
+        <div class="glass px-3 py-1 font-mono text-xs text-green-400/40" style="transform: rotate(6deg);">resolve()
+        </div>
+      </div>
+      <div class="hidden lg:block absolute left-1/4 top-16 w-16 h-16 rounded-full border border-red-500/10 flying"
+        style="animation-delay: -1.5s;"></div>
+      <div class="hidden lg:block absolute right-16 bottom-24 w-20 h-20 rounded-full border border-green-500/10 flying"
+        style="animation-delay: -2s;"></div>
+      <div class="hidden lg:block absolute left-8 bottom-20 flying" style="animation-delay: -0.8s;">
+        <span class="text-xl opacity-25">⚡</span>
+      </div>
+      <div class="hidden lg:block absolute right-8 top-24 flying" style="animation-delay: -1.8s;">
+        <span class="text-xl opacity-25">💪</span>
+      </div>
+      <div class="hidden md:block absolute left-1/3 top-20 flying" style="animation-delay: -2.2s;">
+        <span class="font-mono text-xs text-red-500/30">try {</span>
+      </div>
+      <div class="hidden md:block absolute right-12 bottom-20 flying" style="animation-delay: -0.3s;">
+        <span class="font-mono text-xs text-green-500/30">} finally</span>
+      </div>
+      <div class="hidden lg:block absolute right-20 top-1/2 w-3 h-3 rounded-full bg-green-500/20 flying"
+        style="animation-delay: -1.3s;"></div>
+      <div class="hidden lg:block absolute left-16 top-1/2 w-2 h-2 rounded-full bg-red-500/20 flying"
+        style="animation-delay: -2.8s;"></div>
+
+      <div class="max-w-5xl mx-auto w-full">
+        <p class="fade-in text-center text-purple-500/20 font-mono text-xs mb-2">if (struggle &amp;&amp; strength) {</p>
+        <h2 class="fade-in text-center text-2xl md:text-3xl font-serif mb-2">
+          <span class="text-gray-500">Through the</span>
+          <span class="text-gradient"> Nebula & Star Cluster</span>
+        </h2>
+        <p class="fade-in text-center text-purple-500/20 font-mono text-xs mb-12">=&gt; balance() }</p>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <!-- Nebula: Struggles -->
+          <div class="fade-in glass p-6"
+            style="background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(0,0,0,0));">
+            <h3 class="flex items-center gap-3 text-lg font-semibold mb-4">
+              <span class="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center">🌫️</span>
+              The Nebula (Struggles)
+            </h3>
+            <ul class="space-y-3 text-gray-300 text-sm">
+              <li class="flex gap-2"><span class="text-red-400">✗</span> Dropped out twice</li>
+              <li class="flex gap-2"><span class="text-red-400">✗</span> Company bankrupt in 2022</li>
+              <li class="flex gap-2"><span class="text-red-400">✗</span> ADHD - impulsive decisions</li>
+              <li class="flex gap-2"><span class="text-red-400">✗</span> Poor self-branding</li>
+            </ul>
+          </div>
+
+          <!-- Star Cluster: Strengths -->
+          <div class="fade-in glass p-6"
+            style="background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(0,0,0,0));">
+            <h3 class="flex items-center gap-3 text-lg font-semibold mb-4">
+              <span class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">✨</span>
+              The Star Cluster (Strengths)
+            </h3>
+            <ul class="space-y-3 text-gray-300 text-sm">
+              <li class="flex gap-2"><span class="text-green-400">✓</span> Never stopped learning</li>
+              <li class="flex gap-2"><span class="text-green-400">✓</span> Deep technical knowledge</li>
+              <li class="flex gap-2"><span class="text-green-400">✓</span> ADHD hyperfocus power</li>
+              <li class="flex gap-2"><span class="text-green-400">✓</span> RUH awakening</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- PHILOSOPHY: Black Hole - The Core Truth (CLIMAX) -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <section id="philosophy"
+      class="universe-section black-hole-section flex-col justify-center relative overflow-visible"
+      data-celestial="black-hole">
+
+      <!-- Floating philosophical fragments -->
+      <div class="hidden md:block absolute left-8 top-1/4 flying" style="animation-delay: -1s;">
+        <span class="font-mono text-xs text-purple-500/40"
+          style="transform: rotate(-15deg); display: block;">void</span>
+      </div>
+      <div class="hidden md:block absolute right-8 top-1/3 flying" style="animation-delay: -2s;">
+        <span class="font-mono text-xs text-pink-500/40" style="transform: rotate(10deg); display: block;">truth</span>
+      </div>
+      <div class="hidden md:block absolute left-12 bottom-1/3 flying" style="animation-delay: -3s;">
+        <span class="font-mono text-xs text-purple-500/30" style="transform: rotate(5deg); display: block;">∞</span>
+      </div>
+      <div class="hidden md:block absolute right-12 bottom-1/4 flying" style="animation-delay: -0.5s;">
+        <span class="font-mono text-xs text-pink-500/30" style="transform: rotate(-8deg); display: block;">RUH</span>
+      </div>
+      <div class="hidden lg:block absolute left-4 top-20 flying" style="animation-delay: -1.5s;">
+        <span class="text-2xl opacity-20">🕳️</span>
+      </div>
+      <div class="hidden lg:block absolute right-4 bottom-20 flying" style="animation-delay: -2.5s;">
+        <span class="text-2xl opacity-20">🌀</span>
+      </div>
+      <div class="hidden lg:block absolute left-1/4 top-1/4 w-24 h-24 rounded-full border border-purple-500/10 flying"
+        style="animation-delay: -0.8s;"></div>
+      <div class="hidden lg:block absolute right-1/4 bottom-1/3 w-12 h-12 rounded-full border border-pink-500/10 flying"
+        style="animation-delay: -1.8s;"></div>
+      <div class="hidden md:block absolute left-16 top-1/2 flying" style="animation-delay: -2.2s;">
+        <span class="font-mono text-xs text-violet-500/30">null</span>
+      </div>
+      <div class="hidden md:block absolute right-16 top-1/2 flying" style="animation-delay: -0.3s;">
+        <span class="font-mono text-xs text-violet-500/30">core</span>
+      </div>
+      <div class="hidden lg:block absolute left-20 bottom-24 w-2 h-2 rounded-full bg-purple-500/25 flying"
+        style="animation-delay: -3.2s;"></div>
+      <div class="hidden lg:block absolute right-24 top-32 w-3 h-3 rounded-full bg-pink-500/20 flying"
+        style="animation-delay: -1.2s;"></div>
+
+      <div class="max-w-3xl mx-auto text-center">
+        <p class="fade-in text-purple-500/30 font-mono text-xs mb-2">&lt;?&gt; :: void =&gt; truth</p>
+        <h2 class="fade-in text-2xl md:text-3xl font-serif mb-2">
+          <span class="text-gray-500">Approaching the</span>
+          <span class="text-gradient"> Event Horizon</span>
+        </h2>
+        <p class="fade-in text-gray-500 text-sm mb-4 font-mono">&lt;!-- The point of no return --&gt;</p>
+
+        <!-- Black Hole Visual - Synced with Three.js -->
+        <div id="blackhole-visual" class="fade-in relative w-48 h-48 mx-auto mb-8">
+          <!-- Outer glow ring -->
+          <div id="bh-outer-ring"
+            class="absolute inset-0 rounded-full border-2 border-purple-500/20 transition-all duration-300"></div>
+          <!-- Middle accretion disk -->
+          <div id="bh-accretion" class="absolute inset-3 rounded-full border border-purple-400/30 animate-spin"
+            style="animation-duration: 8s;"></div>
+          <!-- Inner accretion -->
+          <div id="bh-inner" class="absolute inset-6 rounded-full border border-pink-500/20 animate-spin"
+            style="animation-duration: 12s; animation-direction: reverse;"></div>
+          <!-- Event horizon glow -->
+          <div id="bh-horizon"
+            class="absolute inset-8 rounded-full bg-gradient-to-r from-purple-600/0 via-purple-500/20 to-purple-600/0 transition-all duration-300">
+          </div>
+          <!-- Core black hole -->
+          <div id="bh-core"
+            class="absolute inset-12 rounded-full bg-black shadow-[0_0_30px_rgba(0,0,0,0.8)] transition-all duration-300">
+          </div>
+          <!-- Center singularity -->
+          <div id="bh-singularity" class="absolute inset-[3.5rem] rounded-full bg-black transition-all duration-300">
+          </div>
+          <!-- Horizontal light beam (eclipse effect) -->
+          <div id="bh-eclipse"
+            class="absolute top-1/2 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-purple-400/0 to-transparent -translate-y-1/2 transition-all duration-300">
+          </div>
+        </div>
+
+        <!-- Core Philosophy -->
+        <blockquote class="fade-in glass p-8 mb-8">
+          <p class="text-xl md:text-2xl text-gray-200 italic leading-relaxed">
+            "Not the degree, but the <span class="text-purple-400">knowledge</span>.<br>
+            Not the money, but the <span class="text-blue-400">craft</span>.<br>
+            Not the certificate, but the <span class="text-pink-400">experience</span>.<br>
+            Not the profit, but the <span class="text-violet-400">passion</span>."
+          </p>
+        </blockquote>
+
+        <!-- RUH Concept -->
+        <div class="fade-in glass p-6">
+          <h3 class="text-lg font-semibold mb-3 text-gradient">RUH • Mental • Raga</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">
+            RUH (Soul) controls Mental (Mind), Mental controls Raga (Body).<br>
+            <span class="text-purple-300">The singularity within. The source of all creation.</span>
+          </p>
+        </div>
+
+        <!-- ADHD Insight -->
+        <p class="fade-in text-gray-500 text-sm mt-8 italic">
+          "ADHD is not a curse, but a different operating system.<br>
+          Let your RUH be the administrator."
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- PROJECT: Habitable Planet - The Creation -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <section id="project" class="universe-section relative overflow-visible" data-celestial="habitable-planet">
+
+      <!-- Floating tech badges -->
+      <div class="hidden md:block absolute left-4 top-1/4 flying" style="animation-delay: -1s;">
+        <div class="glass px-3 py-1 font-mono text-xs text-green-400/50" style="transform: rotate(-12deg);">HTML</div>
+      </div>
+      <div class="hidden md:block absolute right-8 top-1/3 flying" style="animation-delay: -2s;">
+        <div class="glass px-3 py-1 font-mono text-xs text-blue-400/50" style="transform: rotate(8deg);">CSS</div>
+      </div>
+      <div class="hidden md:block absolute left-8 bottom-1/3 flying" style="animation-delay: -0.5s;">
+        <div class="glass px-3 py-1 font-mono text-xs text-yellow-400/50" style="transform: rotate(5deg);">JS</div>
+      </div>
+      <div class="hidden md:block absolute right-4 bottom-1/4 flying" style="animation-delay: -3s;">
+        <div class="glass px-3 py-1 font-mono text-xs text-purple-400/50" style="transform: rotate(-6deg);">API</div>
+      </div>
+      <div class="hidden lg:block absolute left-12 top-20 flying" style="animation-delay: -1.5s;">
+        <span class="text-2xl opacity-20">🌏</span>
+      </div>
+      <div class="hidden lg:block absolute right-12 bottom-20 flying" style="animation-delay: -2.5s;">
+        <span class="text-2xl opacity-20">🛸</span>
+      </div>
+      <div class="hidden lg:block absolute left-1/4 bottom-1/4 w-16 h-16 rounded-full border border-green-500/10 flying"
+        style="animation-delay: -0.8s;"></div>
+      <div class="hidden lg:block absolute right-1/4 top-1/4 w-20 h-20 rounded-full border border-blue-500/10 flying"
+        style="animation-delay: -1.8s;"></div>
+      <div class="hidden md:block absolute left-1/3 top-16 flying" style="animation-delay: -2.2s;">
+        <div class="glass px-2 py-1 font-mono text-xs text-cyan-400/40" style="transform: rotate(-4deg);">Alpine</div>
+      </div>
+      <div class="hidden md:block absolute right-1/3 bottom-16 flying" style="animation-delay: -0.3s;">
+        <div class="glass px-2 py-1 font-mono text-xs text-teal-400/40" style="transform: rotate(6deg);">Tailwind</div>
+      </div>
+      <div class="hidden lg:block absolute left-20 top-1/2 w-3 h-3 rounded-full bg-green-500/20 flying"
+        style="animation-delay: -1.2s;"></div>
+      <div class="hidden lg:block absolute right-20 top-1/2 w-2 h-2 rounded-full bg-blue-500/25 flying"
+        style="animation-delay: -2.8s;"></div>
+
+      <div class="max-w-7xl w-full px-4 pt-2">
+        <p class="fade-in text-purple-500/20 font-mono text-xs mb-1 text-center">npm run create &amp;&amp;</p>
+        <h2 class="fade-in text-2xl md:text-3xl font-serif mb-1 text-center">
+          <span class="text-gray-500">Landing on</span>
+          <span class="text-gradient"> The Habitable Planet</span>
+        </h2>
+        <p class="fade-in text-purple-500/20 font-mono text-xs mb-4 text-center">=&gt; deploy()</p>
+
+        <!-- Split Layout -->
+        <div class="flex flex-col lg:flex-row gap-8">
+
+          <!-- Left: Solar System -->
+          <div class="relative w-full lg:ml-16 lg:w-96 h-[400px] md:h-[500px]">
+            <!-- Orbit rings -->
+            <div
+              class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[200px] md:w-[280px] md:h-[280px] rounded-full border border-purple-500/20">
+            </div>
+            <div
+              class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] h-[300px] md:w-[400px] md:h-[400px] rounded-full border border-purple-500/15">
+            </div>
+
+            <!-- Sun: SnapCode (center) -->
+            <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+              <button onclick="showProject('snapcode')" class="block group cursor-pointer">
+                <div
+                  class="w-16 h-16 md:w-24 md:h-24 planet planet-purple glow-purple group-hover:scale-110 transition-transform duration-500 flex items-center justify-center">
+                  <span class="text-2xl md:text-3xl drop-shadow-lg">✦</span>
+                </div>
+              </button>
+            </div>
+
+            <!-- Planet 1: AkseSekolah -->
+            <div class="absolute top-1/2 left-1/2 w-[200px] h-[200px] md:w-[280px] md:h-[280px] spin-20">
+              <button onclick="showProject('aksesesekolah')"
+                class="absolute -top-6 left-1/2 counter-20 group cursor-pointer">
+                <div
+                  class="w-12 h-12 md:w-16 md:h-16 planet planet-blue group-hover:scale-125 transition-transform duration-300 flex items-center justify-center">
+                  <span class="text-lg md:text-xl drop-shadow-lg">🏫</span>
+                </div>
+              </button>
+            </div>
+
+            <!-- Planet 2: Kreatr -->
+            <div class="absolute top-1/2 left-1/2 w-[200px] h-[200px] md:w-[280px] md:h-[280px] spin-20">
+              <button onclick="showProject('kreatr')"
+                class="absolute -bottom-6 left-1/2 counter-20 group cursor-pointer">
+                <div
+                  class="w-12 h-12 md:w-16 md:h-16 planet planet-pink group-hover:scale-125 transition-transform duration-300 flex items-center justify-center">
+                  <span class="text-lg md:text-xl drop-shadow-lg">🎨</span>
+                </div>
+              </button>
+            </div>
+
+            <!-- Planet 3: Mantra AI -->
+            <div class="absolute top-1/2 left-1/2 w-[300px] h-[300px] md:w-[400px] md:h-[400px] spin-35-rev">
+              <button onclick="showProject('mantra')"
+                class="absolute top-1/2 -right-6 counter-35-rev group cursor-pointer">
+                <div
+                  class="w-10 h-10 md:w-14 md:h-14 planet planet-violet group-hover:scale-125 transition-transform duration-300 flex items-center justify-center">
+                  <span class="text-sm md:text-lg drop-shadow-lg">🤖</span>
+                </div>
+              </button>
+            </div>
+
+            <!-- Planet 4: We Will Shine -->
+            <div class="absolute top-1/2 left-1/2 w-[200px] h-[200px] md:w-[280px] md:h-[280px] spin-20">
+              <button onclick="showProject('wewillshine')"
+                class="absolute top-1/2 -left-6 counter-20 group cursor-pointer">
+                <div
+                  class="w-10 h-10 md:w-14 md:h-14 planet planet-amber group-hover:scale-125 transition-transform duration-300 flex items-center justify-center">
+                  <span class="text-sm md:text-lg drop-shadow-lg">✨</span>
+                </div>
+              </button>
+            </div>
+
+            <!-- Planet 5: 2USE LLM -->
+            <div class="absolute top-1/2 left-1/2 w-[300px] h-[300px] md:w-[400px] md:h-[400px] spin-35-rev">
+              <button onclick="showProject('2use')"
+                class="absolute top-1/2 -left-6 counter-35-rev group cursor-pointer">
+                <div
+                  class="w-10 h-10 md:w-12 md:h-12 planet planet-cyan group-hover:scale-125 transition-transform duration-300 flex items-center justify-center">
+                  <span class="text-sm md:text-lg drop-shadow-lg">🧠</span>
+                </div>
+              </button>
+            </div>
+
+          </div>
+          <!-- Right: Project Details -->
+          <div class="flex-1">
+            <div class="flex w-full justify-between gap-3">
+              <!-- Nav buttons vertical -->
+              <div class="flex flex-col gap-2">
+                <button onclick="prevProject()"
+                  class="w-8 h-8 glass flex items-center justify-center text-purple-400 hover:text-purple-300 transition-colors">↑</button>
+                <button onclick="nextProject()"
+                  class="w-8 h-8 glass flex items-center justify-center text-purple-400 hover:text-purple-300 transition-colors">↓</button>
+              </div>
+              <!-- Card -->
+              <div class="flex flex-1 flex-col">
+                <div id="project-details" class="glass p-4 md:p-8 w-full max-w-[480px]">
+                  <!-- SnapCode (default) -->
+                  <div id="proj-snapcode" class="project-info flex flex-col h-full">
+                    <div class="flex items-center gap-4 mb-4">
+                      <div
+                        class="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
+                        <span class="text-xl">✦</span>
+                      </div>
+                      <div>
+                        <h3 class="text-xl font-serif font-bold text-gradient">SnapCode</h3>
+                        <p class="text-xs text-purple-500/50">snapcode.me</p>
+                      </div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">Beautiful code screenshots with OS window simulations.
+                      Features
+                      Mermaid diagrams, KaTeX math, and Fira Code ligatures. 100% client-side, buildless architecture.
+                    </p>
+                    <div class="relative h-12 mb-4">
+                      <span class="absolute top-0 left-0 px-2 py-1 glass text-[10px] text-purple-300 orbit-1"
+                        style="animation-duration: 6s;">Alpine.js</span>
+                      <span class="absolute top-2 left-20 px-2 py-1 glass text-[10px] text-purple-300 orbit-2"
+                        style="animation-duration: 8s;">Tailwind</span>
+                      <span class="absolute top-0 right-16 px-2 py-1 glass text-[10px] text-purple-300 orbit-3"
+                        style="animation-duration: 7s;">Prism.js</span>
+                      <span class="absolute top-4 right-0 px-2 py-1 glass text-[10px] text-purple-300 orbit-4"
+                        style="animation-duration: 9s;">html2canvas</span>
+                    </div>
+                    <div class="flex-1"></div>
+                    <div class="text-right">
+                      <a href="index.html"
+                        class="inline-flex items-center gap-2 text-purple-400 text-sm hover:text-purple-300 transition-colors">
+                        Explore <span>→</span>
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- AkseSekolah -->
+                  <div id="proj-aksesesekolah" class="project-info hidden flex flex-col h-full">
+                    <div class="flex items-center gap-4 mb-4">
+                      <div
+                        class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-blue-600 flex items-center justify-center">
+                        <span class="text-xl">🏫</span>
+                      </div>
+                      <div>
+                        <h3 class="text-xl font-serif font-bold text-indigo-400">AkseSekolah.id</h3>
+                        <p class="text-xs text-indigo-500/50">aksesesekolah.id</p>
+                      </div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">School management system for Indonesian education. Simplifying
+                      administration, attendance tracking, grade management, and parent-teacher communication.</p>
+                    <div class="relative h-12 mb-4">
+                      <span class="absolute top-1 left-0 px-2 py-1 glass text-[10px] text-indigo-300 orbit-2"
+                        style="animation-duration: 7s;">SvelteKit</span>
+                      <span class="absolute top-0 left-24 px-2 py-1 glass text-[10px] text-indigo-300 orbit-4"
+                        style="animation-duration: 9s;">PostgreSQL</span>
+                      <span class="absolute top-3 right-12 px-2 py-1 glass text-[10px] text-indigo-300 orbit-1"
+                        style="animation-duration: 6s;">Prisma</span>
+                      <span class="absolute top-1 right-0 px-2 py-1 glass text-[10px] text-indigo-300 orbit-3"
+                        style="animation-duration: 8s;">Docker</span>
+                    </div>
+                    <div class="flex-1"></div>
+                    <div class="text-right">
+                      <a href="https://aksesesekolah.id" target="_blank"
+                        class="inline-flex items-center gap-2 text-indigo-400 text-sm hover:text-indigo-300 transition-colors">
+                        Visit <span>→</span>
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- Kreatr -->
+                  <div id="proj-kreatr" class="project-info hidden flex flex-col h-full">
+                    <div class="flex items-center gap-4 mb-4">
+                      <div
+                        class="w-12 h-12 rounded-xl bg-gradient-to-br from-fuchsia-500 to-pink-600 flex items-center justify-center">
+                        <span class="text-xl">🎨</span>
+                      </div>
+                      <div>
+                        <h3 class="text-xl font-serif font-bold text-fuchsia-400">Kreatr.app</h3>
+                        <p class="text-xs text-fuchsia-500/50">kreatr.app</p>
+                      </div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">Creative tools platform for content creators. Design
+                      templates,
+                      image editing, social media assets, and brand kit management in one place.</p>
+                    <div class="relative h-12 mb-4">
+                      <span class="absolute top-0 left-4 px-2 py-1 glass text-[10px] text-fuchsia-300 orbit-3"
+                        style="animation-duration: 8s;">Next.js</span>
+                      <span class="absolute top-3 left-20 px-2 py-1 glass text-[10px] text-fuchsia-300 orbit-1"
+                        style="animation-duration: 6s;">Canvas API</span>
+                      <span class="absolute top-1 right-8 px-2 py-1 glass text-[10px] text-fuchsia-300 orbit-4"
+                        style="animation-duration: 9s;">Fabric.js</span>
+                      <span class="absolute top-4 right-0 px-2 py-1 glass text-[10px] text-fuchsia-300 orbit-2"
+                        style="animation-duration: 7s;">S3</span>
+                    </div>
+                    <div class="flex-1"></div>
+                    <div class="text-right">
+                      <a href="https://kreatr.app" target="_blank"
+                        class="inline-flex items-center gap-2 text-fuchsia-400 text-sm hover:text-fuchsia-300 transition-colors">
+                        Visit <span>→</span>
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- Mantra AI -->
+                  <div id="proj-mantra" class="project-info hidden flex flex-col h-full">
+                    <div class="flex items-center gap-4 mb-4">
+                      <div
+                        class="w-12 h-12 rounded-xl bg-gradient-to-br from-violet-500 to-purple-700 flex items-center justify-center">
+                        <span class="text-xl">🤖</span>
+                      </div>
+                      <div>
+                        <h3 class="text-xl font-serif font-bold text-violet-400">Mantra AI Studio</h3>
+                        <p class="text-xs text-violet-500/50">mantra.studio</p>
+                      </div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">AI-powered development studio. Building intelligent solutions
+                      with LLMs, computer vision, and automation. From concept to production deployment.</p>
+                    <div class="relative h-12 mb-4">
+                      <span class="absolute top-2 left-0 px-2 py-1 glass text-[10px] text-violet-300 orbit-4"
+                        style="animation-duration: 7s;">Python</span>
+                      <span class="absolute top-0 left-16 px-2 py-1 glass text-[10px] text-violet-300 orbit-2"
+                        style="animation-duration: 9s;">LangChain</span>
+                      <span class="absolute top-4 right-16 px-2 py-1 glass text-[10px] text-violet-300 orbit-1"
+                        style="animation-duration: 6s;">FastAPI</span>
+                      <span class="absolute top-1 right-0 px-2 py-1 glass text-[10px] text-violet-300 orbit-3"
+                        style="animation-duration: 8s;">AWS</span>
+                    </div>
+                    <div class="flex-1"></div>
+                    <div class="text-right">
+                      <a href="https://mantra.studio" target="_blank"
+                        class="inline-flex items-center gap-2 text-violet-400 text-sm hover:text-violet-300 transition-colors">
+                        Visit <span>→</span>
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- We Will Shine -->
+                  <div id="proj-wewillshine" class="project-info hidden flex flex-col h-full">
+                    <div class="flex items-center gap-4 mb-4">
+                      <div
+                        class="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-yellow-600 flex items-center justify-center">
+                        <span class="text-xl">✨</span>
+                      </div>
+                      <div>
+                        <h3 class="text-xl font-serif font-bold text-amber-400">We Will Shine</h3>
+                        <p class="text-xs text-amber-500/50">Open Source</p>
+                      </div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">An inspiring open source project. Empowering developers to
+                      build
+                      and shine together through collaborative innovation.</p>
+                    <div class="relative h-12 mb-4">
+                      <span class="absolute top-1 left-8 px-2 py-1 glass text-[10px] text-amber-300 orbit-1"
+                        style="animation-duration: 7s;">Open Source</span>
+                      <span class="absolute top-3 right-12 px-2 py-1 glass text-[10px] text-amber-300 orbit-3"
+                        style="animation-duration: 8s;">Community</span>
+                    </div>
+                    <div class="flex-1"></div>
+                    <div class="text-right">
+                      <a href="https://github.com/ITIF-Syuhada/we-will-shine" target="_blank"
+                        class="inline-flex items-center gap-2 text-amber-400 text-sm hover:text-amber-300 transition-colors">
+                        GitHub <span>→</span>
+                      </a>
+                    </div>
+                  </div>
+
+                  <!-- 2USE LLM -->
+                  <div id="proj-2use" class="project-info hidden flex flex-col h-full">
+                    <div class="flex items-center gap-4 mb-4">
+                      <div
+                        class="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-teal-600 flex items-center justify-center">
+                        <span class="text-xl">🧠</span>
+                      </div>
+                      <div>
+                        <h3 class="text-xl font-serif font-bold text-cyan-400">2USE LLM</h3>
+                        <p class="text-xs text-cyan-500/50">Open Source</p>
+                      </div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-4">Large Language Model project for practical applications.
+                      Making
+                      AI accessible and useful for everyday tasks.</p>
+                    <div class="relative h-12 mb-4">
+                      <span class="absolute top-0 left-0 px-2 py-1 glass text-[10px] text-cyan-300 orbit-2"
+                        style="animation-duration: 6s;">LLM</span>
+                      <span class="absolute top-3 left-12 px-2 py-1 glass text-[10px] text-cyan-300 orbit-4"
+                        style="animation-duration: 8s;">AI</span>
+                      <span class="absolute top-1 right-4 px-2 py-1 glass text-[10px] text-cyan-300 orbit-1"
+                        style="animation-duration: 7s;">Python</span>
+                    </div>
+                    <div class="flex-1"></div>
+                    <div class="text-right">
+                      <a href="https://github.com/ITIF-Syuhada/2USE" target="_blank"
+                        class="inline-flex items-center gap-2 text-cyan-400 text-sm hover:text-cyan-300 transition-colors">
+                        GitHub <span>→</span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+                <p class="mt-8 ml-4 text-[10px] text-purple-500/40">Click planets or use arrows</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+      </div>
+    </section>
+
+    <script>
+      const projects = ['snapcode', 'aksesesekolah', 'kreatr', 'mantra', 'wewillshine', '2use'];
+      let currentProject = 0;
+
+      function showProject(id) {
+        document.querySelectorAll('.project-info').forEach(el => el.classList.add('hidden'));
+        document.getElementById('proj-' + id).classList.remove('hidden');
+        currentProject = projects.indexOf(id);
+      }
+
+      function nextProject() {
+        currentProject = (currentProject + 1) % projects.length;
+        showProject(projects[currentProject]);
+      }
+
+      function prevProject() {
+        currentProject = (currentProject - 1 + projects.length) % projects.length;
+        showProject(projects[currentProject]);
+      }
+    </script>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- DEDICATION: Cosmic Dust - Spreading across the universe -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <section id="dedication" class="universe-section relative overflow-visible" data-celestial="cosmic-dust">
+
+      <!-- Floating hearts and stars -->
+      <div class="hidden md:block absolute left-8 top-1/4 flying" style="animation-delay: -0.5s;">
+        <span class="text-xl opacity-40">💜</span>
+      </div>
+      <div class="hidden md:block absolute right-8 top-1/3 flying" style="animation-delay: -2s;">
+        <span class="text-xl opacity-40">⭐</span>
+      </div>
+      <div class="hidden md:block absolute left-16 bottom-1/3 flying" style="animation-delay: -1.5s;">
+        <span class="text-lg opacity-30">✦</span>
+      </div>
+      <div class="hidden md:block absolute right-16 bottom-1/4 flying" style="animation-delay: -3s;">
+        <span class="text-lg opacity-30">✧</span>
+      </div>
+      <div class="hidden md:block absolute left-1/4 top-20 flying" style="animation-delay: -1s;">
+        <div class="glass px-3 py-1 font-mono text-xs text-purple-400/40" style="transform: rotate(-5deg);">for (you)
+        </div>
+      </div>
+      <div class="hidden md:block absolute right-1/4 bottom-20 flying" style="animation-delay: -2.5s;">
+        <div class="glass px-3 py-1 font-mono text-xs text-pink-400/40" style="transform: rotate(7deg);">!alone</div>
+      </div>
+
+      <!-- Decorative dust particles -->
+      <div class="hidden lg:block absolute left-10 top-1/2 w-2 h-2 rounded-full bg-purple-500/20 flying"
+        style="animation-delay: -0.3s;"></div>
+      <div class="hidden lg:block absolute right-20 top-1/3 w-3 h-3 rounded-full bg-pink-500/20 flying"
+        style="animation-delay: -1.8s;"></div>
+      <div class="hidden lg:block absolute left-1/3 bottom-24 w-2 h-2 rounded-full bg-purple-500/15 flying"
+        style="animation-delay: -2.3s;"></div>
+      <div class="hidden lg:block absolute left-4 top-16 flying" style="animation-delay: -0.8s;">
+        <span class="text-2xl opacity-20">🫂</span>
+      </div>
+      <div class="hidden lg:block absolute right-4 bottom-16 flying" style="animation-delay: -1.2s;">
+        <span class="text-2xl opacity-20">🌟</span>
+      </div>
+      <div
+        class="hidden lg:block absolute left-1/4 bottom-1/3 w-16 h-16 rounded-full border border-purple-500/10 flying"
+        style="animation-delay: -2.8s;"></div>
+      <div class="hidden lg:block absolute right-1/4 top-1/4 w-12 h-12 rounded-full border border-pink-500/10 flying"
+        style="animation-delay: -0.6s;"></div>
+      <div class="hidden md:block absolute left-12 top-1/3 flying" style="animation-delay: -1.8s;">
+        <span class="font-mono text-xs text-purple-500/30">await</span>
+      </div>
+      <div class="hidden md:block absolute right-12 bottom-1/3 flying" style="animation-delay: -3.2s;">
+        <span class="font-mono text-xs text-pink-500/30">hope()</span>
+      </div>
+      <div class="hidden lg:block absolute right-1/3 top-20 w-2 h-2 rounded-full bg-purple-500/25 flying"
+        style="animation-delay: -1.5s;"></div>
+
+      <div class="max-w-3xl mx-auto text-center">
+        <p class="fade-in text-purple-500/20 font-mono text-xs mb-2">/** @dedication */</p>
+        <h2 class="fade-in text-2xl md:text-3xl font-serif mb-2">
+          <span class="text-gray-500">Scattered as</span>
+          <span class="text-gradient"> Cosmic Dust</span>
+        </h2>
+        <p class="fade-in text-purple-500/20 font-mono text-xs mb-12">...spread(universe)</p>
+
+        <div class="text-left fade-in space-y-3 text-gray-400 mb-12">
+          <p>For everyone who makes mistakes</p>
+          <p>For everyone who drops out</p>
+          <p>For everyone who struggles</p>
+          <p>For everyone with ADHD</p>
+          <p>For everyone seeking truth</p>
+          <p class="text-purple-300 font-medium pt-4">You are not alone in this universe.</p>
+        </div>
+
+        <div class="fade-in glass p-8">
+          <p class="text-2xl font-serif text-gradient mb-4">
+            "Your mistakes don't define you.<br>Your persistence will."
+          </p>
+          <p class="text-gray-500 text-sm">
+            This is just Episode 1. More universes await.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- FOOTER: Singularity - Transcendence -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <footer id="footer" class="universe-section py-16 relative overflow-visible" data-celestial="singularity">
+
+      <!-- Floating infinity symbols and years -->
+      <div class="hidden md:block absolute left-8 top-1/4 flying" style="animation-delay: -1s;">
+        <span class="font-mono text-2xl text-purple-500/30">∞</span>
+      </div>
+      <div class="hidden md:block absolute right-8 top-1/3 flying" style="animation-delay: -2s;">
+        <div class="glass px-3 py-1 font-mono text-xs text-purple-400/40" style="transform: rotate(5deg);">2031</div>
+      </div>
+      <div class="hidden md:block absolute left-12 bottom-1/3 flying" style="animation-delay: -0.5s;">
+        <span class="font-mono text-sm text-pink-500/30" style="transform: rotate(-8deg); display: block;">to be
+          continued...</span>
+      </div>
+      <div class="hidden md:block absolute right-12 bottom-1/4 flying" style="animation-delay: -3s;">
+        <span class="text-xl opacity-30">🚀</span>
+      </div>
+
+      <!-- Decorative elements -->
+      <div class="hidden lg:block absolute left-1/4 top-12 w-24 h-24 rounded-full border border-purple-500/5 flying"
+        style="animation-delay: -1.5s;"></div>
+      <div class="hidden lg:block absolute right-1/3 bottom-12 w-16 h-16 rounded-full border border-pink-500/5 flying"
+        style="animation-delay: -2.5s;"></div>
+      <div class="hidden lg:block absolute left-4 top-20 flying" style="animation-delay: -0.8s;">
+        <span class="text-2xl opacity-20">🌌</span>
+      </div>
+      <div class="hidden lg:block absolute right-4 top-16 flying" style="animation-delay: -1.8s;">
+        <span class="text-2xl opacity-20">✨</span>
+      </div>
+      <div class="hidden md:block absolute left-1/3 top-8 flying" style="animation-delay: -2.2s;">
+        <span class="font-mono text-xs text-purple-500/30">Episode.next()</span>
+      </div>
+      <div class="hidden md:block absolute right-1/4 bottom-8 flying" style="animation-delay: -0.3s;">
+        <span class="font-mono text-xs text-pink-500/30">return ∞</span>
+      </div>
+      <div class="hidden lg:block absolute left-16 top-1/2 w-3 h-3 rounded-full bg-purple-500/20 flying"
+        style="animation-delay: -1.2s;"></div>
+      <div class="hidden lg:block absolute right-20 top-1/2 w-2 h-2 rounded-full bg-pink-500/25 flying"
+        style="animation-delay: -2.8s;"></div>
+      <div class="hidden lg:block absolute left-20 bottom-20 flying" style="animation-delay: -3.2s;">
+        <span class="text-lg opacity-25">⚡</span>
+      </div>
+
+      <div class="max-w-4xl mx-auto text-center">
+        <img src="https://avatars.githubusercontent.com/u/33443311?v=4" alt="sandikodev"
+          class="fade-in w-20 h-20 rounded-full mx-auto mb-6 glow-purple">
+
+        <p class="fade-in text-xl font-semibold mb-2">@sandikodev</p>
+        <p class="fade-in text-gray-500 mb-6">2016 • 2026 • 2031 • ∞</p>
+
+        <!-- Social Links -->
+        <div class="fade-in flex justify-center gap-4 mb-8">
+          <a href="https://github.com/sandikodev" target="_blank"
+            class="w-10 h-10 glass rounded-full flex items-center justify-center hover:glow-purple transition">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
+            </svg>
+          </a>
+          <a href="https://twitter.com/sandikodev" target="_blank"
+            class="w-10 h-10 glass rounded-full flex items-center justify-center hover:glow-purple transition">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+            </svg>
+          </a>
+        </div>
+
+        <div class="fade-in flex flex-wrap justify-center gap-4 text-sm mb-12">
+          <a href="JOURNEY.md" class="text-purple-400 hover:text-purple-300">Full Journey</a>
+          <span class="text-gray-700">•</span>
+          <a href="CONCEPT.md" class="text-purple-400 hover:text-purple-300">Universe Concept</a>
+          <span class="text-gray-700">•</span>
+          <a href="index.html" class="text-purple-400 hover:text-purple-300">SnapCode</a>
+        </div>
+
+        <p class="fade-in text-gray-600 text-sm">
+          Made with RUH, 10 years of experience, and infinite curiosity
+        </p>
+        <p class="fade-in text-gray-700 text-xs mt-4">
+          Alhamdulillah for the journey. The universe continues to expand.
+        </p>
+      </div>
+    </footer>
+
+  </main>
+
+
+  <script>
+    // ═══════════════════════════════════════════════════════════════════════
+    // THE INNER UNIVERSE - Three.js Engine
+    // ═══════════════════════════════════════════════════════════════════════
+
+    window.addEventListener('load', () => {
+      const canvas = document.getElementById('universe-canvas');
+      if (!canvas || !window.THREE) return;
+
+      // Loading progress helper
+      const loadingProgress = document.getElementById('loading-progress');
+      const loadingText = document.getElementById('loading-text');
+      function setProgress(percent, text) {
+        if (loadingProgress) loadingProgress.style.width = percent + '%';
+        if (loadingText && text) loadingText.textContent = text;
+      }
+      setProgress(10, 'Creating universe...');
+
+      // ─────────────────────────────────────────────────────────────────────
+      // SETUP
+      // ─────────────────────────────────────────────────────────────────────
+      const scene = new THREE.Scene();
+      const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
+      const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+      // Lighting for GLTF models
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+      scene.add(ambientLight);
+      const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+      dirLight.position.set(10, 20, 10);
+      scene.add(dirLight);
+
+      // Post-processing for Depth of Field
+      const composer = new THREE.EffectComposer(renderer);
+      composer.addPass(new THREE.RenderPass(scene, camera));
+      const bokehPass = new THREE.BokehPass(scene, camera, {
+        focus: 50,
+        aperture: 0.002,
+        maxblur: 0.01
+      });
+      composer.addPass(bokehPass);
+
+      // Camera starts far (overview)
+      camera.position.set(0, 0, 100);
+
+      // State
+      let mouseX = 0, mouseY = 0;
+      let currentSection = 0;
+      let targetCameraZ = 100;
+
+      // ─────────────────────────────────────────────────────────────────────
+      // GENERATE TEXTURES (Canvas API)
+      // ─────────────────────────────────────────────────────────────────────
+
+      // Star particle texture (soft glow)
+      function createStarTexture() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 64;
+        canvas.height = 64;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, 64, 64);
+        const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+        gradient.addColorStop(0, 'rgba(255,255,255,1)');
+        gradient.addColorStop(0.1, 'rgba(255,255,255,0.8)');
+        gradient.addColorStop(0.4, 'rgba(200,180,255,0.3)');
+        gradient.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 64, 64);
+        return new THREE.CanvasTexture(canvas);
+      }
+
+      // Galaxy particle texture (colored glow)
+      function createGalaxyTexture() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 32;
+        canvas.height = 32;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, 32, 32);
+        const gradient = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+        gradient.addColorStop(0, 'rgba(255,255,255,1)');
+        gradient.addColorStop(0.2, 'rgba(255,255,255,0.5)');
+        gradient.addColorStop(0.5, 'rgba(139,92,246,0.2)');
+        gradient.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 32, 32);
+        return new THREE.CanvasTexture(canvas);
+      }
+
+      // Nebula cloud texture
+      function createNebulaTexture() {
+        const canvas = document.createElement('canvas');
+        canvas.width = 128;
+        canvas.height = 128;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, 128, 128);
+        const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+        gradient.addColorStop(0, 'rgba(139,92,246,0.3)');
+        gradient.addColorStop(0.3, 'rgba(99,102,241,0.15)');
+        gradient.addColorStop(0.6, 'rgba(236,72,153,0.05)');
+        gradient.addColorStop(1, 'rgba(0,0,0,0)');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 128, 128);
+        return new THREE.CanvasTexture(canvas);
+      }
+
+      const starTexture = createStarTexture();
+      const galaxyTexture = createGalaxyTexture();
+      const nebulaTexture = createNebulaTexture();
+      setProgress(30, 'Generating stars...');
+
+      // ─────────────────────────────────────────────────────────────────────
+      // CELESTIAL OBJECTS
+      // ─────────────────────────────────────────────────────────────────────
+
+      // Mobile detection for performance
+      const isMobile = window.innerWidth < 768;
+
+      // 1. STAR FIELD (Background) - with texture
+      const starCount = isMobile ? 2000 : 4000;
+      const starGeometry = new THREE.BufferGeometry();
+      const starPositions = new Float32Array(starCount * 3);
+      const starSizes = new Float32Array(starCount);
+
+      for (let i = 0; i < starCount; i++) {
+        starPositions[i * 3] = (Math.random() - 0.5) * 800;
+        starPositions[i * 3 + 1] = (Math.random() - 0.5) * 800;
+        starPositions[i * 3 + 2] = (Math.random() - 0.5) * 800;
+        starSizes[i] = Math.random() * 2 + 0.5;
+      }
+
+      starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+      starGeometry.setAttribute('size', new THREE.BufferAttribute(starSizes, 1));
+      const starMaterial = new THREE.PointsMaterial({
+        size: 1.5,
+        map: starTexture,
+        transparent: true,
+        blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      const stars = new THREE.Points(starGeometry, starMaterial);
+      scene.add(stars);
+      setProgress(45, 'Forming galaxy...');
+
+      // 1.5 MATRIX RAIN (Behind stars) - subtle digital rain with ligatures
+      const matrixChars = ['=>', '=>>', '->', '<-', '<->', '===', '!==', '<=', '>=', '&&', '||', '++', '--', '/*', '*/', '//', '::', '..', '...', '??', '?.', '</>', '|>', '<|', '{;}', '[0]', '()', '!=', '::=', '<$>', '<*>', '>>>', '<<<', '@_@', '#!', '$$', '%%', '^^', '~~', '``', ';;'];
+      const matrixColumns = isMobile ? 50 : 100;
+      const matrixDrops = [];
+      const matrixGroup = new THREE.Group();
+
+      // Create canvas texture for matrix characters (using Fira Code for ligatures)
+      function createMatrixTexture(char) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 128;
+        canvas.height = 64;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, 128, 64);
+        ctx.fillStyle = '#0f0';
+        ctx.font = 'bold 48px "Fira Code", monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(char, 64, 32);
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.premultiplyAlpha = false;
+        return texture;
+      }
+
+      // Initialize matrix drops
+      for (let i = 0; i < matrixColumns; i++) {
+        const x = (i - matrixColumns / 2) * 8;
+        const drop = {
+          x: x,
+          y: Math.random() * 200 - 100,
+          speed: 0.3 + Math.random() * 0.5,
+          chars: []
+        };
+
+        // Create trail of characters
+        const trailLength = 8 + Math.floor(Math.random() * 8);
+        for (let j = 0; j < trailLength; j++) {
+          const char = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+          const spriteMaterial = new THREE.SpriteMaterial({
+            map: createMatrixTexture(char),
+            transparent: true,
+            opacity: (1 - j / trailLength) * 0.5,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false,
+            alphaTest: 0.01
+          });
+          const sprite = new THREE.Sprite(spriteMaterial);
+          sprite.position.set(x, drop.y - j * 5, -50);
+          sprite.scale.set(5, 3, 1);
+          matrixGroup.add(sprite);
+          drop.chars.push(sprite);
+        }
+        matrixDrops.push(drop);
+      }
+      scene.add(matrixGroup);
+
+      // 1.6 FLOATING MATH EQUATIONS
+      const mathEquations = [
+        'E = mc²', 'F = ma', 'a² + b² = c²', '∫f(x)dx', '∑n=1', 'Δx/Δt',
+        'π ≈ 3.14', 'e^iπ + 1 = 0', '∇×B', 'λ = h/p', 'PV = nRT',
+        'x = -b±√(b²-4ac)/2a', 'lim x→∞', 'd/dx', '∂f/∂x', 'sin²θ + cos²θ = 1',
+        'log₂n', 'O(n log n)', 'f(x) = ax + b', 'y = mx + c', '∞'
+      ];
+      const mathGroup = new THREE.Group();
+      const mathSprites = [];
+
+      function createMathTexture(equation) {
+        const canvas = document.createElement('canvas');
+        canvas.width = 512;
+        canvas.height = 128;
+        const ctx = canvas.getContext('2d');
+        ctx.clearRect(0, 0, 512, 128); // Clear to transparent
+        ctx.fillStyle = '#c084fc';
+        ctx.font = 'bold 48px "Fira Code", monospace';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(equation, 256, 64);
+        const texture = new THREE.CanvasTexture(canvas);
+        texture.premultiplyAlpha = false;
+        return texture;
+      }
+
+      const mathCount = isMobile ? 15 : 30;
+      for (let i = 0; i < mathCount; i++) {
+        const eq = mathEquations[Math.floor(Math.random() * mathEquations.length)];
+        const spriteMaterial = new THREE.SpriteMaterial({
+          map: createMathTexture(eq),
+          transparent: true,
+          opacity: 0.6 + Math.random() * 0.3,
+          blending: THREE.AdditiveBlending
+        });
+        const sprite = new THREE.Sprite(spriteMaterial);
+        sprite.position.set(
+          (Math.random() - 0.5) * 150,
+          (Math.random() - 0.5) * 100,
+          (Math.random() - 0.5) * 60 - 10
+        );
+        sprite.scale.set(12 + Math.random() * 6, 3 + Math.random() * 2, 1);
+        sprite.userData = {
+          floatSpeed: 0.2 + Math.random() * 0.3,
+          floatOffset: Math.random() * Math.PI * 2,
+          driftX: (Math.random() - 0.5) * 0.02,
+          driftY: (Math.random() - 0.5) * 0.01
+        };
+        mathGroup.add(sprite);
+        mathSprites.push(sprite);
+      }
+      scene.add(mathGroup);
+
+      // 1.7 SPACE OBJECTS - Astronaut, Shuttle, ISS with tether
+      const spaceGroup = new THREE.Group();
+      let tether = null;
+      let tetherGeo = null;
+
+      // Load Astronaut model from Google model-viewer CDN
+      const loader = new THREE.GLTFLoader();
+      let astronaut = null;
+      loader.load('https://modelviewer.dev/shared-assets/models/Astronaut.glb', (gltf) => {
+        astronaut = gltf.scene;
+        astronaut.scale.set(2, 2, 2);
+        astronaut.position.set(25, 15, -20);
+        astronaut.rotation.z = 0.3;
+        spaceGroup.add(astronaut);
+
+        // Create initial tether
+        const tetherMat = new THREE.MeshBasicMaterial({ color: 0xffaa00, transparent: true, opacity: 0.8 });
+        tetherGeo = new THREE.TubeGeometry(new THREE.CatmullRomCurve3([camera.position.clone(), astronaut.position.clone()]), 50, 0.06, 8, false);
+        tether = new THREE.Mesh(tetherGeo, tetherMat);
+        spaceGroup.add(tether);
+      });
+
+      // Function to update tether - astronaut hangs from the end
+      function updateTether() {
+        if (!astronaut || !tether) return;
+
+        const time = Date.now() * 0.001;
+
+        // Anchor far behind camera
+        const anchorPos = camera.position.clone();
+        anchorPos.z += 50;
+
+        // Tether end swings in front of camera - slow space-like movement
+        const swingX = Math.sin(time * 0.1) * 20;
+        const swingY = Math.cos(time * 0.08) * 10;
+        const swingZ = Math.sin(time * 0.06) * 8;
+
+        const tetherEnd = new THREE.Vector3(
+          camera.position.x + swingX,
+          camera.position.y + 5 + swingY,
+          camera.position.z - 35 + swingZ
+        );
+
+        // Position astronaut at tether end
+        astronaut.position.copy(tetherEnd);
+        astronaut.position.y -= 1.5;
+
+        // Astronaut rotation follows swing direction - slow
+        astronaut.rotation.y = time * 0.05;
+        astronaut.rotation.x = swingY * 0.02;
+        astronaut.rotation.z = swingX * 0.01;
+
+        // Tether attaches to astronaut's hand (offset from astronaut position)
+        const handOffset = new THREE.Vector3(-1, 2, 0); // Right hand, raised up
+        handOffset.applyQuaternion(astronaut.quaternion);
+        const handPos = astronaut.position.clone().add(handOffset);
+
+        // Create long snaking tether that goes left-right across screen
+        const points = [];
+        const segments = 50;
+
+        for (let i = 0; i <= segments; i++) {
+          const t = i / segments;
+
+          // Base path from anchor to astronaut's hand
+          const basePos = anchorPos.clone().lerp(handPos, t);
+
+          // Big snake waves left-right (X axis) - slow movement
+          const snakeFade = Math.sin(t * Math.PI);
+          const snakeX = Math.sin(t * Math.PI * 3 + time * 0.2) * 25 * snakeFade;
+          const snakeY = Math.cos(t * Math.PI * 2 + time * 0.15) * 8 * snakeFade;
+
+          // Smaller ripple waves - slow
+          const ripple = Math.sin(t * Math.PI * 8 + time * 0.5) * 1.5 * snakeFade;
+
+          // Gravity sag
+          const sag = Math.sin(t * Math.PI) * 4;
+
+          points.push(new THREE.Vector3(
+            basePos.x + snakeX + ripple,
+            basePos.y - sag + snakeY,
+            basePos.z
+          ));
+        }
+
+        // Update geometry
+        const newCurve = new THREE.CatmullRomCurve3(points);
+        const newGeo = new THREE.TubeGeometry(newCurve, 80, 0.05, 8, false);
+        tether.geometry.dispose();
+        tether.geometry = newGeo;
+      }
+
+      // Geometric Space Shuttle
+      const shuttleGroup = new THREE.Group();
+      // Fuselage
+      const fuselageGeo = new THREE.CylinderGeometry(0.8, 1.2, 8, 16);
+      const shuttleMat = new THREE.MeshStandardMaterial({ color: 0xdddddd, roughness: 0.4, metalness: 0.6 });
+      const shuttleMatDark = new THREE.MeshStandardMaterial({ color: 0x333333, roughness: 0.5, metalness: 0.3 });
+      const fuselage = new THREE.Mesh(fuselageGeo, shuttleMat);
+      fuselage.rotation.z = Math.PI / 2;
+      shuttleGroup.add(fuselage);
+      // Nose cone
+      const noseGeo = new THREE.ConeGeometry(0.8, 2, 16);
+      const nose = new THREE.Mesh(noseGeo, shuttleMatDark);
+      nose.rotation.z = -Math.PI / 2;
+      nose.position.x = 5;
+      shuttleGroup.add(nose);
+      // Wings
+      const wingGeo = new THREE.BoxGeometry(3, 0.1, 4);
+      const wing = new THREE.Mesh(wingGeo, shuttleMat);
+      wing.position.set(-1, 0, 0);
+      shuttleGroup.add(wing);
+      // Tail
+      const tailGeo = new THREE.BoxGeometry(1.5, 2, 0.1);
+      const tail = new THREE.Mesh(tailGeo, shuttleMat);
+      tail.position.set(-3.5, 1, 0);
+      shuttleGroup.add(tail);
+
+      // Engine thruster with layered flame effect
+      // Core (hottest - blue/white)
+      const coreGeo = new THREE.ConeGeometry(0.3, 1.5, 16);
+      const coreMat = new THREE.MeshBasicMaterial({ color: 0x88ccff, transparent: true, opacity: 0.9 });
+      const core = new THREE.Mesh(coreGeo, coreMat);
+      core.rotation.z = Math.PI / 2;
+      core.position.x = -5;
+      shuttleGroup.add(core);
+
+      // Middle flame (orange)
+      const midFlameGeo = new THREE.ConeGeometry(0.5, 3, 16);
+      const midFlameMat = new THREE.MeshBasicMaterial({ color: 0xff6600, transparent: true, opacity: 0.7 });
+      const midFlame = new THREE.Mesh(midFlameGeo, midFlameMat);
+      midFlame.rotation.z = Math.PI / 2;
+      midFlame.position.x = -5.5;
+      shuttleGroup.add(midFlame);
+
+      // Outer flame (yellow, fading)
+      const outerFlameGeo = new THREE.ConeGeometry(0.7, 5, 16);
+      const outerFlameMat = new THREE.MeshBasicMaterial({ color: 0xffaa00, transparent: true, opacity: 0.4 });
+      const outerFlame = new THREE.Mesh(outerFlameGeo, outerFlameMat);
+      outerFlame.rotation.z = Math.PI / 2;
+      outerFlame.position.x = -6.5;
+      shuttleGroup.add(outerFlame);
+
+      // Thruster particles
+      const thrusterParticles = [];
+      const thrusterGroup = new THREE.Group();
+      for (let i = 0; i < 80; i++) {
+        const size = 0.1 + Math.random() * 0.2;
+        const particleGeo = new THREE.SphereGeometry(size, 4, 4);
+        const hue = Math.random(); // 0=red, 0.1=orange, 0.15=yellow
+        const color = new THREE.Color().setHSL(0.05 + hue * 0.1, 1, 0.5 + hue * 0.3);
+        const particleMat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.8 });
+        const particle = new THREE.Mesh(particleGeo, particleMat);
+
+        // Start position behind engine
+        particle.position.set(-5 - Math.random() * 8, (Math.random() - 0.5) * 1, (Math.random() - 0.5) * 1);
+        particle.userData = {
+          speed: 0.1 + Math.random() * 0.15,
+          life: Math.random(),
+          maxLife: 0.8 + Math.random() * 0.4,
+          drift: (Math.random() - 0.5) * 0.02
+        };
+        thrusterGroup.add(particle);
+        thrusterParticles.push(particle);
+      }
+      shuttleGroup.add(thrusterGroup);
+
+      // Smoke trail (gray, very faint)
+      const smokeParticles = [];
+      for (let i = 0; i < 30; i++) {
+        const size = 0.3 + Math.random() * 0.4;
+        const smokeGeo = new THREE.SphereGeometry(size, 4, 4);
+        const smokeMat = new THREE.MeshBasicMaterial({ color: 0x666666, transparent: true, opacity: 0.15 });
+        const smoke = new THREE.Mesh(smokeGeo, smokeMat);
+        smoke.position.set(-10 - Math.random() * 10, (Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2);
+        smoke.userData = {
+          speed: 0.03 + Math.random() * 0.02,
+          life: Math.random(),
+          expand: 1 + Math.random() * 0.5
+        };
+        thrusterGroup.add(smoke);
+        smokeParticles.push(smoke);
+      }
+
+      shuttleGroup.position.set(-40, -10, -35);
+      shuttleGroup.rotation.set(0.2, 0.5, 0.1);
+      shuttleGroup.scale.set(1.5, 1.5, 1.5);
+      spaceGroup.add(shuttleGroup);
+
+      // Geometric ISS
+      const issGroup = new THREE.Group();
+      // Main module
+      const moduleGeo = new THREE.CylinderGeometry(0.6, 0.6, 6, 16);
+      const issMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, roughness: 0.5, metalness: 0.4 });
+      const mainModule = new THREE.Mesh(moduleGeo, issMat);
+      mainModule.rotation.z = Math.PI / 2;
+      issGroup.add(mainModule);
+      // Cross modules
+      const crossModule = new THREE.Mesh(moduleGeo, issMat);
+      crossModule.rotation.x = Math.PI / 2;
+      crossModule.scale.set(0.8, 0.8, 0.8);
+      issGroup.add(crossModule);
+      // Solar panels
+      const panelMat = new THREE.MeshStandardMaterial({ color: 0x1a3a8a, roughness: 0.3, metalness: 0.7 });
+      for (let i = -1; i <= 1; i += 2) {
+        for (let j = -1; j <= 1; j += 2) {
+          const panelGeo = new THREE.BoxGeometry(8, 0.05, 1.5);
+          const panel = new THREE.Mesh(panelGeo, panelMat);
+          panel.position.set(i * 6, 0, j * 3);
+          issGroup.add(panel);
+        }
+      }
+      // Radiators
+      const radGeo = new THREE.BoxGeometry(0.1, 3, 0.8);
+      const radMat = new THREE.MeshStandardMaterial({ color: 0xeeeeee, roughness: 0.2, metalness: 0.8 });
+      for (let i = -1; i <= 1; i += 2) {
+        const rad = new THREE.Mesh(radGeo, radMat);
+        rad.position.set(0, i * 2, 0);
+        issGroup.add(rad);
+      }
+      issGroup.position.set(50, 25, -50);
+      issGroup.rotation.set(0.1, -0.3, 0.05);
+      issGroup.scale.set(1.2, 1.2, 1.2);
+      spaceGroup.add(issGroup);
+
+      scene.add(spaceGroup);
+
+      // 2. GALAXY SPIRAL (Main Universe) - with texture
+      const galaxyParams = { count: isMobile ? 8000 : 15000, radius: 50, branches: 5, spin: 1.2, randomness: 0.4 };
+      const galaxyGeometry = new THREE.BufferGeometry();
+      const galaxyPositions = new Float32Array(galaxyParams.count * 3);
+      const galaxyColors = new Float32Array(galaxyParams.count * 3);
+      const galaxySizes = new Float32Array(galaxyParams.count);
+
+      const colorInner = new THREE.Color('#a855f7');
+      const colorOuter = new THREE.Color('#3b82f6');
+
+      for (let i = 0; i < galaxyParams.count; i++) {
+        const radius = Math.random() * galaxyParams.radius;
+        const branchAngle = (i % galaxyParams.branches) / galaxyParams.branches * Math.PI * 2;
+        const spinAngle = radius * galaxyParams.spin;
+
+        const randomX = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * galaxyParams.randomness * radius;
+        const randomY = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * galaxyParams.randomness * radius * 0.2;
+        const randomZ = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * galaxyParams.randomness * radius;
+
+        galaxyPositions[i * 3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
+        galaxyPositions[i * 3 + 1] = randomY;
+        galaxyPositions[i * 3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+
+        const mixedColor = colorInner.clone().lerp(colorOuter, radius / galaxyParams.radius);
+        galaxyColors[i * 3] = mixedColor.r;
+        galaxyColors[i * 3 + 1] = mixedColor.g;
+        galaxyColors[i * 3 + 2] = mixedColor.b;
+
+        galaxySizes[i] = Math.random() * 1.5 + 0.5;
+      }
+
+      galaxyGeometry.setAttribute('position', new THREE.BufferAttribute(galaxyPositions, 3));
+      galaxyGeometry.setAttribute('color', new THREE.BufferAttribute(galaxyColors, 3));
+      galaxyGeometry.setAttribute('size', new THREE.BufferAttribute(galaxySizes, 1));
+      const galaxyMaterial = new THREE.PointsMaterial({
+        size: 0.6, sizeAttenuation: true, vertexColors: true,
+        map: galaxyTexture, transparent: true,
+        blending: THREE.AdditiveBlending, depthWrite: false
+      });
+      const galaxy = new THREE.Points(galaxyGeometry, galaxyMaterial);
+      galaxy.rotation.x = Math.PI * 0.3; // More tilted
+      galaxy.rotation.z = Math.PI * 0.1; // Slight z tilt
+      galaxy.position.set(60, 20, 40); // Away from black hole
+      scene.add(galaxy);
+      setProgress(65, 'Creating black hole...');
+
+      // 2.5 NEBULA CLOUDS (Atmospheric depth)
+      const nebulaGroup = new THREE.Group();
+      for (let i = 0; i < 8; i++) {
+        const nebulaMaterial = new THREE.SpriteMaterial({
+          map: nebulaTexture,
+          transparent: true,
+          opacity: 0.15 + Math.random() * 0.1,
+          blending: THREE.AdditiveBlending,
+          color: new THREE.Color().setHSL(0.75 + Math.random() * 0.1, 0.6, 0.5)
+        });
+        const nebula = new THREE.Sprite(nebulaMaterial);
+        nebula.position.set(
+          (Math.random() - 0.5) * 80,
+          (Math.random() - 0.5) * 30,
+          (Math.random() - 0.5) * 80
+        );
+        nebula.scale.set(30 + Math.random() * 20, 30 + Math.random() * 20, 1);
+        nebulaGroup.add(nebula);
+      }
+      scene.add(nebulaGroup);
+
+      // 2.7 COSMIC DUST TRAIL (Mouse follower)
+      const dustTrail = [];
+      const dustCount = 50;
+      for (let i = 0; i < dustCount; i++) {
+        const dustMaterial = new THREE.SpriteMaterial({
+          map: starTexture,
+          transparent: true,
+          opacity: 0,
+          blending: THREE.AdditiveBlending,
+          color: new THREE.Color().setHSL(0.75 + Math.random() * 0.15, 0.8, 0.6)
+        });
+        const dust = new THREE.Sprite(dustMaterial);
+        dust.scale.set(0.5, 0.5, 1);
+        dust.position.set(0, 0, -10);
+        dust.userData = { life: 0, maxLife: 30 + Math.random() * 30, vx: 0, vy: 0 };
+        scene.add(dust);
+        dustTrail.push(dust);
+      }
+      let dustIndex = 0;
+
+      // 2.8 WORMHOLE RINGS (Distant portals)
+      const wormholeGroup = new THREE.Group();
+      for (let w = 0; w < 3; w++) {
+        const ringGroup = new THREE.Group();
+        for (let i = 0; i < 5; i++) {
+          const ringGeo = new THREE.TorusGeometry(8 + i * 2, 0.1, 8, 64);
+          const ringMat = new THREE.MeshBasicMaterial({
+            color: new THREE.Color().setHSL(0.8 - i * 0.05, 0.7, 0.5),
+            transparent: true,
+            opacity: 0.3 - i * 0.05,
+            blending: THREE.AdditiveBlending
+          });
+          const ring = new THREE.Mesh(ringGeo, ringMat);
+          ring.position.z = -i * 3;
+          ringGroup.add(ring);
+        }
+        ringGroup.position.set(
+          (Math.random() - 0.5) * 200,
+          (Math.random() - 0.5) * 100,
+          -150 - Math.random() * 100
+        );
+        ringGroup.rotation.x = Math.random() * Math.PI;
+        ringGroup.rotation.y = Math.random() * Math.PI;
+        ringGroup.userData = { rotSpeed: 0.01 + Math.random() * 0.02 };
+        wormholeGroup.add(ringGroup);
+      }
+      scene.add(wormholeGroup);
+
+      // 2.9 ASTEROID FIELD (Floating rocks)
+      const asteroidGroup = new THREE.Group();
+      for (let i = 0; i < 30; i++) {
+        const size = 0.3 + Math.random() * 0.7;
+        const asteroidGeo = new THREE.IcosahedronGeometry(size, 0);
+        const asteroidMat = new THREE.MeshBasicMaterial({
+          color: new THREE.Color().setHSL(0, 0, 0.2 + Math.random() * 0.1),
+          wireframe: Math.random() > 0.5
+        });
+        const asteroid = new THREE.Mesh(asteroidGeo, asteroidMat);
+        asteroid.position.set(
+          (Math.random() - 0.5) * 150,
+          (Math.random() - 0.5) * 80,
+          (Math.random() - 0.5) * 150
+        );
+        asteroid.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+        asteroid.userData = {
+          rotX: (Math.random() - 0.5) * 0.02,
+          rotY: (Math.random() - 0.5) * 0.02,
+          floatSpeed: Math.random() * 0.5,
+          floatOffset: Math.random() * Math.PI * 2
+        };
+        asteroidGroup.add(asteroid);
+      }
+      scene.add(asteroidGroup);
+
+      // 3. BLACK HOLE - Gargantua style (Interstellar)
+      const bhDistance = -50;
+      const bhScale = 12;
+      const bhX = -30;
+      const bhTilt = Math.PI * 0.15; // Tilted view
+
+      // Core black sphere
+      const blackHoleGeometry = new THREE.SphereGeometry(bhScale, 64, 64);
+      const blackHoleMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+      const blackHole = new THREE.Mesh(blackHoleGeometry, blackHoleMaterial);
+      blackHole.position.set(bhX, 0, bhDistance);
+      scene.add(blackHole);
+
+      // Accretion disk - horizontal (main disk, tilted)
+      const diskGroup = new THREE.Group();
+      for (let i = 0; i < 5; i++) {
+        const innerR = bhScale * 1.4 + i * bhScale * 0.4;
+        const outerR = bhScale * 1.7 + i * bhScale * 0.6;
+        const diskGeometry = new THREE.RingGeometry(innerR, outerR, 128);
+        const diskMaterial = new THREE.MeshBasicMaterial({
+          color: new THREE.Color().setHSL(0.08 - i * 0.01, 1, 0.6 - i * 0.08),
+          transparent: true, opacity: 0.5 - i * 0.08,
+          side: THREE.DoubleSide, blending: THREE.AdditiveBlending,
+          depthWrite: false
+        });
+        const disk = new THREE.Mesh(diskGeometry, diskMaterial);
+        disk.position.z = i * 0.3;
+        disk.userData.speed = 0.12 - i * 0.015;
+        diskGroup.add(disk);
+      }
+      diskGroup.rotation.x = Math.PI * 0.5 + bhTilt;
+      diskGroup.position.set(bhX, 0, bhDistance);
+      scene.add(diskGroup);
+
+      // Gravitational lensing ring - vertical (Gargantua signature!)
+      const lensRingGroup = new THREE.Group();
+      for (let i = 0; i < 3; i++) {
+        const lensGeo = new THREE.TorusGeometry(bhScale * 1.5 + i * 2, 0.3 - i * 0.08, 16, 128);
+        const lensMat = new THREE.MeshBasicMaterial({
+          color: new THREE.Color().setHSL(0.1, 0.9, 0.7 - i * 0.15),
+          transparent: true, opacity: 0.6 - i * 0.15,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false
+        });
+        const lensRing = new THREE.Mesh(lensGeo, lensMat);
+        lensRingGroup.add(lensRing);
+      }
+      lensRingGroup.rotation.y = Math.PI * 0.5; // Vertical orientation
+      lensRingGroup.rotation.x = bhTilt;
+      lensRingGroup.position.set(bhX, 0, bhDistance);
+      scene.add(lensRingGroup);
+
+      // Photon sphere (thin bright ring at event horizon)
+      const photonGeo = new THREE.TorusGeometry(bhScale * 1.05, 0.15, 16, 128);
+      const photonMat = new THREE.MeshBasicMaterial({
+        color: 0xffffcc, transparent: true, opacity: 0.8,
+        blending: THREE.AdditiveBlending, depthWrite: false
+      });
+      const photonSphere = new THREE.Mesh(photonGeo, photonMat);
+      photonSphere.rotation.x = Math.PI * 0.5 + bhTilt;
+      photonSphere.position.set(bhX, 0, bhDistance);
+      scene.add(photonSphere);
+
+      // Event horizon glow
+      const glowGeometry = new THREE.RingGeometry(bhScale * 0.98, bhScale * 1.2, 128);
+      const glowMaterial = new THREE.MeshBasicMaterial({
+        color: 0xff6600, transparent: true, opacity: 0.4,
+        side: THREE.DoubleSide, blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      const eventHorizon = new THREE.Mesh(glowGeometry, glowMaterial);
+      eventHorizon.rotation.x = Math.PI * 0.5 + bhTilt;
+      eventHorizon.position.set(bhX, 0, bhDistance + 0.1);
+      scene.add(eventHorizon);
+
+      // Outer glow halo
+      const haloGeometry = new THREE.RingGeometry(bhScale * 3, bhScale * 5, 128);
+      const haloMaterial = new THREE.MeshBasicMaterial({
+        color: 0x220044, transparent: true, opacity: 0.1,
+        side: THREE.DoubleSide, blending: THREE.AdditiveBlending,
+        depthWrite: false
+      });
+      const halo = new THREE.Mesh(haloGeometry, haloMaterial);
+      halo.rotation.x = Math.PI * 0.5 + bhTilt;
+      halo.position.set(bhX, 0, bhDistance - 1);
+      scene.add(halo);
+      setProgress(85, 'Launching shuttle...');
+
+      // 4. SHOOTING STARS - Enhanced with glow
+      const shootingStars = [];
+
+      function createShootingStar() {
+        const group = new THREE.Group();
+
+        // Glowing head using sprite
+        const headMaterial = new THREE.SpriteMaterial({
+          map: starTexture, color: 0xffffff,
+          transparent: true, blending: THREE.AdditiveBlending
+        });
+        const head = new THREE.Sprite(headMaterial);
+        head.scale.set(2, 2, 1);
+        group.add(head);
+
+        // Trail particles
+        for (let i = 1; i <= 10; i++) {
+          const trailMaterial = new THREE.SpriteMaterial({
+            map: starTexture,
+            color: new THREE.Color().setHSL(0.75, 0.8, 0.7 - i * 0.05),
+            transparent: true, opacity: 1 - i * 0.09,
+            blending: THREE.AdditiveBlending
+          });
+          const trail = new THREE.Sprite(trailMaterial);
+          trail.scale.set(1.5 - i * 0.1, 1.5 - i * 0.1, 1);
+          trail.position.set(i * 1.5, i * 0.8, 0);
+          group.add(trail);
+        }
+
+        group.position.set(40 + Math.random() * 30, 25 + Math.random() * 20, -20 + Math.random() * 40);
+        group.velocity = { x: -1.5 - Math.random(), y: -0.8 - Math.random() * 0.4 };
+        group.life = 1;
+        scene.add(group);
+        shootingStars.push(group);
+      }
+
+      setInterval(() => { if (shootingStars.length < 3) createShootingStar(); }, 3000);
+      setTimeout(createShootingStar, 1000);
+
+
+      // ─────────────────────────────────────────────────────────────────────
+      // SECTION CAMERA DESTINATIONS
+      // ─────────────────────────────────────────────────────────────────────
+      const sections = [
+        { id: 'hero', z: 100, y: 10, rotX: 0.1, rotY: 0 },           // Far overview
+        { id: 'stats', z: 70, y: 5, rotX: 0.15, rotY: 0.3 },         // Approaching
+        { id: 'hud', z: 80, y: 0, x: 15, rotX: 0.05, rotY: 0.5 },     // Wide view, shifted right
+        { id: 'timeline', z: 50, y: 3, rotX: 0.2, rotY: 0.6 },       // Mid distance
+        { id: 'reality', z: 35, y: 2, rotX: 0.1, rotY: 1 },          // Closer
+        { id: 'philosophy', z: 20, y: 5, rotX: 0.1, rotY: 0 },        // Close to black hole
+        { id: 'project', z: 40, y: 5, rotX: 0.15, rotY: 1.5 },       // Pull back
+        { id: 'dedication', z: 60, y: 8, rotX: 0.1, rotY: 2 },       // Rising
+        { id: 'footer', z: 90, y: 15, rotX: 0.05, rotY: 2.5 },       // Far away, looking back
+      ];
+
+      // ─────────────────────────────────────────────────────────────────────
+      // SCROLL HANDLING
+      // ─────────────────────────────────────────────────────────────────────
+      const sectionElements = document.querySelectorAll('.universe-section');
+      const sectionDotWrappers = document.querySelectorAll('.section-dot-wrapper');
+      const sectionLabel = document.getElementById('current-section-label');
+
+      const sectionNames = ['Overview', 'Achievements', 'Observation', 'Journey', 'Reality', 'Core', 'Creation', 'Dedication', 'End'];
+
+      function updateCurrentSection() {
+        const scrollY = window.scrollY;
+        const windowHeight = window.innerHeight;
+
+        sectionElements.forEach((section, index) => {
+          const rect = section.getBoundingClientRect();
+          const sectionTop = rect.top;
+          const sectionBottom = rect.bottom;
+
+          // Section is active if it occupies majority of viewport
+          if (sectionTop < windowHeight * 0.5 && sectionBottom > windowHeight * 0.5) {
+            if (currentSection !== index) {
+              currentSection = index;
+
+              // Update dots
+              sectionDotWrappers.forEach((wrapper, i) => {
+                wrapper.classList.toggle('active', i === index);
+              });
+
+              // Update section label
+              if (sectionLabel) {
+                sectionLabel.textContent = sectionNames[index] || '';
+              }
+            }
+          }
+        });
+
+        // Update scroll progress
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progress = (scrollY / docHeight) * 100;
+        document.getElementById('scroll-progress').style.width = progress + '%';
+      }
+
+      window.addEventListener('scroll', updateCurrentSection);
+
+      // ─────────────────────────────────────────────────────────────────────
+      // IMMERSIVE SCROLL EFFECTS
+      // ─────────────────────────────────────────────────────────────────────
+      let lastScrollY = 0;
+      let scrollVelocity = 0;
+      let lastSectionIndex = 0;
+      const momentumIndicator = document.getElementById('momentum-indicator');
+      const transitionOverlay = document.getElementById('transition-overlay');
+
+      function updateScrollEffects() {
+        const currentScrollY = window.scrollY;
+        scrollVelocity = Math.abs(currentScrollY - lastScrollY);
+        lastScrollY = currentScrollY;
+
+        // Momentum indicator - shows scroll speed
+        if (momentumIndicator) {
+          const intensity = Math.min(scrollVelocity / 50, 1);
+          if (intensity > 0.1) {
+            momentumIndicator.classList.add('active');
+            momentumIndicator.style.width = `${100 + intensity * 200}px`;
+            momentumIndicator.style.height = `${3 + intensity * 3}px`;
+          } else {
+            momentumIndicator.classList.remove('active');
+          }
+
+          // Warp speed effect on fast scroll - stretch the canvas
+          const canvas = document.getElementById('universe-canvas');
+          if (canvas && intensity > 0.2) {
+            canvas.style.transform = `scaleY(${1 + intensity * 0.05})`;
+            canvas.style.filter = `blur(${intensity * 2}px)`;
+          } else if (canvas) {
+            canvas.style.transform = 'scaleY(1)';
+            canvas.style.filter = 'blur(0px)';
+          }
+        }
+
+        // Section transition effect
+        if (currentSection !== lastSectionIndex) {
+          // Trigger transition pulse
+          if (transitionOverlay) {
+            transitionOverlay.style.background = 'radial-gradient(circle at center, transparent 0%, rgba(139, 92, 246, 0.15) 50%, rgba(10, 10, 15, 0.4) 100%)';
+            setTimeout(() => {
+              transitionOverlay.style.background = 'transparent';
+            }, 400);
+          }
+
+          lastSectionIndex = currentSection;
+        }
+
+        requestAnimationFrame(updateScrollEffects);
+      }
+      updateScrollEffects();
+
+      // Section dot click navigation
+      sectionDotWrappers.forEach(wrapper => {
+        wrapper.addEventListener('click', () => {
+          const sectionId = wrapper.dataset.section;
+          document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+        });
+      });
+
+      // COSMIC CLICK RIPPLE
+      document.addEventListener('click', (e) => {
+        const ripple = document.createElement('div');
+        ripple.style.cssText = `
+        position: fixed;
+        left: ${e.clientX}px;
+        top: ${e.clientY}px;
+        width: 10px;
+        height: 10px;
+        background: radial-gradient(circle, rgba(168, 85, 247, 0.8), transparent);
+        border-radius: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        pointer-events: none;
+        z-index: 9998;
+        animation: rippleExpand 0.8s ease-out forwards;
+      `;
+        document.body.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 800);
+      });
+
+      // Add ripple keyframes
+      const rippleStyle = document.createElement('style');
+      rippleStyle.textContent = `
+      @keyframes rippleExpand {
+        0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+        100% { transform: translate(-50%, -50%) scale(50); opacity: 0; }
+      }
+    `;
+      document.head.appendChild(rippleStyle);
+
+      // ─────────────────────────────────────────────────────────────────────
+      // FADE IN OBSERVER
+      // ─────────────────────────────────────────────────────────────────────
+      const fadeObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          }
+        });
+      }, { threshold: 0.1 });
+
+      document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+
+      // ─────────────────────────────────────────────────────────────────────
+      // MOUSE INTERACTION
+      // ─────────────────────────────────────────────────────────────────────
+      let mouseWorldX = 0, mouseWorldY = 0;
+      document.addEventListener('mousemove', (e) => {
+        mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+        mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+        mouseWorldX = mouseX * 50;
+        mouseWorldY = -mouseY * 30;
+
+        // Spawn cosmic dust at mouse position
+        const dust = dustTrail[dustIndex];
+        dust.position.set(mouseWorldX, mouseWorldY, camera.position.z - 20);
+        dust.material.opacity = 0.8;
+        dust.userData.life = 0;
+        dust.userData.vx = (Math.random() - 0.5) * 0.5;
+        dust.userData.vy = (Math.random() - 0.5) * 0.5;
+        dustIndex = (dustIndex + 1) % dustCount;
+      });
+
+
+      // ─────────────────────────────────────────────────────────────────────
+      // ANIMATION LOOP
+      // ─────────────────────────────────────────────────────────────────────
+      const clock = new THREE.Clock();
+
+      function animate() {
+        requestAnimationFrame(animate);
+        const elapsed = clock.getElapsedTime();
+
+        // Get target camera position based on current section
+        const target = sections[currentSection] || sections[0];
+
+        // Ultra smooth camera movement (lower lerp = smoother)
+        const lerpFactor = 0.015;
+        camera.position.z += (target.z - camera.position.z) * lerpFactor;
+        camera.position.y += ((target.y || 0) - camera.position.y) * lerpFactor;
+        camera.position.x += ((target.x || 0) - camera.position.x) * lerpFactor;
+
+        // Smooth lookAt with interpolation
+        const lookTarget = new THREE.Vector3(0, 0, 0);
+        camera.lookAt(lookTarget)
+
+        // Galaxy rotation - smooth interpolation
+        const targetRotY = elapsed * 0.03 + target.rotY + mouseX * 0.05;
+        const targetRotX = target.rotX + mouseY * 0.05;
+        galaxy.rotation.y += (targetRotY - galaxy.rotation.y) * 0.02;
+        galaxy.rotation.x += (targetRotX - galaxy.rotation.x) * 0.02;
+
+        // Section-specific galaxy intensity - smooth fade
+        const sectionIntensity = [1.0, 0.8, 0.7, 0.6, 0.4, 0.7, 0.9][currentSection] || 0.8;
+        const targetOpacity = 0.7 * sectionIntensity;
+        galaxyMaterial.opacity += (targetOpacity - galaxyMaterial.opacity) * 0.02;
+
+        // Stars subtle parallax (enhanced)
+        stars.rotation.y = elapsed * 0.005 + mouseX * 0.03;
+        stars.rotation.x = mouseY * 0.03;
+
+        // Cosmic dust trail animation
+        dustTrail.forEach(dust => {
+          if (dust.material.opacity > 0) {
+            dust.userData.life++;
+            dust.position.x += dust.userData.vx;
+            dust.position.y += dust.userData.vy;
+            dust.material.opacity = Math.max(0, 0.8 - dust.userData.life / dust.userData.maxLife);
+            dust.scale.setScalar(0.5 + dust.userData.life * 0.02);
+          }
+        });
+
+        // Wormhole rotation
+        wormholeGroup.children.forEach((wormhole, i) => {
+          wormhole.rotation.z += wormhole.userData.rotSpeed;
+          wormhole.children.forEach((ring, j) => {
+            ring.rotation.z = elapsed * (0.5 + j * 0.1) * (i % 2 ? 1 : -1);
+          });
+        });
+
+        // Asteroid floating and rotation
+        asteroidGroup.children.forEach((asteroid) => {
+          asteroid.rotation.x += asteroid.userData.rotX;
+          asteroid.rotation.y += asteroid.userData.rotY;
+          asteroid.position.y += Math.sin(elapsed * asteroid.userData.floatSpeed + asteroid.userData.floatOffset) * 0.01;
+        });
+
+        // Matrix rain animation
+        matrixDrops.forEach(drop => {
+          drop.y -= drop.speed;
+          if (drop.y < -100) {
+            drop.y = 100;
+          }
+          drop.chars.forEach((sprite, j) => {
+            sprite.position.y = drop.y - j * 3;
+          });
+        });
+
+        // Math equations floating animation
+        mathSprites.forEach(sprite => {
+          sprite.position.x += sprite.userData.driftX;
+          sprite.position.y += Math.sin(elapsed * sprite.userData.floatSpeed + sprite.userData.floatOffset) * 0.02 + sprite.userData.driftY;
+          // Wrap around
+          if (sprite.position.x > 120) sprite.position.x = -120;
+          if (sprite.position.x < -120) sprite.position.x = 120;
+          if (sprite.position.y > 100) sprite.position.y = -100;
+          if (sprite.position.y < -100) sprite.position.y = 100;
+        });
+
+        // Space objects animation
+        if (astronaut) {
+          // Astronaut hangs from tether - position determined by tether end
+          updateTether();
+        }
+
+        // Shuttle position per section (relative to camera)
+        const shuttleOffsets = {
+          0: { x: -25, y: -15, z: -30 },  // Overview - kiri bawah
+          1: { x: 25, y: 15, z: -30 },    // Achievements - kanan atas
+          2: { x: 25, y: -15, z: -30 },   // Observation - kanan bawah
+          3: { x: -25, y: 15, z: -30 },   // Journey - kiri atas
+          4: { x: 25, y: -15, z: -30 },   // Reality - kanan bawah
+          5: { x: -25, y: 15, z: -30 },   // Core - kiri atas
+          6: { x: 25, y: -15, z: -30 },   // Creation - kanan bawah
+          7: { x: 20, y: 12, z: -30 },    // Dedication - kanan atas (dikit)
+          8: { x: 0, y: 10, z: -40 },     // Footer - tengah atas, jauh
+        };
+        const offset = shuttleOffsets[currentSection] || shuttleOffsets[0];
+        const targetX = camera.position.x + offset.x;
+        const targetY = camera.position.y + offset.y + Math.sin(elapsed * 0.3) * 2;
+        const targetZ = camera.position.z + offset.z;
+        shuttleGroup.position.x += (targetX - shuttleGroup.position.x) * 0.03;
+        shuttleGroup.position.y += (targetY - shuttleGroup.position.y) * 0.03;
+        shuttleGroup.position.z += (targetZ - shuttleGroup.position.z) * 0.03;
+
+        // Shuttle always faces black hole with smooth rotation
+        const bhTarget = new THREE.Vector3(bhX, 0, bhDistance);
+        const tempObj = new THREE.Object3D();
+        tempObj.position.copy(shuttleGroup.position);
+        tempObj.lookAt(bhTarget);
+        tempObj.rotateY(Math.PI); // Flip 180 karena nose di +Z
+        shuttleGroup.quaternion.slerp(tempObj.quaternion, 0.02);
+
+        // Thruster flame flicker
+        if (core) {
+          core.scale.x = 1 + Math.sin(elapsed * 15) * 0.1;
+          midFlame.scale.x = 1 + Math.sin(elapsed * 12) * 0.15;
+          outerFlame.scale.x = 1 + Math.sin(elapsed * 10) * 0.2;
+        }
+
+        // Thruster particles animation
+        thrusterParticles.forEach(p => {
+          p.userData.life += 0.016;
+          if (p.userData.life > p.userData.maxLife) {
+            // Reset particle
+            p.userData.life = 0;
+            p.position.set(-5, (Math.random() - 0.5) * 0.5, (Math.random() - 0.5) * 0.5);
+            p.material.opacity = 0.8;
+            p.scale.setScalar(1);
+          }
+          // Move backward and spread
+          p.position.x -= p.userData.speed;
+          p.position.y += p.userData.drift;
+          p.position.z += p.userData.drift * 0.5;
+          // Fade out
+          const lifeRatio = p.userData.life / p.userData.maxLife;
+          p.material.opacity = 0.8 * (1 - lifeRatio);
+          p.scale.setScalar(1 + lifeRatio * 0.5);
+        });
+
+        // Smoke particles animation
+        smokeParticles.forEach(s => {
+          s.userData.life += 0.008;
+          if (s.userData.life > 1) {
+            s.userData.life = 0;
+            s.position.set(-10, (Math.random() - 0.5) * 1, (Math.random() - 0.5) * 1);
+            s.scale.setScalar(1);
+          }
+          s.position.x -= s.userData.speed;
+          s.material.opacity = 0.15 * (1 - s.userData.life);
+          s.scale.setScalar(1 + s.userData.life * s.userData.expand);
+        });
+
+        issGroup.rotation.y += 0.001;
+        issGroup.position.y = 25 + Math.sin(elapsed * 0.2) * 2;
+
+        // Nebula subtle movement (enhanced)
+        nebulaGroup.rotation.y = elapsed * 0.01;
+        nebulaGroup.children.forEach((nebula, i) => {
+          nebula.material.opacity = 0.12 + Math.sin(elapsed * 0.4 + i * 0.5) * 0.06;
+          nebula.position.y += Math.sin(elapsed * 0.3 + i) * 0.002;
+        });
+
+        // Black hole disk rotation (multiple layers at different speeds)
+        diskGroup.children.forEach((disk, i) => {
+          disk.rotation.z = elapsed * disk.userData.speed;
+        });
+        eventHorizon.rotation.z = -elapsed * 0.3;
+
+        // Gargantua lensing ring shimmer
+        lensRingGroup.children.forEach((ring, i) => {
+          ring.material.opacity = 0.5 + Math.sin(elapsed * 2 + i) * 0.15;
+        });
+
+        // Photon sphere pulse
+        photonSphere.material.opacity = 0.7 + Math.sin(elapsed * 3) * 0.2;
+
+        // Pulsing effect near black hole (philosophy section)
+        // Also sync HTML black hole visual
+        const bhVisual = document.getElementById('blackhole-visual');
+        const bhOuterRing = document.getElementById('bh-outer-ring');
+        const bhAccretion = document.getElementById('bh-accretion');
+        const bhInner = document.getElementById('bh-inner');
+        const bhHorizon = document.getElementById('bh-horizon');
+        const bhCore = document.getElementById('bh-core');
+        const bhEclipse = document.getElementById('bh-eclipse');
+
+        if (bhVisual) {
+          const rect = bhVisual.getBoundingClientRect();
+          const viewportCenter = window.innerHeight / 2;
+          const elementCenter = rect.top + rect.height / 2;
+          const distanceFromCenter = Math.abs(viewportCenter - elementCenter);
+          const maxDistance = window.innerHeight / 2;
+
+          // Intensity: 1 when perfectly centered, 0 when at edge
+          const intensity = Math.max(0, 1 - (distanceFromCenter / maxDistance));
+          const intensitySquared = intensity * intensity; // More dramatic curve
+
+          // Apply intensity to HTML elements
+          if (bhOuterRing) {
+            bhOuterRing.style.borderColor = `rgba(168, 85, 247, ${0.2 + intensitySquared * 0.6})`;
+            bhOuterRing.style.boxShadow = `0 0 ${20 + intensitySquared * 40}px rgba(168, 85, 247, ${intensitySquared * 0.5})`;
+          }
+          if (bhAccretion) {
+            bhAccretion.style.borderColor = `rgba(168, 85, 247, ${0.3 + intensitySquared * 0.5})`;
+          }
+          if (bhInner) {
+            bhInner.style.borderColor = `rgba(236, 72, 153, ${0.2 + intensitySquared * 0.6})`;
+          }
+          if (bhHorizon) {
+            bhHorizon.style.background = `radial-gradient(circle, rgba(168, 85, 247, ${intensitySquared * 0.4}) 0%, transparent 70%)`;
+          }
+          if (bhCore) {
+            bhCore.style.boxShadow = `0 0 ${30 + intensitySquared * 50}px rgba(139, 92, 246, ${intensitySquared * 0.8}), inset 0 0 ${intensitySquared * 20}px rgba(139, 92, 246, ${intensitySquared * 0.3})`;
+          }
+          if (bhEclipse) {
+            // Horizontal light beam - the eclipse effect
+            bhEclipse.style.background = `linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, ${intensitySquared * 0.9}) 30%, rgba(168, 85, 247, ${intensitySquared}) 50%, rgba(255, 255, 255, ${intensitySquared * 0.9}) 70%, transparent 100%)`;
+            bhEclipse.style.height = `${2 + intensitySquared * 4}px`;
+            bhEclipse.style.filter = `blur(${intensitySquared * 2}px)`;
+          }
+
+          // Scale effect
+          const scale = 1 + intensitySquared * 0.1;
+          bhVisual.style.transform = `scale(${scale})`;
+        }
+
+        // Three.js black hole sync - enhanced pulse in Philosophy
+        if (currentSection === 4) {
+          const pulse = Math.sin(elapsed * 1.5) * 0.2 + 1;
+          const breathe = Math.sin(elapsed * 0.8) * 0.1;
+          diskGroup.scale.set(pulse, pulse, pulse);
+          blackHole.scale.set(1 + breathe, 1 + breathe, 1 + breathe);
+          eventHorizon.material.opacity = 0.4 + Math.sin(elapsed * 2) * 0.25;
+        } else {
+          diskGroup.scale.set(1, 1, 1);
+          eventHorizon.material.opacity = 0.4;
+        }
+
+        // Shooting stars update
+        for (let i = shootingStars.length - 1; i >= 0; i--) {
+          const meteor = shootingStars[i];
+          meteor.position.x += meteor.velocity.x;
+          meteor.position.y += meteor.velocity.y;
+          meteor.life -= 0.008;
+
+          meteor.children.forEach(child => {
+            if (child.material) child.material.opacity = meteor.life;
+          });
+
+          if (meteor.life <= 0 || meteor.position.x < -80) {
+            scene.remove(meteor);
+            shootingStars.splice(i, 1);
+          }
+        }
+
+        // Camera look at center with slight offset, but focus on black hole in Core section
+        camera.position.x += (mouseX * 3 - camera.position.x) * 0.02;
+        camera.position.y += (-mouseY * 3 - camera.position.y) * 0.02;
+
+        // Section 5 = Core/Philosophy - look at black hole
+        if (currentSection === 5) {
+          camera.lookAt(bhX, 0, bhDistance);
+        } else {
+          camera.lookAt(0, 0, 0);
+        }
+
+        // Update DoF per section
+        const dofSettings = [
+          { focus: 80, aperture: 0.001, maxblur: 0.005 },  // Hero - wide focus
+          { focus: 50, aperture: 0.002, maxblur: 0.008 },  // Stats - medium
+          { focus: 50, aperture: 0, maxblur: 0 },          // HUD - NO BLUR!
+          { focus: 40, aperture: 0.003, maxblur: 0.01 },   // Timeline - tighter
+          { focus: 35, aperture: 0.003, maxblur: 0.012 },  // Reality - dramatic
+          { focus: 20, aperture: 0, maxblur: 0 },              // Philosophy/Core - NO BLUR!
+          { focus: 45, aperture: 0.002, maxblur: 0.008 },  // Project - medium
+          { focus: 60, aperture: 0.002, maxblur: 0.006 },  // Dedication - soft
+          { focus: 70, aperture: 0.001, maxblur: 0.005 }   // Footer - wide
+        ];
+        const dof = dofSettings[currentSection] || dofSettings[0];
+        bokehPass.uniforms['focus'].value += (dof.focus - bokehPass.uniforms['focus'].value) * 0.05;
+        bokehPass.uniforms['aperture'].value += (dof.aperture - bokehPass.uniforms['aperture'].value) * 0.05;
+        bokehPass.uniforms['maxblur'].value += (dof.maxblur - bokehPass.uniforms['maxblur'].value) * 0.05;
+        composer.render();
+      }
+
+      animate();
+
+      // ─────────────────────────────────────────────────────────────────────
+      // RESIZE HANDLER
+      // ─────────────────────────────────────────────────────────────────────
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        composer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      // Initial section check
+      updateCurrentSection();
+
+      // Parallax effect for floating decorations
+      const parallaxElements = document.querySelectorAll('.flying');
+      parallaxElements.forEach((el, i) => {
+        el.dataset.speed = (0.02 + (i % 5) * 0.015).toFixed(3);
+        el.dataset.direction = i % 2 === 0 ? '1' : '-1';
+      });
+
+      // Dynamic parallax for main content
+      const parallaxSectionsList = document.querySelectorAll('.universe-section');
+
+      function updateParallaxEffect() {
+        const scrollY = window.scrollY;
+        const windowHeight = window.innerHeight;
+
+        // Floating decorations parallax
+        parallaxElements.forEach(el => {
+          const speed = parseFloat(el.dataset.speed);
+          const dir = parseFloat(el.dataset.direction);
+          const yOffset = scrollY * speed * dir;
+          const xOffset = scrollY * speed * 0.3 * dir;
+          el.style.setProperty('transform', `translate(${xOffset}px, ${yOffset}px) rotate(${dir * 6}deg)`, 'important');
+        });
+
+        // Main content parallax per section
+        parallaxSectionsList.forEach(section => {
+          const rect = section.getBoundingClientRect();
+          const sectionCenter = rect.top + rect.height / 2;
+          const distanceFromCenter = sectionCenter - windowHeight / 2;
+          const progress = Math.max(-1, Math.min(1, distanceFromCenter / windowHeight));
+
+          // Title parallax - moves up faster
+          const title = section.querySelector('h2');
+          if (title) {
+            title.style.setProperty('transform', `translateY(${progress * -20}px)`, 'important');
+          }
+
+          // Cards stagger effect
+          const cards = section.querySelectorAll('.glass:not(#project-details):not(.project-info .glass)');
+          cards.forEach((card, i) => {
+            const delay = i * 0.1;
+            const cardProgress = progress + delay;
+            const yMove = cardProgress * 30;
+            const rotate = cardProgress * (i % 2 === 0 ? 2 : -2);
+            const scale = 1 - Math.abs(progress) * 0.05;
+            card.style.setProperty('transform', `translateY(${yMove}px) rotate(${rotate}deg) scale(${scale})`, 'important');
+          });
+
+          // Planet circles in timeline - orbit effect
+          const planets = section.querySelectorAll('.rounded-full.bg-gradient-to-br:not(.planet)');
+          planets.forEach((planet, i) => {
+            const orbitProgress = scrollY * 0.001 + i * 0.5;
+            const xOrbit = Math.sin(orbitProgress) * 5;
+            const yOrbit = Math.cos(orbitProgress) * 3;
+            planet.style.setProperty('transform', `translate(${xOrbit}px, ${yOrbit}px)`, 'important');
+          });
+
+          // Blockquotes - subtle float
+          const quotes = section.querySelectorAll('blockquote');
+          quotes.forEach(quote => {
+            quote.style.setProperty('transform', `translateY(${progress * -15}px) scale(${1 - Math.abs(progress) * 0.02})`, 'important');
+          });
+        });
+      }
+
+      window.addEventListener('scroll', updateParallaxEffect, { passive: true });
+      updateParallaxEffect();
+
+      // Countdown to 2026
+      function updateCountdown() {
+        const target = new Date('2026-01-01T00:00:00');
+        const now = new Date();
+        const diff = target - now;
+        
+        if (diff > 0) {
+          const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+          
+          document.getElementById('countdown-text').textContent = 
+            `${days}d ${hours}h ${minutes}m ${seconds}s until celebration`;
+          document.getElementById('countdown-banner').classList.remove('hidden');
+        } else {
+          document.getElementById('countdown-text').textContent = '🎊 The celebration is NOW! 🎊';
+          document.getElementById('countdown-banner').classList.remove('hidden');
+        }
+      }
+      updateCountdown();
+      setInterval(updateCountdown, 1000);
+
+      // HUD time update
+      const hudTime = document.getElementById('hud-time');
+      if (hudTime) {
+        setInterval(() => {
+          const now = new Date();
+          hudTime.textContent = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+        }, 1000);
+      }
+
+      // Hide loading screen
+      setProgress(100, 'Welcome to the universe');
+      setTimeout(() => {
+        document.getElementById('loading-screen')?.classList.add('hidden');
+      }, 600);
+    });
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // KEYBOARD NAVIGATION
+    // ═══════════════════════════════════════════════════════════════════════
+    const sectionIds = ['hero', 'stats', 'hud', 'timeline', 'reality', 'philosophy', 'project', 'dedication', 'footer'];
+    let targetSectionIndex = 0;
+    let scrollAnimationId = null;
+
+    function smoothScrollTo(element) {
+      if (!element) return;
+
+      // Cancel previous animation
+      if (scrollAnimationId) {
+        cancelAnimationFrame(scrollAnimationId);
+      }
+
+      const targetY = element.offsetTop;
+      const startY = window.scrollY;
+      const distance = targetY - startY;
+      const duration = 2000;
+      let startTime = null;
+
+      // Cinematic ease - smooth throughout
+      function cinematicEase(t) {
+        // Smooth sine-based easing for immersive feel
+        return t < 0.5
+          ? 4 * t * t * t
+          : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      }
+
+      function step(currentTime) {
+        if (!startTime) startTime = currentTime;
+        const elapsed = currentTime - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+
+        window.scrollTo(0, startY + distance * cinematicEase(progress));
+
+        if (progress < 1) {
+          scrollAnimationId = requestAnimationFrame(step);
+        } else {
+          scrollAnimationId = null;
+        }
+      }
+
+      scrollAnimationId = requestAnimationFrame(step);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      // Arrow down or Space or Page Down
+      if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        targetSectionIndex = Math.min(targetSectionIndex + 1, sectionIds.length - 1);
+        smoothScrollTo(document.getElementById(sectionIds[targetSectionIndex]));
+      }
+      // Arrow up or Page Up
+      if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+        e.preventDefault();
+        targetSectionIndex = Math.max(targetSectionIndex - 1, 0);
+        smoothScrollTo(document.getElementById(sectionIds[targetSectionIndex]));
+      }
+      // Home
+      if (e.key === 'Home') {
+        e.preventDefault();
+        targetSectionIndex = 0;
+        smoothScrollTo(document.getElementById(sectionIds[0]));
+      }
+      // End
+      if (e.key === 'End') {
+        e.preventDefault();
+        targetSectionIndex = sectionIds.length - 1;
+        smoothScrollTo(document.getElementById(sectionIds[targetSectionIndex]));
+      }
+    });
+
+    // Sync targetSectionIndex when user scrolls manually
+    window.addEventListener('scroll', () => {
+      if (scrollAnimationId) return; // Don't sync during animation
+      const sections = document.querySelectorAll('.universe-section');
+      sections.forEach((section, index) => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.5) {
+          if (index < sectionIds.length) targetSectionIndex = index;
+        }
+      });
+    });
+
+    // ═══════════════════════════════════════════════════════════════════════
+    // EASTER EGG: Konami Code - Reveal Multiverse
+    // ═══════════════════════════════════════════════════════════════════════
+    const konamiCode = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65];
+    let konamiIndex = 0;
+
+    document.addEventListener('keydown', (e) => {
+      if (e.keyCode === konamiCode[konamiIndex]) {
+        konamiIndex++;
+        if (konamiIndex === konamiCode.length) {
+          konamiIndex = 0;
+          document.body.innerHTML += `
+          <div id="multiverse" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,rgba(139,92,246,0.2),rgba(0,0,0,0.98));animation:fadeIn 1s">
+            <div style="text-align:center;max-width:500px;padding:2rem">
+              <p style="font-size:4rem;margin-bottom:1rem">🌌</p>
+              <h2 style="font-size:2rem;background:linear-gradient(90deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem">The Multiverse Awaits</h2>
+              <p style="color:#888;margin-bottom:0.5rem">This is just Episode 1: Web Technology</p>
+              <p style="color:#666;font-size:0.9rem;margin-bottom:2rem">More universes exist within. Music. Art. Philosophy. Health. Relationships. Each waiting to be explored.</p>
+              <p style="color:#a855f7;font-style:italic;margin-bottom:2rem">"Every human is a multiverse."</p>
+              <button onclick="document.getElementById('multiverse').remove()" style="padding:0.75rem 2rem;background:linear-gradient(90deg,#a855f7,#ec4899);border:none;border-radius:0.5rem;color:white;cursor:pointer;font-weight:500">Continue Episode 1</button>
+            </div>
+          </div>
+        `;
+        }
+      } else {
+        konamiIndex = 0;
+      }
+    });
+  </script>
+</body>
+
+</html>

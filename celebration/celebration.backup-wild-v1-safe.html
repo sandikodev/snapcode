@@ -1,0 +1,1751 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Inner Universe - @sandikodev | 10 Years Journey</title>
+  
+  <!-- Performance -->
+  <link rel="dns-prefetch" href="//cdnjs.cloudflare.com">
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  
+  <!-- SEO -->
+  <meta name="description" content="Enter the Inner Universe - 10 years (2016-2026) journey through Web Technology. A cosmic exploration of passion, ADHD, consciousness, and the pursuit of truth.">
+  <meta name="theme-color" content="#0a0a0f">
+  <link rel="canonical" href="https://snapcode.me/celebration">
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="static/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="static/apple-touch-icon.png">
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="The Inner Universe - @sandikodev">
+  <meta property="og:description" content="Episode 1: Web Technology Universe (2016-2026)">
+  <meta property="og:image" content="https://snapcode.me/static/brand.png">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400&family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+  
+  <!-- Three.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            serif: ['Playfair Display', 'serif'],
+            mono: ['Fira Code', 'monospace'],
+          },
+          colors: {
+            void: '#0a0a0f',
+            nebula: '#8b5cf6',
+            star: '#3b82f6',
+            cosmic: '#ec4899',
+          }
+        }
+      }
+    }
+  </script>
+  
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { 
+      scroll-behavior: smooth;
+    }
+    body { 
+      background: transparent; 
+      color: #fff; 
+      font-family: 'Inter', sans-serif; 
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+    
+    /* Dark background on html for fallback */
+    html {
+      background: #0a0a0f;
+    }
+    
+    /* Scroll Snap Container */
+    .content-layer {
+      position: relative;
+      z-index: 3;
+      background: transparent;
+      transition: transform 0.12s ease-out;
+    }
+    
+    .universe-section {
+      background: transparent;
+    }
+    
+    /* Transition Overlay - for cinematic feel */
+    #transition-overlay {
+      position: fixed !important;
+      inset: 0 !important;
+      background: transparent !important;
+      pointer-events: none !important;
+      z-index: 2 !important;
+      transition: background 0.3s !important;
+    }
+    
+    /* Momentum Indicator */
+    #momentum-indicator {
+      position: fixed;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0), transparent);
+      z-index: 1001;
+      transition: all 0.2s;
+      opacity: 0;
+    }
+    #momentum-indicator.active {
+      opacity: 1;
+      background: linear-gradient(90deg, transparent, rgba(168, 85, 247, 0.8), transparent);
+    }
+    
+    /* Section Transition State */
+    .section-transitioning .glass {
+      filter: blur(2px);
+      opacity: 0.7;
+    }
+    
+    /* Vignette Effect - Subtle */
+    #vignette {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(ellipse at center, transparent 60%, rgba(10, 10, 15, 0.2) 100%);
+      pointer-events: none;
+      z-index: 1;
+    }
+    
+    /* Loading Screen */
+    #loading-screen {
+      position: fixed;
+      inset: 0;
+      background: #0a0a0f;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.8s, visibility 0.8s;
+    }
+    #loading-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+    .loader {
+      width: 50px;
+      height: 50px;
+      border: 3px solid rgba(139, 92, 246, 0.2) !important;
+      border-top-color: #a855f7 !important;
+      border-radius: 50%;
+      animation: spin 1s linear infinite !important;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    /* Three.js Canvas */
+    #universe-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      transition: transform 0.3s ease-out, filter 0.3s ease-out;
+    }
+    
+    /* Section Styles */
+    .universe-section {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      padding-top: 4rem;
+      padding-bottom: 4rem;
+      position: relative;
+    }
+    
+    /* Glass Card - Enhanced */
+    .glass {
+      background: rgba(255, 255, 255, 0.02);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 1.5rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    .glass::before {
+      content: '';
+      position: absolute;
+      top: -100%;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(transparent, rgba(168, 85, 247, 0.03), transparent);
+      animation: scanline 8s linear infinite;
+      pointer-events: none;
+    }
+    .glass:hover {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(139, 92, 246, 0.3);
+      box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);
+    }
+    
+    /* Text Gradient */
+    .text-gradient {
+      background: linear-gradient(135deg, #a855f7, #6366f1, #ec4899);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    /* Glow Effects */
+    .glow-purple { 
+      box-shadow: 0 0 30px rgba(139, 92, 246, 0.3);
+      transition: box-shadow 0.3s ease;
+    }
+    .glow-purple:hover {
+      box-shadow: 0 0 40px rgba(139, 92, 246, 0.5);
+    }
+    .glow-text { text-shadow: 0 0 30px rgba(139, 92, 246, 0.5); }
+    
+    /* Typography */
+    h1, h2, h3 { letter-spacing: -0.02em; }
+    p { color: rgba(255, 255, 255, 0.7); }
+    
+    /* Animations */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 0.5; }
+      50% { opacity: 1; }
+    }
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    @keyframes cosmicGlow {
+      0%, 100% { text-shadow: 0 0 10px rgba(168, 85, 247, 0.5), 0 0 20px rgba(168, 85, 247, 0.3); }
+      50% { text-shadow: 0 0 20px rgba(168, 85, 247, 0.8), 0 0 40px rgba(168, 85, 247, 0.5), 0 0 60px rgba(236, 72, 153, 0.3); }
+    }
+    @keyframes warpSpeed {
+      0% { transform: scaleY(1); }
+      50% { transform: scaleY(1.02); }
+      100% { transform: scaleY(1); }
+    }
+    @keyframes glitchText {
+      0%, 90%, 100% { transform: translate(0); opacity: 1; }
+      92% { transform: translate(-2px, 1px); opacity: 0.8; }
+      94% { transform: translate(2px, -1px); opacity: 0.9; }
+      96% { transform: translate(-1px, 2px); opacity: 0.8; }
+      98% { transform: translate(1px, -2px); opacity: 0.9; }
+    }
+    @keyframes scanline {
+      0% { top: -100%; }
+      100% { top: 100%; }
+    }
+    @keyframes borderGlow {
+      0%, 100% { border-color: rgba(168, 85, 247, 0.3); box-shadow: 0 0 10px rgba(168, 85, 247, 0.2); }
+      50% { border-color: rgba(236, 72, 153, 0.5); box-shadow: 0 0 20px rgba(236, 72, 153, 0.3); }
+    }
+    
+    .cosmic-glow { animation: cosmicGlow 3s ease-in-out infinite !important; }
+    .warp-speed { animation: warpSpeed 2s ease-in-out infinite !important; }
+    .glitch-text { animation: glitchText 5s ease-in-out infinite !important; }
+    .border-glow { animation: borderGlow 2s ease-in-out infinite !important; }
+    
+    .float { animation: float 4s ease-in-out infinite !important; }
+    .pulse { animation: pulse 2s ease-in-out infinite !important; }
+    .fade-in { 
+      opacity: 0; 
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fade-in.visible { 
+      opacity: 1; 
+      transform: translateY(0); 
+    }
+    
+    /* Stagger delays for children */
+    .fade-in.visible:nth-child(1) { transition-delay: 0s; }
+    .fade-in.visible:nth-child(2) { transition-delay: 0.1s; }
+    .fade-in.visible:nth-child(3) { transition-delay: 0.2s; }
+    .fade-in.visible:nth-child(4) { transition-delay: 0.3s; }
+    
+    /* Scroll Dot Animation - Very Smooth */
+    @keyframes scrollDot {
+      0% { 
+        transform: translateY(0);
+        opacity: 1;
+      }
+      100% { 
+        transform: translateY(16px);
+        opacity: 0;
+      }
+    }
+    .scroll-dot-anim {
+      animation: scrollDot 1.5s ease-in-out infinite !important;
+    }
+    
+    /* Section Indicators - Fixed Position */
+    .section-indicator {
+      position: fixed;
+      right: 1.5rem;
+      top: 50vh;
+      transform: translateY(-50%);
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 1rem;
+    }
+    .section-dot-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      cursor: pointer;
+    }
+    .section-dot-label {
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: transparent;
+      transition: color 0.3s;
+      white-space: nowrap;
+    }
+    .section-dot-wrapper:hover .section-dot-label,
+    .section-dot-wrapper.active .section-dot-label {
+      color: rgba(255, 255, 255, 0.6);
+    }
+    .section-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.15);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .section-dot::after {
+      content: '';
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 1px solid transparent;
+      transition: border-color 0.3s;
+    }
+    .section-dot-wrapper:hover .section-dot {
+      background: rgba(255, 255, 255, 0.4);
+    }
+    .section-dot-wrapper.active .section-dot {
+      background: #a855f7;
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.6);
+    }
+    .section-dot-wrapper.active .section-dot::after {
+      border-color: rgba(168, 85, 247, 0.3);
+    }
+    
+    /* Current Section Label */
+    #current-section-label {
+      position: fixed;
+      left: 2rem;
+      bottom: 2rem;
+      z-index: 100;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: rgba(255, 255, 255, 0.3);
+      transition: opacity 0.3s;
+    }
+    
+    /* Scroll Progress */
+    #scroll-progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #a855f7, #ec4899);
+      z-index: 1000;
+      width: 0%;
+      transition: width 0.1s ease-out;
+    }
+    
+    /* Black Hole Section - Smooth transition */
+    .black-hole-section {
+      background: transparent;
+    }
+    .black-hole-section::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at center, rgba(0,0,0,0.6) 0%, rgba(10,10,15,0.3) 50%, transparent 100%);
+      pointer-events: none;
+    }
+    
+    /* Buttons */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: linear-gradient(135deg, #a855f7, #6366f1);
+      padding: 0.875rem 1.75rem;
+      border-radius: 0.75rem;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
+      color: white;
+      text-decoration: none;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(139, 92, 246, 0.3);
+    }
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+    
+    /* Mobile Responsive */
+    @media (max-width: 768px) {
+      .section-indicator { right: 0.75rem; }
+      .section-dot-label { display: none; }
+      #current-section-label { left: 1rem; bottom: 1rem; }
+      .universe-section { padding: 1.5rem; }
+    }
+    
+    /* Reduced Motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+    
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #0a0a0f; }
+    ::-webkit-scrollbar-thumb { 
+      background: linear-gradient(180deg, #a855f7, #6366f1); 
+      border-radius: 3px; 
+    }
+    
+    /* Selection */
+    ::selection {
+      background: rgba(139, 92, 246, 0.3);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loading-screen">
+    <div class="loader"></div>
+    <p style="margin-top: 1.5rem; color: rgba(255,255,255,0.5); font-size: 0.8rem;">Entering the universe...</p>
+  </div>
+  
+  <!-- Three.js Universe Canvas -->
+  <canvas id="universe-canvas"></canvas>
+  
+  <!-- Cinematic Effects Layer -->
+  <div id="vignette"></div>
+  <div id="transition-overlay"></div>
+  <div id="momentum-indicator"></div>
+  
+  <!-- Scroll Progress -->
+  <div id="scroll-progress"></div>
+  
+  <!-- Current Section Label -->
+  <div id="current-section-label">Overview</div>
+  
+  <!-- Section Navigation - Enhanced -->
+  <nav class="section-indicator" aria-label="Section navigation">
+    <div class="section-dot-wrapper active" data-section="hero">
+      <span class="section-dot-label">Overview</span>
+      <div class="section-dot"></div>
+    </div>
+    <div class="section-dot-wrapper" data-section="stats">
+      <span class="section-dot-label">Achievements</span>
+      <div class="section-dot"></div>
+    </div>
+    <div class="section-dot-wrapper" data-section="timeline">
+      <span class="section-dot-label">Journey</span>
+      <div class="section-dot"></div>
+    </div>
+    <div class="section-dot-wrapper" data-section="reality">
+      <span class="section-dot-label">Reality</span>
+      <div class="section-dot"></div>
+    </div>
+    <div class="section-dot-wrapper" data-section="philosophy">
+      <span class="section-dot-label">Core</span>
+      <div class="section-dot"></div>
+    </div>
+    <div class="section-dot-wrapper" data-section="project">
+      <span class="section-dot-label">Creation</span>
+      <div class="section-dot"></div>
+    </div>
+    <div class="section-dot-wrapper" data-section="dedication">
+      <span class="section-dot-label">Dedication</span>
+      <div class="section-dot"></div>
+    </div>
+  </nav>
+
+  <!-- Content Layer -->
+  <main class="content-layer">
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- HERO: Universe Overview - See the entire galaxy from afar -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <section id="hero" class="universe-section flex-col justify-between py-8" data-celestial="galaxy-overview">
+      <!-- Episode Badge - Top -->
+      <div class="fade-in text-center">
+        <span class="inline-block px-4 py-2 glass text-xs tracking-widest text-purple-300 uppercase font-mono">
+          <span class="text-purple-500/50">&lt;/&gt;</span> Episode 1 • Web Technology Universe <span class="text-purple-500/50">&lt;/&gt;</span>
+        </span>
+      </div>
+      
+      <!-- Main Content - Center -->
+      <div class="text-center max-w-4xl mx-auto">
+        
+        <!-- Ligature Decoration Top -->
+        <p class="fade-in text-purple-500/30 font-mono text-sm mb-4 tracking-widest glitch-text">{:: =&gt; |&gt; &lt;| ::}</p>
+        
+        <!-- Main Title -->
+        <h1 class="fade-in text-5xl md:text-7xl lg:text-8xl font-serif font-bold mb-4 cosmic-glow">
+          <span class="text-gradient">The Inner Universe</span>
+        </h1>
+        
+        <!-- Subtitle -->
+        <p class="fade-in text-xl md:text-2xl text-gray-400 mb-2">
+          10 Years in Computer Science
+        </p>
+        
+        <!-- Ligature Decoration -->
+        <p class="fade-in text-purple-500/20 font-mono text-xs mb-8 tracking-widest">&lt;=&gt; === !== &lt;-&gt;</p>
+        
+        <!-- Year Range -->
+        <div class="fade-in flex items-center justify-center gap-4 mb-12">
+          <span class="text-purple-500/30 font-mono text-sm">[</span>
+          <span class="text-3xl md:text-4xl font-light text-purple-400">2016</span>
+          <span class="font-mono text-purple-500/50">=&gt;&gt;</span>
+          <span class="text-3xl md:text-4xl font-light text-pink-400">2026</span>
+          <span class="text-purple-500/30 font-mono text-sm">]</span>
+        </div>
+        
+        <!-- Author -->
+        <div class="fade-in flex items-center justify-center gap-4">
+          <img src="https://avatars.githubusercontent.com/u/33443311?v=4" alt="sandikodev" 
+               class="w-14 h-14 rounded-full glow-purple">
+          <div class="text-left">
+            <p class="font-semibold">@sandikodev</p>
+            <p class="text-sm text-gray-500 font-mono">&lt;Explorer /&gt; of Inner Universes</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Scroll Prompt - Bottom -->
+      <div class="fade-in text-center">
+        <div class="flex flex-col items-center gap-3 cursor-pointer group" onclick="document.getElementById('stats').scrollIntoView({behavior:'smooth'})">
+          <p class="text-gray-500 text-xs uppercase tracking-widest group-hover:text-purple-400 transition-colors font-mono">|&gt; Begin the journey &lt;|</p>
+          <div class="w-6 h-10 border-2 border-gray-600 rounded-full flex justify-center pt-2 group-hover:border-purple-500 transition-colors">
+            <div class="w-1.5 h-3 bg-purple-500 rounded-full" style="animation: scrollDot 2s ease-in-out infinite !important;"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- STATS: Asteroid Belt - Fragments of achievements -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <section id="stats" class="universe-section" data-celestial="asteroid-belt">
+      <div class="max-w-5xl mx-auto w-full">
+        <p class="fade-in text-center text-purple-500/20 font-mono text-xs mb-2">&lt;*&gt; :: &lt;*&gt;</p>
+        <h2 class="fade-in text-center text-2xl md:text-3xl font-serif mb-2">
+          <span class="text-gray-500">Passing through the</span>
+          <span class="text-gradient"> Asteroid Belt</span>
+        </h2>
+        <p class="fade-in text-center text-purple-500/20 font-mono text-xs mb-12">[...fragments]</p>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <div class="fade-in glass p-6 text-center hover:glow-purple transition-all">
+            <p class="text-4xl md:text-5xl font-bold text-gradient">10</p>
+            <p class="text-gray-400 text-sm mt-2">Years</p>
+          </div>
+          <div class="fade-in glass p-6 text-center hover:glow-purple transition-all">
+            <p class="text-4xl md:text-5xl font-bold text-gradient">7+</p>
+            <p class="text-gray-400 text-sm mt-2">Roles</p>
+          </div>
+          <div class="fade-in glass p-6 text-center hover:glow-purple transition-all">
+            <p class="text-4xl md:text-5xl font-bold text-gradient">∞</p>
+            <p class="text-gray-400 text-sm mt-2">Lessons</p>
+          </div>
+          <div class="fade-in glass p-6 text-center hover:glow-purple transition-all">
+            <p class="text-4xl md:text-5xl font-bold text-gradient">1</p>
+            <p class="text-gray-400 text-sm mt-2">Passion</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- TIMELINE: Planetary System - Each planet is an era -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <section id="timeline" class="universe-section" data-celestial="planetary-system">
+      <div class="max-w-4xl mx-auto w-full">
+        <p class="fade-in text-center text-purple-500/20 font-mono text-xs mb-2">for (era in life) {</p>
+        <h2 class="fade-in text-center text-2xl md:text-3xl font-serif mb-2">
+          <span class="text-gray-500">Orbiting the</span>
+          <span class="text-gradient"> Planetary System</span>
+        </h2>
+        <p class="fade-in text-center text-purple-500/20 font-mono text-xs mb-12">=&gt; orbit()</p>
+        
+        <div class="space-y-8">
+          <!-- Planet 1: Origin -->
+          <div class="fade-in flex items-center gap-6">
+            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-orange-600 flex-shrink-0 glow-purple"></div>
+            <div class="glass p-4 flex-1">
+              <p class="text-purple-400 text-xs font-mono">CHILDHOOD</p>
+              <h3 class="font-semibold">The Spark</h3>
+              <p class="text-gray-400 text-sm">Built first PC in 2nd grade. Intel Pentium 2.</p>
+            </div>
+          </div>
+          
+          <!-- Planet 2: Education -->
+          <div class="fade-in flex items-center gap-6">
+            <div class="w-16 h-16 rounded-full bg-gradient-to-br from-blue-500 to-cyan-600 flex-shrink-0 glow-purple"></div>
+            <div class="glass p-4 flex-1">
+              <p class="text-blue-400 text-xs font-mono">2016</p>
+              <h3 class="font-semibold">SMK Negeri 3 Yogyakarta</h3>
+              <p class="text-gray-400 text-sm">Teknik Komputer Jaringan. The right path.</p>
+            </div>
+          </div>
+          
+          <!-- Planet 3: Growth -->
+          <div class="fade-in flex items-center gap-6">
+            <div class="w-20 h-20 rounded-full bg-gradient-to-br from-purple-500 to-violet-600 flex-shrink-0 glow-purple"></div>
+            <div class="glass p-4 flex-1">
+              <p class="text-violet-400 text-xs font-mono">2016-2026</p>
+              <h3 class="font-semibold">10 Years of Evolution</h3>
+              <p class="text-gray-400 text-sm">IT Support → NOC → Sysadmin → Frontend → Backend → Full-Stack → DevOps</p>
+            </div>
+          </div>
+          
+          <!-- Planet 4: Awakening -->
+          <div class="fade-in flex items-center gap-6">
+            <div class="w-14 h-14 rounded-full bg-gradient-to-br from-pink-500 to-rose-600 flex-shrink-0 glow-purple"></div>
+            <div class="glass p-4 flex-1">
+              <p class="text-pink-400 text-xs font-mono">2025</p>
+              <h3 class="font-semibold">ADHD Diagnosis</h3>
+              <p class="text-gray-400 text-sm">Understanding myself. Strengthening RUH.</p>
+            </div>
+          </div>
+          
+          <!-- Planet 5: Vision -->
+          <div class="fade-in flex items-center gap-6">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex-shrink-0 glow-purple"></div>
+            <div class="glass p-4 flex-1">
+              <p class="text-emerald-400 text-xs font-mono">2031</p>
+              <h3 class="font-semibold">The Vision</h3>
+              <p class="text-gray-400 text-sm">PT Koneksi Jaringan Indonesia. Wait for me.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- REALITY: Nebula (Struggles) + Star Cluster (Strengths) -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <section id="reality" class="universe-section" data-celestial="nebula-cluster">
+      <div class="max-w-5xl mx-auto w-full">
+        <p class="fade-in text-center text-purple-500/20 font-mono text-xs mb-2">if (struggle &amp;&amp; strength) {</p>
+        <h2 class="fade-in text-center text-2xl md:text-3xl font-serif mb-2">
+          <span class="text-gray-500">Through the</span>
+          <span class="text-gradient"> Nebula & Star Cluster</span>
+        </h2>
+        <p class="fade-in text-center text-purple-500/20 font-mono text-xs mb-12">=&gt; balance() }</p>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+          <!-- Nebula: Struggles -->
+          <div class="fade-in glass p-6" style="background: linear-gradient(135deg, rgba(239,68,68,0.1), rgba(0,0,0,0));">
+            <h3 class="flex items-center gap-3 text-lg font-semibold mb-4">
+              <span class="w-8 h-8 rounded-full bg-red-500/20 flex items-center justify-center">🌫️</span>
+              The Nebula (Struggles)
+            </h3>
+            <ul class="space-y-3 text-gray-300 text-sm">
+              <li class="flex gap-2"><span class="text-red-400">✗</span> Dropped out twice</li>
+              <li class="flex gap-2"><span class="text-red-400">✗</span> Company bankrupt in 2022</li>
+              <li class="flex gap-2"><span class="text-red-400">✗</span> ADHD - impulsive decisions</li>
+              <li class="flex gap-2"><span class="text-red-400">✗</span> Poor self-branding</li>
+            </ul>
+          </div>
+          
+          <!-- Star Cluster: Strengths -->
+          <div class="fade-in glass p-6" style="background: linear-gradient(135deg, rgba(34,197,94,0.1), rgba(0,0,0,0));">
+            <h3 class="flex items-center gap-3 text-lg font-semibold mb-4">
+              <span class="w-8 h-8 rounded-full bg-green-500/20 flex items-center justify-center">✨</span>
+              The Star Cluster (Strengths)
+            </h3>
+            <ul class="space-y-3 text-gray-300 text-sm">
+              <li class="flex gap-2"><span class="text-green-400">✓</span> Never stopped learning</li>
+              <li class="flex gap-2"><span class="text-green-400">✓</span> Deep technical knowledge</li>
+              <li class="flex gap-2"><span class="text-green-400">✓</span> ADHD hyperfocus power</li>
+              <li class="flex gap-2"><span class="text-green-400">✓</span> RUH awakening</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- PHILOSOPHY: Black Hole - The Core Truth (CLIMAX) -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <section id="philosophy" class="universe-section black-hole-section flex-col justify-center" data-celestial="black-hole">
+      <div class="max-w-3xl mx-auto text-center">
+        <p class="fade-in text-purple-500/30 font-mono text-xs mb-2">&lt;?&gt; :: void =&gt; truth</p>
+        <h2 class="fade-in text-2xl md:text-3xl font-serif mb-2">
+          <span class="text-gray-500">Approaching the</span>
+          <span class="text-gradient"> Event Horizon</span>
+        </h2>
+        <p class="fade-in text-gray-500 text-sm mb-4 font-mono">&lt;!-- The point of no return --&gt;</p>
+        
+        <!-- Black Hole Visual - Synced with Three.js -->
+        <div id="blackhole-visual" class="fade-in relative w-48 h-48 mx-auto mb-8">
+          <!-- Outer glow ring -->
+          <div id="bh-outer-ring" class="absolute inset-0 rounded-full border-2 border-purple-500/20 transition-all duration-300"></div>
+          <!-- Middle accretion disk -->
+          <div id="bh-accretion" class="absolute inset-3 rounded-full border border-purple-400/30 animate-spin" style="animation-duration: 8s;"></div>
+          <!-- Inner accretion -->
+          <div id="bh-inner" class="absolute inset-6 rounded-full border border-pink-500/20 animate-spin" style="animation-duration: 12s; animation-direction: reverse;"></div>
+          <!-- Event horizon glow -->
+          <div id="bh-horizon" class="absolute inset-8 rounded-full bg-gradient-to-r from-purple-600/0 via-purple-500/20 to-purple-600/0 transition-all duration-300"></div>
+          <!-- Core black hole -->
+          <div id="bh-core" class="absolute inset-12 rounded-full bg-black shadow-[0_0_30px_rgba(0,0,0,0.8)] transition-all duration-300"></div>
+          <!-- Center singularity -->
+          <div id="bh-singularity" class="absolute inset-[3.5rem] rounded-full bg-black transition-all duration-300"></div>
+          <!-- Horizontal light beam (eclipse effect) -->
+          <div id="bh-eclipse" class="absolute top-1/2 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-purple-400/0 to-transparent -translate-y-1/2 transition-all duration-300"></div>
+        </div>
+        
+        <!-- Core Philosophy -->
+        <blockquote class="fade-in glass p-8 mb-8">
+          <p class="text-xl md:text-2xl text-gray-200 italic leading-relaxed">
+            "Not the degree, but the <span class="text-purple-400">knowledge</span>.<br>
+            Not the money, but the <span class="text-blue-400">craft</span>.<br>
+            Not the certificate, but the <span class="text-pink-400">experience</span>.<br>
+            Not the profit, but the <span class="text-violet-400">passion</span>."
+          </p>
+        </blockquote>
+        
+        <!-- RUH Concept -->
+        <div class="fade-in glass p-6">
+          <h3 class="text-lg font-semibold mb-3 text-gradient">RUH • Mental • Raga</h3>
+          <p class="text-gray-400 text-sm leading-relaxed">
+            RUH (Soul) controls Mental (Mind), Mental controls Raga (Body).<br>
+            <span class="text-purple-300">The singularity within. The source of all creation.</span>
+          </p>
+        </div>
+        
+        <!-- ADHD Insight -->
+        <p class="fade-in text-gray-500 text-sm mt-8 italic">
+          "ADHD is not a curse, but a different operating system.<br>
+          Let your RUH be the administrator."
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- PROJECT: Habitable Planet - The Creation -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <section id="project" class="universe-section" data-celestial="habitable-planet">
+      <div class="max-w-4xl mx-auto text-center">
+        <p class="fade-in text-purple-500/20 font-mono text-xs mb-2">npm run create &amp;&amp;</p>
+        <h2 class="fade-in text-2xl md:text-3xl font-serif mb-2">
+          <span class="text-gray-500">Landing on</span>
+          <span class="text-gradient"> The Habitable Planet</span>
+        </h2>
+        <p class="fade-in text-purple-500/20 font-mono text-xs mb-12">=&gt; deploy()</p>
+        
+        <div class="fade-in glass p-8 md:p-12">
+          <div class="w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-blue-500 via-green-500 to-blue-600 glow-purple"></div>
+          
+          <h3 class="text-3xl font-serif font-bold text-gradient mb-4">SnapCode</h3>
+          <p class="text-gray-300 mb-8 max-w-xl mx-auto">
+            10 years of knowledge distilled into a comprehensive learning resource.
+            From client-side rendering to DevOps deployment.
+          </p>
+          
+          <div class="flex flex-wrap justify-center gap-4 mb-8">
+            <span class="px-3 py-1 glass text-xs text-purple-300">100% Client-Side</span>
+            <span class="px-3 py-1 glass text-xs text-blue-300">Buildless</span>
+            <span class="px-3 py-1 glass text-xs text-pink-300">Open Source</span>
+          </div>
+          
+          <a href="index.html" class="btn-primary">
+            Explore SnapCode
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- DEDICATION: Cosmic Dust - Spreading across the universe -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <section id="dedication" class="universe-section" data-celestial="cosmic-dust">
+      <div class="max-w-3xl mx-auto text-center">
+        <p class="fade-in text-purple-500/20 font-mono text-xs mb-2">/** @dedication */</p>
+        <h2 class="fade-in text-2xl md:text-3xl font-serif mb-2">
+          <span class="text-gray-500">Scattered as</span>
+          <span class="text-gradient"> Cosmic Dust</span>
+        </h2>
+        <p class="fade-in text-purple-500/20 font-mono text-xs mb-12">...spread(universe)</p>
+        
+        <div class="fade-in space-y-3 text-gray-400 mb-12">
+          <p>For everyone who makes mistakes</p>
+          <p>For everyone who drops out</p>
+          <p>For everyone who struggles</p>
+          <p>For everyone with ADHD</p>
+          <p>For everyone seeking truth</p>
+          <p class="text-purple-300 font-medium pt-4">You are not alone in this universe.</p>
+        </div>
+        
+        <div class="fade-in glass p-8">
+          <p class="text-2xl font-serif text-gradient mb-4">
+            "Your mistakes don't define you.<br>Your persistence will."
+          </p>
+          <p class="text-gray-500 text-sm">
+            This is just Episode 1. More universes await.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <!-- FOOTER: Singularity - Transcendence -->
+    <!-- ═══════════════════════════════════════════════════════════════ -->
+    <footer class="universe-section py-16" data-celestial="singularity">
+      <div class="max-w-4xl mx-auto text-center">
+        <img src="https://avatars.githubusercontent.com/u/33443311?v=4" alt="sandikodev" 
+             class="w-20 h-20 rounded-full mx-auto mb-6 glow-purple">
+        
+        <p class="text-xl font-semibold mb-2">@sandikodev</p>
+        <p class="text-gray-500 mb-6">2016 • 2026 • 2031 • ∞</p>
+        
+        <!-- Social Links -->
+        <div class="flex justify-center gap-4 mb-8">
+          <a href="https://github.com/sandikodev" target="_blank" class="w-10 h-10 glass rounded-full flex items-center justify-center hover:glow-purple transition">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          </a>
+          <a href="https://twitter.com/sandikodev" target="_blank" class="w-10 h-10 glass rounded-full flex items-center justify-center hover:glow-purple transition">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+          </a>
+        </div>
+        
+        <div class="flex flex-wrap justify-center gap-4 text-sm mb-12">
+          <a href="JOURNEY.md" class="text-purple-400 hover:text-purple-300">Full Journey</a>
+          <span class="text-gray-700">•</span>
+          <a href="CONCEPT.md" class="text-purple-400 hover:text-purple-300">Universe Concept</a>
+          <span class="text-gray-700">•</span>
+          <a href="index.html" class="text-purple-400 hover:text-purple-300">SnapCode</a>
+        </div>
+        
+        <p class="text-gray-600 text-sm">
+          Made with RUH, 10 years of experience, and infinite curiosity
+        </p>
+        <p class="text-gray-700 text-xs mt-4">
+          Alhamdulillah for the journey. The universe continues to expand.
+        </p>
+      </div>
+    </footer>
+
+  </main>
+
+
+  <script>
+  // ═══════════════════════════════════════════════════════════════════════
+  // THE INNER UNIVERSE - Three.js Engine
+  // ═══════════════════════════════════════════════════════════════════════
+  
+  window.addEventListener('load', () => {
+    const canvas = document.getElementById('universe-canvas');
+    if (!canvas || !window.THREE) return;
+    
+    // ─────────────────────────────────────────────────────────────────────
+    // SETUP
+    // ─────────────────────────────────────────────────────────────────────
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
+    const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    
+    // Camera starts far (overview)
+    camera.position.set(0, 0, 100);
+    
+    // State
+    let mouseX = 0, mouseY = 0;
+    let currentSection = 0;
+    let targetCameraZ = 100;
+    
+    // ─────────────────────────────────────────────────────────────────────
+    // GENERATE TEXTURES (Canvas API)
+    // ─────────────────────────────────────────────────────────────────────
+    
+    // Star particle texture (soft glow)
+    function createStarTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 64;
+      canvas.height = 64;
+      const ctx = canvas.getContext('2d');
+      const gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+      gradient.addColorStop(0, 'rgba(255,255,255,1)');
+      gradient.addColorStop(0.1, 'rgba(255,255,255,0.8)');
+      gradient.addColorStop(0.4, 'rgba(200,180,255,0.3)');
+      gradient.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 64, 64);
+      return new THREE.CanvasTexture(canvas);
+    }
+    
+    // Galaxy particle texture (colored glow)
+    function createGalaxyTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 32;
+      canvas.height = 32;
+      const ctx = canvas.getContext('2d');
+      const gradient = ctx.createRadialGradient(16, 16, 0, 16, 16, 16);
+      gradient.addColorStop(0, 'rgba(255,255,255,1)');
+      gradient.addColorStop(0.2, 'rgba(255,255,255,0.5)');
+      gradient.addColorStop(0.5, 'rgba(139,92,246,0.2)');
+      gradient.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 32, 32);
+      return new THREE.CanvasTexture(canvas);
+    }
+    
+    // Nebula cloud texture
+    function createNebulaTexture() {
+      const canvas = document.createElement('canvas');
+      canvas.width = 128;
+      canvas.height = 128;
+      const ctx = canvas.getContext('2d');
+      const gradient = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
+      gradient.addColorStop(0, 'rgba(139,92,246,0.3)');
+      gradient.addColorStop(0.3, 'rgba(99,102,241,0.15)');
+      gradient.addColorStop(0.6, 'rgba(236,72,153,0.05)');
+      gradient.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 128, 128);
+      return new THREE.CanvasTexture(canvas);
+    }
+    
+    const starTexture = createStarTexture();
+    const galaxyTexture = createGalaxyTexture();
+    const nebulaTexture = createNebulaTexture();
+    
+    // ─────────────────────────────────────────────────────────────────────
+    // CELESTIAL OBJECTS
+    // ─────────────────────────────────────────────────────────────────────
+    
+    // Mobile detection for performance
+    const isMobile = window.innerWidth < 768;
+    
+    // 1. STAR FIELD (Background) - with texture
+    const starCount = isMobile ? 2000 : 4000;
+    const starGeometry = new THREE.BufferGeometry();
+    const starPositions = new Float32Array(starCount * 3);
+    const starSizes = new Float32Array(starCount);
+    
+    for (let i = 0; i < starCount; i++) {
+      starPositions[i * 3] = (Math.random() - 0.5) * 800;
+      starPositions[i * 3 + 1] = (Math.random() - 0.5) * 800;
+      starPositions[i * 3 + 2] = (Math.random() - 0.5) * 800;
+      starSizes[i] = Math.random() * 2 + 0.5;
+    }
+    
+    starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+    starGeometry.setAttribute('size', new THREE.BufferAttribute(starSizes, 1));
+    const starMaterial = new THREE.PointsMaterial({ 
+      size: 1.5, 
+      map: starTexture, 
+      transparent: true, 
+      blending: THREE.AdditiveBlending,
+      depthWrite: false
+    });
+    const stars = new THREE.Points(starGeometry, starMaterial);
+    scene.add(stars);
+    
+    // 1.5 MATRIX RAIN (Behind stars) - subtle digital rain with ligatures
+    const matrixChars = ['=>','=>>','->','<-','<->','===','!==','<=','>=','&&','||','++','--','/*','*/','//','::','..','...','??','?.','</>','|>','<|','{;}','[0]','()','!=','::=','<$>','<*>','>>>','<<<','@_@','#!','$$','%%','^^','~~','``',';;'];
+    const matrixColumns = isMobile ? 30 : 60;
+    const matrixDrops = [];
+    const matrixGroup = new THREE.Group();
+    
+    // Create canvas texture for matrix characters (using Fira Code for ligatures)
+    function createMatrixTexture(char) {
+      const canvas = document.createElement('canvas');
+      canvas.width = 64;
+      canvas.height = 32;
+      const ctx = canvas.getContext('2d');
+      ctx.fillStyle = '#0f0';
+      ctx.font = '24px "Fira Code", monospace';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(char, 32, 16);
+      return new THREE.CanvasTexture(canvas);
+    }
+    
+    // Initialize matrix drops
+    for (let i = 0; i < matrixColumns; i++) {
+      const x = (i - matrixColumns / 2) * 8;
+      const drop = {
+        x: x,
+        y: Math.random() * 200 - 100,
+        speed: 0.3 + Math.random() * 0.5,
+        chars: []
+      };
+      
+      // Create trail of characters
+      const trailLength = 8 + Math.floor(Math.random() * 8);
+      for (let j = 0; j < trailLength; j++) {
+        const char = matrixChars[Math.floor(Math.random() * matrixChars.length)];
+        const spriteMaterial = new THREE.SpriteMaterial({
+          map: createMatrixTexture(char),
+          transparent: true,
+          opacity: (1 - j / trailLength) * 0.4,
+          blending: THREE.AdditiveBlending
+        });
+        const sprite = new THREE.Sprite(spriteMaterial);
+        sprite.position.set(x, drop.y - j * 3, -50);
+        sprite.scale.set(2, 2, 1);
+        matrixGroup.add(sprite);
+        drop.chars.push(sprite);
+      }
+      matrixDrops.push(drop);
+    }
+    scene.add(matrixGroup);
+    
+    // 2. GALAXY SPIRAL (Main Universe) - with texture
+    const galaxyParams = { count: isMobile ? 8000 : 15000, radius: 50, branches: 5, spin: 1.2, randomness: 0.4 };
+    const galaxyGeometry = new THREE.BufferGeometry();
+    const galaxyPositions = new Float32Array(galaxyParams.count * 3);
+    const galaxyColors = new Float32Array(galaxyParams.count * 3);
+    const galaxySizes = new Float32Array(galaxyParams.count);
+    
+    const colorInner = new THREE.Color('#a855f7');
+    const colorOuter = new THREE.Color('#3b82f6');
+    
+    for (let i = 0; i < galaxyParams.count; i++) {
+      const radius = Math.random() * galaxyParams.radius;
+      const branchAngle = (i % galaxyParams.branches) / galaxyParams.branches * Math.PI * 2;
+      const spinAngle = radius * galaxyParams.spin;
+      
+      const randomX = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * galaxyParams.randomness * radius;
+      const randomY = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * galaxyParams.randomness * radius * 0.2;
+      const randomZ = Math.pow(Math.random(), 3) * (Math.random() < 0.5 ? 1 : -1) * galaxyParams.randomness * radius;
+      
+      galaxyPositions[i * 3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
+      galaxyPositions[i * 3 + 1] = randomY;
+      galaxyPositions[i * 3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+      
+      const mixedColor = colorInner.clone().lerp(colorOuter, radius / galaxyParams.radius);
+      galaxyColors[i * 3] = mixedColor.r;
+      galaxyColors[i * 3 + 1] = mixedColor.g;
+      galaxyColors[i * 3 + 2] = mixedColor.b;
+      
+      galaxySizes[i] = Math.random() * 1.5 + 0.5;
+    }
+    
+    galaxyGeometry.setAttribute('position', new THREE.BufferAttribute(galaxyPositions, 3));
+    galaxyGeometry.setAttribute('color', new THREE.BufferAttribute(galaxyColors, 3));
+    galaxyGeometry.setAttribute('size', new THREE.BufferAttribute(galaxySizes, 1));
+    const galaxyMaterial = new THREE.PointsMaterial({
+      size: 0.6, sizeAttenuation: true, vertexColors: true,
+      map: galaxyTexture, transparent: true, 
+      blending: THREE.AdditiveBlending, depthWrite: false
+    });
+    const galaxy = new THREE.Points(galaxyGeometry, galaxyMaterial);
+    galaxy.rotation.x = Math.PI * 0.1;
+    scene.add(galaxy);
+    
+    // 2.5 NEBULA CLOUDS (Atmospheric depth)
+    const nebulaGroup = new THREE.Group();
+    for (let i = 0; i < 8; i++) {
+      const nebulaMaterial = new THREE.SpriteMaterial({
+        map: nebulaTexture,
+        transparent: true,
+        opacity: 0.15 + Math.random() * 0.1,
+        blending: THREE.AdditiveBlending,
+        color: new THREE.Color().setHSL(0.75 + Math.random() * 0.1, 0.6, 0.5)
+      });
+      const nebula = new THREE.Sprite(nebulaMaterial);
+      nebula.position.set(
+        (Math.random() - 0.5) * 80,
+        (Math.random() - 0.5) * 30,
+        (Math.random() - 0.5) * 80
+      );
+      nebula.scale.set(30 + Math.random() * 20, 30 + Math.random() * 20, 1);
+      nebulaGroup.add(nebula);
+    }
+    scene.add(nebulaGroup);
+    
+    // 2.7 COSMIC DUST TRAIL (Mouse follower)
+    const dustTrail = [];
+    const dustCount = 50;
+    for (let i = 0; i < dustCount; i++) {
+      const dustMaterial = new THREE.SpriteMaterial({
+        map: starTexture,
+        transparent: true,
+        opacity: 0,
+        blending: THREE.AdditiveBlending,
+        color: new THREE.Color().setHSL(0.75 + Math.random() * 0.15, 0.8, 0.6)
+      });
+      const dust = new THREE.Sprite(dustMaterial);
+      dust.scale.set(0.5, 0.5, 1);
+      dust.position.set(0, 0, -10);
+      dust.userData = { life: 0, maxLife: 30 + Math.random() * 30, vx: 0, vy: 0 };
+      scene.add(dust);
+      dustTrail.push(dust);
+    }
+    let dustIndex = 0;
+    
+    // 2.8 WORMHOLE RINGS (Distant portals)
+    const wormholeGroup = new THREE.Group();
+    for (let w = 0; w < 3; w++) {
+      const ringGroup = new THREE.Group();
+      for (let i = 0; i < 5; i++) {
+        const ringGeo = new THREE.TorusGeometry(8 + i * 2, 0.1, 8, 64);
+        const ringMat = new THREE.MeshBasicMaterial({
+          color: new THREE.Color().setHSL(0.8 - i * 0.05, 0.7, 0.5),
+          transparent: true,
+          opacity: 0.3 - i * 0.05,
+          blending: THREE.AdditiveBlending
+        });
+        const ring = new THREE.Mesh(ringGeo, ringMat);
+        ring.position.z = -i * 3;
+        ringGroup.add(ring);
+      }
+      ringGroup.position.set(
+        (Math.random() - 0.5) * 200,
+        (Math.random() - 0.5) * 100,
+        -150 - Math.random() * 100
+      );
+      ringGroup.rotation.x = Math.random() * Math.PI;
+      ringGroup.rotation.y = Math.random() * Math.PI;
+      ringGroup.userData = { rotSpeed: 0.01 + Math.random() * 0.02 };
+      wormholeGroup.add(ringGroup);
+    }
+    scene.add(wormholeGroup);
+    
+    // 2.9 ASTEROID FIELD (Floating rocks)
+    const asteroidGroup = new THREE.Group();
+    for (let i = 0; i < 30; i++) {
+      const size = 0.3 + Math.random() * 0.7;
+      const asteroidGeo = new THREE.IcosahedronGeometry(size, 0);
+      const asteroidMat = new THREE.MeshBasicMaterial({
+        color: new THREE.Color().setHSL(0, 0, 0.2 + Math.random() * 0.1),
+        wireframe: Math.random() > 0.5
+      });
+      const asteroid = new THREE.Mesh(asteroidGeo, asteroidMat);
+      asteroid.position.set(
+        (Math.random() - 0.5) * 150,
+        (Math.random() - 0.5) * 80,
+        (Math.random() - 0.5) * 150
+      );
+      asteroid.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, Math.random() * Math.PI);
+      asteroid.userData = { 
+        rotX: (Math.random() - 0.5) * 0.02,
+        rotY: (Math.random() - 0.5) * 0.02,
+        floatSpeed: Math.random() * 0.5,
+        floatOffset: Math.random() * Math.PI * 2
+      };
+      asteroidGroup.add(asteroid);
+    }
+    scene.add(asteroidGroup);
+
+    // 3. BLACK HOLE (Center) - Enhanced
+    const blackHoleGeometry = new THREE.SphereGeometry(3, 32, 32);
+    const blackHoleMaterial = new THREE.MeshBasicMaterial({ color: 0x000000 });
+    const blackHole = new THREE.Mesh(blackHoleGeometry, blackHoleMaterial);
+    scene.add(blackHole);
+    
+    // Accretion disk - multiple layers
+    const diskGroup = new THREE.Group();
+    for (let i = 0; i < 3; i++) {
+      const diskGeometry = new THREE.RingGeometry(4 + i * 2, 6 + i * 3, 64);
+      const diskMaterial = new THREE.MeshBasicMaterial({
+        color: new THREE.Color().setHSL(0.75 - i * 0.05, 0.8, 0.5),
+        transparent: true, opacity: 0.25 - i * 0.05,
+        side: THREE.DoubleSide, blending: THREE.AdditiveBlending
+      });
+      const disk = new THREE.Mesh(diskGeometry, diskMaterial);
+      disk.rotation.x = Math.PI * 0.5;
+      disk.userData.speed = 0.2 - i * 0.05;
+      diskGroup.add(disk);
+    }
+    scene.add(diskGroup);
+    
+    // Event horizon glow
+    const glowGeometry = new THREE.RingGeometry(2.8, 4, 64);
+    const glowMaterial = new THREE.MeshBasicMaterial({
+      color: 0xa855f7, transparent: true, opacity: 0.4,
+      side: THREE.DoubleSide, blending: THREE.AdditiveBlending
+    });
+    const eventHorizon = new THREE.Mesh(glowGeometry, glowMaterial);
+    eventHorizon.rotation.x = Math.PI * 0.5;
+    scene.add(eventHorizon);
+    
+    // 4. SHOOTING STARS - Enhanced with glow
+    const shootingStars = [];
+    
+    function createShootingStar() {
+      const group = new THREE.Group();
+      
+      // Glowing head using sprite
+      const headMaterial = new THREE.SpriteMaterial({
+        map: starTexture, color: 0xffffff,
+        transparent: true, blending: THREE.AdditiveBlending
+      });
+      const head = new THREE.Sprite(headMaterial);
+      head.scale.set(2, 2, 1);
+      group.add(head);
+      
+      // Trail particles
+      for (let i = 1; i <= 10; i++) {
+        const trailMaterial = new THREE.SpriteMaterial({
+          map: starTexture,
+          color: new THREE.Color().setHSL(0.75, 0.8, 0.7 - i * 0.05),
+          transparent: true, opacity: 1 - i * 0.09,
+          blending: THREE.AdditiveBlending
+        });
+        const trail = new THREE.Sprite(trailMaterial);
+        trail.scale.set(1.5 - i * 0.1, 1.5 - i * 0.1, 1);
+        trail.position.set(i * 1.5, i * 0.8, 0);
+        group.add(trail);
+      }
+      
+      group.position.set(40 + Math.random() * 30, 25 + Math.random() * 20, -20 + Math.random() * 40);
+      group.velocity = { x: -1.5 - Math.random(), y: -0.8 - Math.random() * 0.4 };
+      group.life = 1;
+      scene.add(group);
+      shootingStars.push(group);
+    }
+    
+    setInterval(() => { if (shootingStars.length < 3) createShootingStar(); }, 3000);
+    setTimeout(createShootingStar, 1000);
+
+    
+    // ─────────────────────────────────────────────────────────────────────
+    // SECTION CAMERA DESTINATIONS
+    // ─────────────────────────────────────────────────────────────────────
+    const sections = [
+      { id: 'hero', z: 100, y: 10, rotX: 0.1, rotY: 0 },           // Far overview
+      { id: 'stats', z: 70, y: 5, rotX: 0.15, rotY: 0.3 },         // Approaching
+      { id: 'timeline', z: 50, y: 3, rotX: 0.2, rotY: 0.6 },       // Mid distance
+      { id: 'reality', z: 35, y: 2, rotX: 0.1, rotY: 1 },          // Closer
+      { id: 'philosophy', z: 15, y: 0, rotX: 0, rotY: 0 },         // Side view black hole
+      { id: 'project', z: 40, y: 5, rotX: 0.15, rotY: 1.5 },       // Pull back
+      { id: 'dedication', z: 60, y: 8, rotX: 0.1, rotY: 2 },       // Rising
+    ];
+    
+    // ─────────────────────────────────────────────────────────────────────
+    // SCROLL HANDLING
+    // ─────────────────────────────────────────────────────────────────────
+    const sectionElements = document.querySelectorAll('.universe-section');
+    const sectionDotWrappers = document.querySelectorAll('.section-dot-wrapper');
+    const sectionLabel = document.getElementById('current-section-label');
+    
+    const sectionNames = ['Overview', 'Achievements', 'Journey', 'Reality', 'Core', 'Creation', 'Dedication', 'To Be Continued'];
+    
+    function updateCurrentSection() {
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      
+      sectionElements.forEach((section, index) => {
+        const rect = section.getBoundingClientRect();
+        const sectionTop = rect.top;
+        const sectionBottom = rect.bottom;
+        
+        // Section is active if it occupies majority of viewport
+        if (sectionTop < windowHeight * 0.5 && sectionBottom > windowHeight * 0.5) {
+          if (currentSection !== index) {
+            currentSection = index;
+            
+            // Update dots
+            sectionDotWrappers.forEach((wrapper, i) => {
+              wrapper.classList.toggle('active', i === index);
+            });
+            
+            // Update section label
+            if (sectionLabel) {
+              sectionLabel.textContent = sectionNames[index] || '';
+            }
+          }
+        }
+      });
+      
+      // Update scroll progress
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const progress = (scrollY / docHeight) * 100;
+      document.getElementById('scroll-progress').style.width = progress + '%';
+    }
+    
+    window.addEventListener('scroll', updateCurrentSection);
+    
+    // ─────────────────────────────────────────────────────────────────────
+    // IMMERSIVE SCROLL EFFECTS
+    // ─────────────────────────────────────────────────────────────────────
+    let lastScrollY = 0;
+    let scrollVelocity = 0;
+    let lastSectionIndex = 0;
+    const momentumIndicator = document.getElementById('momentum-indicator');
+    const transitionOverlay = document.getElementById('transition-overlay');
+    
+    function updateScrollEffects() {
+      const currentScrollY = window.scrollY;
+      scrollVelocity = Math.abs(currentScrollY - lastScrollY);
+      lastScrollY = currentScrollY;
+      
+      // Momentum indicator - shows scroll speed
+      if (momentumIndicator) {
+        const intensity = Math.min(scrollVelocity / 50, 1);
+        if (intensity > 0.1) {
+          momentumIndicator.classList.add('active');
+          momentumIndicator.style.width = `${100 + intensity * 200}px`;
+          momentumIndicator.style.height = `${3 + intensity * 3}px`;
+        } else {
+          momentumIndicator.classList.remove('active');
+        }
+        
+        // Warp speed effect on fast scroll - stretch the canvas
+        const canvas = document.getElementById('universe-canvas');
+        if (canvas && intensity > 0.2) {
+          canvas.style.transform = `scaleY(${1 + intensity * 0.05})`;
+          canvas.style.filter = `blur(${intensity * 2}px)`;
+        } else if (canvas) {
+          canvas.style.transform = 'scaleY(1)';
+          canvas.style.filter = 'blur(0px)';
+        }
+      }
+      
+      // Section transition effect
+      if (currentSection !== lastSectionIndex) {
+        // Trigger transition pulse
+        if (transitionOverlay) {
+          transitionOverlay.style.background = 'radial-gradient(circle at center, transparent 0%, rgba(139, 92, 246, 0.15) 50%, rgba(10, 10, 15, 0.4) 100%)';
+          setTimeout(() => {
+            transitionOverlay.style.background = 'transparent';
+          }, 400);
+        }
+        
+        lastSectionIndex = currentSection;
+      }
+      
+      requestAnimationFrame(updateScrollEffects);
+    }
+    updateScrollEffects();
+    
+    // Section dot click navigation
+    sectionDotWrappers.forEach(wrapper => {
+      wrapper.addEventListener('click', () => {
+        const sectionId = wrapper.dataset.section;
+        document.getElementById(sectionId)?.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+    
+    // COSMIC CLICK RIPPLE
+    document.addEventListener('click', (e) => {
+      const ripple = document.createElement('div');
+      ripple.style.cssText = `
+        position: fixed;
+        left: ${e.clientX}px;
+        top: ${e.clientY}px;
+        width: 10px;
+        height: 10px;
+        background: radial-gradient(circle, rgba(168, 85, 247, 0.8), transparent);
+        border-radius: 50%;
+        transform: translate(-50%, -50%) scale(0);
+        pointer-events: none;
+        z-index: 9998;
+        animation: rippleExpand 0.8s ease-out forwards;
+      `;
+      document.body.appendChild(ripple);
+      setTimeout(() => ripple.remove(), 800);
+    });
+    
+    // Add ripple keyframes
+    const rippleStyle = document.createElement('style');
+    rippleStyle.textContent = `
+      @keyframes rippleExpand {
+        0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+        100% { transform: translate(-50%, -50%) scale(50); opacity: 0; }
+      }
+    `;
+    document.head.appendChild(rippleStyle);
+    
+    // ─────────────────────────────────────────────────────────────────────
+    // FADE IN OBSERVER
+    // ─────────────────────────────────────────────────────────────────────
+    const fadeObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+    
+    document.querySelectorAll('.fade-in').forEach(el => fadeObserver.observe(el));
+    
+    // ─────────────────────────────────────────────────────────────────────
+    // MOUSE INTERACTION
+    // ─────────────────────────────────────────────────────────────────────
+    let mouseWorldX = 0, mouseWorldY = 0;
+    document.addEventListener('mousemove', (e) => {
+      mouseX = (e.clientX / window.innerWidth - 0.5) * 2;
+      mouseY = (e.clientY / window.innerHeight - 0.5) * 2;
+      mouseWorldX = mouseX * 50;
+      mouseWorldY = -mouseY * 30;
+      
+      // Spawn cosmic dust at mouse position
+      const dust = dustTrail[dustIndex];
+      dust.position.set(mouseWorldX, mouseWorldY, camera.position.z - 20);
+      dust.material.opacity = 0.8;
+      dust.userData.life = 0;
+      dust.userData.vx = (Math.random() - 0.5) * 0.5;
+      dust.userData.vy = (Math.random() - 0.5) * 0.5;
+      dustIndex = (dustIndex + 1) % dustCount;
+    });
+
+    
+    // ─────────────────────────────────────────────────────────────────────
+    // ANIMATION LOOP
+    // ─────────────────────────────────────────────────────────────────────
+    const clock = new THREE.Clock();
+    
+    function animate() {
+      requestAnimationFrame(animate);
+      const elapsed = clock.getElapsedTime();
+      
+      // Get target camera position based on current section
+      const target = sections[currentSection] || sections[0];
+      
+      // Smooth camera movement (lerp factor)
+      camera.position.z += (target.z - camera.position.z) * 0.035;
+      camera.position.y += ((target.y || 0) - camera.position.y) * 0.035;
+      camera.lookAt(0, 0, 0); // Always look at center (black hole)
+      
+      // Galaxy rotation based on section + mouse
+      galaxy.rotation.y = elapsed * 0.03 + target.rotY;
+      galaxy.rotation.x = target.rotX + mouseY * 0.05;
+      galaxy.rotation.y += mouseX * 0.05;
+      
+      // Section-specific galaxy intensity
+      const sectionIntensity = [1.0, 0.8, 0.7, 0.6, 0.4, 0.7, 0.9][currentSection] || 0.8;
+      galaxyMaterial.opacity = 0.7 * sectionIntensity;
+      
+      // Stars subtle parallax (enhanced)
+      stars.rotation.y = elapsed * 0.005 + mouseX * 0.03;
+      stars.rotation.x = mouseY * 0.03;
+      
+      // Cosmic dust trail animation
+      dustTrail.forEach(dust => {
+        if (dust.material.opacity > 0) {
+          dust.userData.life++;
+          dust.position.x += dust.userData.vx;
+          dust.position.y += dust.userData.vy;
+          dust.material.opacity = Math.max(0, 0.8 - dust.userData.life / dust.userData.maxLife);
+          dust.scale.setScalar(0.5 + dust.userData.life * 0.02);
+        }
+      });
+      
+      // Wormhole rotation
+      wormholeGroup.children.forEach((wormhole, i) => {
+        wormhole.rotation.z += wormhole.userData.rotSpeed;
+        wormhole.children.forEach((ring, j) => {
+          ring.rotation.z = elapsed * (0.5 + j * 0.1) * (i % 2 ? 1 : -1);
+        });
+      });
+      
+      // Asteroid floating and rotation
+      asteroidGroup.children.forEach((asteroid) => {
+        asteroid.rotation.x += asteroid.userData.rotX;
+        asteroid.rotation.y += asteroid.userData.rotY;
+        asteroid.position.y += Math.sin(elapsed * asteroid.userData.floatSpeed + asteroid.userData.floatOffset) * 0.01;
+      });
+      
+      // Matrix rain animation
+      matrixDrops.forEach(drop => {
+        drop.y -= drop.speed;
+        if (drop.y < -100) {
+          drop.y = 100;
+        }
+        drop.chars.forEach((sprite, j) => {
+          sprite.position.y = drop.y - j * 3;
+        });
+      });
+      
+      // Nebula subtle movement (enhanced)
+      nebulaGroup.rotation.y = elapsed * 0.01;
+      nebulaGroup.children.forEach((nebula, i) => {
+        nebula.material.opacity = 0.12 + Math.sin(elapsed * 0.4 + i * 0.5) * 0.06;
+        nebula.position.y += Math.sin(elapsed * 0.3 + i) * 0.002;
+      });
+      
+      // Black hole disk rotation (multiple layers at different speeds)
+      diskGroup.children.forEach((disk, i) => {
+        disk.rotation.z = elapsed * disk.userData.speed;
+      });
+      eventHorizon.rotation.z = -elapsed * 0.3;
+      
+      // Pulsing effect near black hole (philosophy section)
+      // Also sync HTML black hole visual
+      const bhVisual = document.getElementById('blackhole-visual');
+      const bhOuterRing = document.getElementById('bh-outer-ring');
+      const bhAccretion = document.getElementById('bh-accretion');
+      const bhInner = document.getElementById('bh-inner');
+      const bhHorizon = document.getElementById('bh-horizon');
+      const bhCore = document.getElementById('bh-core');
+      const bhEclipse = document.getElementById('bh-eclipse');
+      
+      if (bhVisual) {
+        const rect = bhVisual.getBoundingClientRect();
+        const viewportCenter = window.innerHeight / 2;
+        const elementCenter = rect.top + rect.height / 2;
+        const distanceFromCenter = Math.abs(viewportCenter - elementCenter);
+        const maxDistance = window.innerHeight / 2;
+        
+        // Intensity: 1 when perfectly centered, 0 when at edge
+        const intensity = Math.max(0, 1 - (distanceFromCenter / maxDistance));
+        const intensitySquared = intensity * intensity; // More dramatic curve
+        
+        // Apply intensity to HTML elements
+        if (bhOuterRing) {
+          bhOuterRing.style.borderColor = `rgba(168, 85, 247, ${0.2 + intensitySquared * 0.6})`;
+          bhOuterRing.style.boxShadow = `0 0 ${20 + intensitySquared * 40}px rgba(168, 85, 247, ${intensitySquared * 0.5})`;
+        }
+        if (bhAccretion) {
+          bhAccretion.style.borderColor = `rgba(168, 85, 247, ${0.3 + intensitySquared * 0.5})`;
+        }
+        if (bhInner) {
+          bhInner.style.borderColor = `rgba(236, 72, 153, ${0.2 + intensitySquared * 0.6})`;
+        }
+        if (bhHorizon) {
+          bhHorizon.style.background = `radial-gradient(circle, rgba(168, 85, 247, ${intensitySquared * 0.4}) 0%, transparent 70%)`;
+        }
+        if (bhCore) {
+          bhCore.style.boxShadow = `0 0 ${30 + intensitySquared * 50}px rgba(139, 92, 246, ${intensitySquared * 0.8}), inset 0 0 ${intensitySquared * 20}px rgba(139, 92, 246, ${intensitySquared * 0.3})`;
+        }
+        if (bhEclipse) {
+          // Horizontal light beam - the eclipse effect
+          bhEclipse.style.background = `linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, ${intensitySquared * 0.9}) 30%, rgba(168, 85, 247, ${intensitySquared}) 50%, rgba(255, 255, 255, ${intensitySquared * 0.9}) 70%, transparent 100%)`;
+          bhEclipse.style.height = `${2 + intensitySquared * 4}px`;
+          bhEclipse.style.filter = `blur(${intensitySquared * 2}px)`;
+        }
+        
+        // Scale effect
+        const scale = 1 + intensitySquared * 0.1;
+        bhVisual.style.transform = `scale(${scale})`;
+      }
+      
+      // Three.js black hole sync - enhanced pulse in Philosophy
+      if (currentSection === 4) {
+        const pulse = Math.sin(elapsed * 1.5) * 0.2 + 1;
+        const breathe = Math.sin(elapsed * 0.8) * 0.1;
+        diskGroup.scale.set(pulse, pulse, pulse);
+        blackHole.scale.set(1 + breathe, 1 + breathe, 1 + breathe);
+        eventHorizon.material.opacity = 0.4 + Math.sin(elapsed * 2) * 0.25;
+        glowMaterial.opacity = 0.5 + Math.sin(elapsed * 1.5) * 0.25;
+      } else {
+        diskGroup.scale.set(1, 1, 1);
+        eventHorizon.material.opacity = 0.4;
+      }
+      
+      // Shooting stars update
+      for (let i = shootingStars.length - 1; i >= 0; i--) {
+        const meteor = shootingStars[i];
+        meteor.position.x += meteor.velocity.x;
+        meteor.position.y += meteor.velocity.y;
+        meteor.life -= 0.008;
+        
+        meteor.children.forEach(child => {
+          if (child.material) child.material.opacity = meteor.life;
+        });
+        
+        if (meteor.life <= 0 || meteor.position.x < -80) {
+          scene.remove(meteor);
+          shootingStars.splice(i, 1);
+        }
+      }
+      
+      // Camera look at center with slight offset
+      camera.position.x += (mouseX * 3 - camera.position.x) * 0.02;
+      camera.position.y += (-mouseY * 3 - camera.position.y) * 0.02;
+      camera.lookAt(0, 0, 0);
+      
+      renderer.render(scene, camera);
+    }
+    
+    animate();
+    
+    // ─────────────────────────────────────────────────────────────────────
+    // RESIZE HANDLER
+    // ─────────────────────────────────────────────────────────────────────
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+    
+    // Initial section check
+    updateCurrentSection();
+    
+    // Hide loading screen
+    setTimeout(() => {
+      document.getElementById('loading-screen')?.classList.add('hidden');
+    }, 800);
+  });
+  
+  // ═══════════════════════════════════════════════════════════════════════
+  // KEYBOARD NAVIGATION
+  // ═══════════════════════════════════════════════════════════════════════
+  const sectionIds = ['hero', 'stats', 'timeline', 'reality', 'philosophy', 'project', 'dedication'];
+  let targetSectionIndex = 0;
+  let scrollAnimationId = null;
+  
+  function smoothScrollTo(element) {
+    if (!element) return;
+    
+    // Cancel previous animation
+    if (scrollAnimationId) {
+      cancelAnimationFrame(scrollAnimationId);
+    }
+    
+    const targetY = element.offsetTop;
+    const startY = window.scrollY;
+    const distance = targetY - startY;
+    const duration = 1400;
+    let startTime = null;
+    
+    // Rocket feather - cepat di awal, magnet landing di akhir
+    function rocketFeatherEase(t) {
+      if (t < 0.4) {
+        // Rocket boost! - cepat di awal (70% jarak dalam 40% waktu)
+        return 1.75 * t;
+      } else {
+        // Magnetic landing - super pelan mendarat (30% jarak dalam 60% waktu)
+        const landing = (t - 0.4) / 0.6;
+        return 0.7 + 0.3 * (1 - Math.pow(1 - landing, 4));
+      }
+    }
+    
+    function step(currentTime) {
+      if (!startTime) startTime = currentTime;
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      window.scrollTo(0, startY + distance * rocketFeatherEase(progress));
+      
+      if (progress < 1) {
+        scrollAnimationId = requestAnimationFrame(step);
+      } else {
+        scrollAnimationId = null;
+      }
+    }
+    
+    scrollAnimationId = requestAnimationFrame(step);
+  }
+  
+  document.addEventListener('keydown', (e) => {
+    // Arrow down or Space or Page Down
+    if (e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      targetSectionIndex = Math.min(targetSectionIndex + 1, sectionIds.length - 1);
+      smoothScrollTo(document.getElementById(sectionIds[targetSectionIndex]));
+    }
+    // Arrow up or Page Up
+    if (e.key === 'ArrowUp' || e.key === 'PageUp') {
+      e.preventDefault();
+      targetSectionIndex = Math.max(targetSectionIndex - 1, 0);
+      smoothScrollTo(document.getElementById(sectionIds[targetSectionIndex]));
+    }
+    // Home
+    if (e.key === 'Home') {
+      e.preventDefault();
+      targetSectionIndex = 0;
+      smoothScrollTo(document.getElementById(sectionIds[0]));
+    }
+    // End
+    if (e.key === 'End') {
+      e.preventDefault();
+      targetSectionIndex = sectionIds.length - 1;
+      smoothScrollTo(document.getElementById(sectionIds[targetSectionIndex]));
+    }
+  });
+  
+  // Sync targetSectionIndex when user scrolls manually
+  window.addEventListener('scroll', () => {
+    if (scrollAnimationId) return; // Don't sync during animation
+    const sections = document.querySelectorAll('.universe-section');
+    sections.forEach((section, index) => {
+      const rect = section.getBoundingClientRect();
+      if (rect.top < window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.5) {
+        if (index < sectionIds.length) targetSectionIndex = index;
+      }
+    });
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════
+  // EASTER EGG: Konami Code - Reveal Multiverse
+  // ═══════════════════════════════════════════════════════════════════════
+  const konamiCode = [38,38,40,40,37,39,37,39,66,65];
+  let konamiIndex = 0;
+  
+  document.addEventListener('keydown', (e) => {
+    if (e.keyCode === konamiCode[konamiIndex]) {
+      konamiIndex++;
+      if (konamiIndex === konamiCode.length) {
+        konamiIndex = 0;
+        document.body.innerHTML += `
+          <div id="multiverse" style="position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,rgba(139,92,246,0.2),rgba(0,0,0,0.98));animation:fadeIn 1s">
+            <div style="text-align:center;max-width:500px;padding:2rem">
+              <p style="font-size:4rem;margin-bottom:1rem">🌌</p>
+              <h2 style="font-size:2rem;background:linear-gradient(90deg,#a855f7,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:1rem">The Multiverse Awaits</h2>
+              <p style="color:#888;margin-bottom:0.5rem">This is just Episode 1: Web Technology</p>
+              <p style="color:#666;font-size:0.9rem;margin-bottom:2rem">More universes exist within. Music. Art. Philosophy. Health. Relationships. Each waiting to be explored.</p>
+              <p style="color:#a855f7;font-style:italic;margin-bottom:2rem">"Every human is a multiverse."</p>
+              <button onclick="document.getElementById('multiverse').remove()" style="padding:0.75rem 2rem;background:linear-gradient(90deg,#a855f7,#ec4899);border:none;border-radius:0.5rem;color:white;cursor:pointer;font-weight:500">Continue Episode 1</button>
+            </div>
+          </div>
+        `;
+      }
+    } else {
+      konamiIndex = 0;
+    }
+  });
+  </script>
+</body>
+</html>
