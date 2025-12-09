@@ -38,15 +38,19 @@
   <!-- Open Graph Image -->
   <meta property="og:image" content="https://sandikodev.github.io/snapcode/static/brand.png">
   
-  <!-- Fira Code Font -->
+  <!-- DNS Prefetch & Preconnect for CDN -->
+  <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+  <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+  
+  <!-- Fira Code Font with font-display swap -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   
-  <!-- KaTeX for Math -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <!-- KaTeX - Lazy loaded when enabled -->
+  <!-- Moved to dynamic loading in script -->
   
   <!-- Inline Prism CSS to avoid CORS -->
   <style>
@@ -200,17 +204,25 @@
     }
   </style>
   
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+  <!-- Preload critical scripts -->
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js" as="script">
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" as="script">
+  
+  <!-- Critical scripts (defer for non-blocking) -->
+  <script defer src="https://cdn.tailwindcss.com"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-markup.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-css.min.js"></script>
+  <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/dompurify@3.0.8/dist/purify.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  
+  <!-- Heavy dependencies - Lazy loaded when needed -->
+  <!-- Mermaid & KaTeX loaded dynamically -->
+  
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
   
   <style>
@@ -754,6 +766,64 @@
   </div>
 
   <script>
+    // Lazy Loading Utilities
+    const loadedScripts = new Set();
+    const loadedStyles = new Set();
+    
+    function loadScript(src) {
+      if (loadedScripts.has(src)) return Promise.resolve();
+      
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = () => {
+          loadedScripts.add(src);
+          resolve();
+        };
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    }
+    
+    function loadStyle(href) {
+      if (loadedStyles.has(href)) return Promise.resolve();
+      
+      return new Promise((resolve, reject) => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = href;
+        link.onload = () => {
+          loadedStyles.add(href);
+          resolve();
+        };
+        link.onerror = reject;
+        document.head.appendChild(link);
+      });
+    }
+    
+    // Lazy load KaTeX
+    async function loadKaTeX() {
+      if (window.katex) return;
+      
+      await Promise.all([
+        loadStyle('https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css'),
+        loadScript('https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js')
+      ]);
+      
+      await loadScript('https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js');
+    }
+    
+    // Lazy load Mermaid
+    async function loadMermaid() {
+      if (window.mermaid) return;
+      
+      await loadScript('https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js');
+      
+      if (window.mermaid) {
+        mermaid.initialize({ startOnLoad: false, theme: 'dark' });
+      }
+    }
+    
     function app() {
       return {
         content: '',
@@ -883,8 +953,16 @@
           const raw = marked.parse(this.content);
           let html = DOMPurify.sanitize(raw);
           
-          // Process Mermaid diagrams if enabled
-          if (this.useMermaid) {
+          // Lazy load and process Mermaid diagrams if enabled
+          if (this.useMermaid && html.includes('language-mermaid')) {
+            loadMermaid().then(() => {
+              this.$nextTick(() => {
+                if (window.mermaid) {
+                  mermaid.run();
+                }
+              });
+            });
+            
             html = html.replace(/<pre><code class="language-mermaid">([\s\S]*?)<\/code><\/pre>/g, (match, code) => {
               const decoded = code
                 .replace(/&lt;/g, '<')
@@ -893,6 +971,27 @@
                 .replace(/&quot;/g, '"')
                 .replace(/&#39;/g, "'");
               return `<div class="mermaid">${decoded}</div>`;
+            });
+          }
+          
+          // Lazy load KaTeX if math detected
+          if (this.useKatex && (html.includes('$') || html.includes('\\('))) {
+            loadKaTeX().then(() => {
+              this.$nextTick(() => {
+                if (window.renderMathInElement) {
+                  const element = document.querySelector('.preview-content');
+                  if (element) {
+                    renderMathInElement(element, {
+                      delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false},
+                        {left: '\\(', right: '\\)', display: false},
+                        {left: '\\[', right: '\\]', display: true}
+                      ]
+                    });
+                  }
+                }
+              });
             });
           }
           
