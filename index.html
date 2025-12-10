@@ -27,6 +27,31 @@
   <!-- Canonical URL -->
   <link rel="canonical" href="https://sandikodev.github.io/snapcode/">
   
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "SnapCode",
+    "description": "Create beautiful images of your markdown with OS window simulations, Fira Code ligatures, Mermaid diagrams, and KaTeX math formulas",
+    "url": "https://sandikodev.github.io/snapcode",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Any",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "sandikodev",
+      "url": "https://github.com/sandikodev"
+    },
+    "datePublished": "2025-12-10",
+    "softwareVersion": "1.0.0"
+  }
+  </script>
+  
   <!-- Favicon & Icons -->
   <link rel="icon" type="image/x-icon" href="static/favicon.ico">
   <link rel="icon" type="image/png" sizes="16x16" href="static/favicon-16x16.png">
@@ -204,12 +229,14 @@
     }
   </style>
   
+  <!-- Tailwind CSS - MUST load first (blocking) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
   <!-- Preload critical scripts -->
   <link rel="preload" href="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js" as="script">
   <link rel="preload" href="https://cdn.jsdelivr.net/npm/marked@11.1.1/marked.min.js" as="script">
   
-  <!-- Critical scripts (defer for non-blocking) -->
-  <script defer src="https://cdn.tailwindcss.com"></script>
+  <!-- Non-critical scripts (defer for non-blocking) -->
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
   <script defer src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
@@ -226,6 +253,15 @@
   <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js"></script>
   
   <style>
+    /* Critical CSS - prevent FOUC */
+    body { 
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    body.loaded { 
+      opacity: 1; 
+    }
+    
     @keyframes gradient {
       0% { background-position: 0% 50%; }
       50% { background-position: 100% 50%; }
@@ -237,13 +273,62 @@
       background-size: 400% 400%;
       animation: gradient 15s ease infinite;
     }
+    
+    /* Markdown bullet points fix */
+    .preview-content ul {
+      list-style-type: disc !important;
+      padding-left: 1.5em !important;
+      margin: 0.5em 0 !important;
+    }
+    .preview-content ol {
+      list-style-type: decimal !important;
+      padding-left: 1.5em !important;
+      margin: 0.5em 0 !important;
+    }
+    .preview-content li {
+      display: list-item !important;
+      margin: 0.25em 0 !important;
+    }
+    .preview-content ul ul {
+      list-style-type: circle !important;
+    }
+    .preview-content ul ul ul {
+      list-style-type: square !important;
+    }
+    
+    /* Focus indicators for accessibility */
+    button:focus-visible,
+    select:focus-visible,
+    input:focus-visible,
+    textarea:focus-visible {
+      outline: 2px solid #8b5cf6 !important;
+      outline-offset: 2px !important;
+    }
+    
+    /* Skip to content link */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: #8b5cf6;
+      color: white;
+      padding: 8px 16px;
+      z-index: 100;
+      transition: top 0.3s;
+    }
+    .skip-link:focus {
+      top: 0;
+    }
   </style>
 </head>
 <body>
-  <div x-data="app()" x-init="init()">
+  <!-- Skip to main content for accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+  
+  <div x-data="app()" x-init="init(); $nextTick(() => document.body.classList.add('loaded'))">
     <style x-html="styles"></style>
     
-    <div class="min-h-screen animated-bg p-8">
+    <main id="main-content" class="min-h-screen animated-bg p-8" role="main">
       <div class="max-w-7xl mx-auto">
         <div class="text-center mb-8">
           <h1 class="text-4xl font-bold text-white mb-2">SnapCode</h1>
@@ -766,7 +851,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </main>
   </div>
 
   <script>
