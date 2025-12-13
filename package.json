@@ -1,0 +1,29 @@
+{
+  "name": "snapcode-linting",
+  "version": "1.0.0",
+  "description": "Linting and validation tools for SnapCode",
+  "type": "module",
+  "scripts": {
+    "lint": "npm run lint:html && npm run lint:js:main",
+    "lint:html": "htmlhint index.html",
+    "lint:css": "stylelint '**/*.css' --ignore-path .gitignore",
+    "lint:js": "eslint --ext .js,.html .",
+    "lint:js:main": "eslint index.html js/utils/*.js",
+    "format": "prettier --write '**/*.{html,css,js,json,md}'",
+    "format:main": "prettier --write 'index.html' 'js/**/*.js' '*.{json,md}'",
+    "validate": "html-validate index.html",
+    "validate:custom": "node validate.js",
+    "check": "npm run validate:custom && npm run lint",
+    "check:main": "npm run validate:custom && npm run lint:html && npm run lint:js:main"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-html": "^8.0.0",
+    "htmlhint": "^1.1.4",
+    "html-validate": "^8.0.0",
+    "prettier": "^3.0.0",
+    "stylelint": "^16.0.0",
+    "stylelint-config-standard": "^36.0.0"
+  }
+}

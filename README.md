@@ -85,6 +85,15 @@ open index.html
 - ✅ **Single File** - Just 56KB HTML file
 - ✅ **CDN Dependencies** - No node_modules bloat
 
+### Development Tools (Optional)
+While the app is buildless, we use **development utilities** for code quality:
+- 🔍 **HTMLHint** - HTML validation and linting
+- 🔧 **ESLint** - JavaScript linting with Alpine.js support
+- 🎨 **Prettier** - Consistent code formatting
+- ✅ **Custom Validator** - SnapCode-specific checks
+
+> **Why?** Teaching beginners that professional development includes quality tools, even for static sites. These are **dev utilities**, not runtime dependencies.
+
 ### Python Server?
 The `server.py` is **OPTIONAL** and only for:
 - 📚 Learning dynamic file loading
@@ -110,6 +119,32 @@ open index.html
 ```
 
 That's it! No npm install, no build process, no dependencies to manage.
+
+### Option 3: Development with Professional Tools (Recommended for Learning)
+```bash
+# Clone the repository
+git clone https://github.com/sandikodev/snapcode.git
+cd snapcode
+
+# Install development utilities (linting, formatting, validation)
+pnpm install
+
+# Run quality checks
+pnpm run check:main
+
+# Open in browser
+open index.html
+```
+
+> 💡 **Learning Note**: Even for static HTML projects, professional developers use quality tools. The `pnpm install` here installs **development utilities only** (not runtime dependencies). This teaches:
+> - **Clean Development Environment** - Consistent code quality
+> - **Professional Workflow** - Industry-standard tools from day one  
+> - **Best Practices** - Linting, formatting, validation
+> - **Tool Separation** - Dev tools ≠ Runtime dependencies
+> 
+> The app still runs 100% in browser without any build step!
+
+📖 Read more: [LINTING.md](LINTING.md)
 
 ---
 
