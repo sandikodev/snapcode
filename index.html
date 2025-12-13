@@ -1050,6 +1050,7 @@
       }
     }
     
+    // eslint-disable-next-line no-unused-vars
     function app() {
       return {
         content: '',
@@ -1576,7 +1577,7 @@
           
           this.$watch('useKatex', async () => {
             if (this.useKatex) {
-              await loadKatex();
+              await loadKaTeX();
               this.$nextTick(() => this.renderKatex());
             }
           });
@@ -1650,7 +1651,9 @@
               this.content = decodeURIComponent(atob(encoded));
               this.pushHistory(this.content);
               return true;
-            } catch(e) {}
+            } catch(e) {
+              console.warn('Failed to decode URL content:', e);
+            }
           }
           return false;
         },
@@ -1683,7 +1686,7 @@
             a.click();
             URL.revokeObjectURL(url);
             this.showToast('SVG exported!', 'success');
-          } catch(e) {
+          } catch(_e) {
             this.showToast('Export failed', 'error');
           }
           this.isExporting = false;
@@ -1767,7 +1770,7 @@
             } else {
               this.content = '# Welcome to SnapCode\n\nStart typing your markdown here...';
             }
-          } catch (err) {
+          } catch (_err) {
             this.content = '# Welcome to SnapCode\n\nStart typing your markdown here...';
           }
         },
@@ -1826,7 +1829,7 @@
                       size: content.length
                     });
                   }
-                } catch (err) {
+                } catch (_err) {
                   console.log(`Could not load ${fileInfo.name}`);
                 }
               }
@@ -1847,7 +1850,7 @@
                         size: content.length
                       });
                     }
-                  } catch (err) {
+                  } catch (_err) {
                     console.log(`Could not load ${fileInfo.name}`);
                   }
                 }
@@ -1871,7 +1874,7 @@
                         size: content.length
                       });
                     }
-                  } catch (err) {
+                  } catch (_err) {
                     console.log(`Could not load ${filename}`);
                   }
                 }
@@ -1937,7 +1940,7 @@
                   new ClipboardItem({ 'image/png': blob })
                 ]);
                 this.showToast('Image copied!', 'success');
-              } catch (err) {
+              } catch (_err) {
                 this.showToast('Copy not supported, use Export', 'error');
               }
             });
