@@ -229,9 +229,18 @@
     }
   </style>
   
-  <!-- Tailwind CSS - MUST load first (blocking) -->
+  <!-- Tailwind CSS - CDN used intentionally for buildless architecture -->
+  <!-- Warning about production usage is expected - this is a single-file app -->
   <script>window.tailwind = { config: {} }</script>
   <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  <script>
+    // Suppress Tailwind CDN warning - intentional for buildless architecture
+    const originalWarn = console.warn;
+    console.warn = function(...args) {
+      if (args[0] && args[0].includes('should not be used in production')) return;
+      originalWarn.apply(console, args);
+    };
+  </script>
   
   <!-- Preload critical scripts -->
   <link rel="preload" href="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js" as="script">
@@ -495,30 +504,25 @@
               
               <div class="bg-gray-900 rounded-lg h-96 overflow-y-auto">
                 <!-- Loading State -->
-                <template x-if="loadingFolder">
-                  <div class="flex flex-col items-center justify-center h-full text-gray-400">
+                <div x-show="loadingFolder" class="flex flex-col items-center justify-center h-full text-gray-400">
                     <svg class="w-12 h-12 animate-spin mb-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                       <circle cx="12" cy="12" r="10" stroke-opacity="0.25"></circle>
                       <path d="M12 2a10 10 0 0 1 10 10" stroke-opacity="0.75"></path>
                     </svg>
                     <p class="text-sm">Loading files...</p>
                   </div>
-                </template>
                 
                 <!-- Empty State -->
-                <template x-if="!loadingFolder && files.length === 0">
-                  <div class="flex flex-col items-center justify-center h-full text-gray-500">
+                <div x-show="!loadingFolder && files.length === 0" class="flex flex-col items-center justify-center h-full text-gray-500">
                     <svg class="w-16 h-16 mb-4" fill="none" stroke="currentColor" stroke-width="1" viewBox="0 0 24 24">
                       <path d="M3 7v10a2 2 0 0 02 2h14a2 2 0 0 02-2V9a2 2 0 0 0-2-2h-6l-2-2H5a2 2 0 0 0-2 2z"></path>
                     </svg>
                     <p>No files yet</p>
                     <p class="text-sm mt-2">Click "Content" or "Docs" to load files</p>
                   </div>
-                </template>
                 
                 <!-- File List -->
-                <template x-if="!loadingFolder && files.length > 0">
-                  <div class="divide-y divide-gray-800">
+                <div x-show="!loadingFolder && files.length > 0" class="divide-y divide-gray-800">
                     <template x-for="(file, index) in files" :key="index">
                       <div 
                         @click="selectFile(index)"
@@ -545,7 +549,6 @@
                       </div>
                     </template>
                   </div>
-                </template>
               </div>
             </div>
 
@@ -759,8 +762,8 @@
                   :title="'Fullscreen (F11)'"
                 >
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <template x-if="!isFullscreen"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></template>
-                    <template x-if="isFullscreen"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path></template>
+                    <path x-show="!isFullscreen" d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+                    <path x-show="isFullscreen" d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path>
                   </svg>
                 </button>
                 <!-- Print -->
@@ -821,8 +824,7 @@
                 :style="windowBorder"
               >
                 <!-- macOS: Separate frame with title bar -->
-                <template x-if="windowStyle.includes('macos')">
-                  <div :style="windowFrameStyle">
+                <div x-show="windowStyle.includes('macos')" :style="windowFrameStyle">
                     <div :style="titleBarStyle">
                       <div class="flex items-center py-3 px-4">
                         <div class="flex items-center gap-2">
@@ -869,16 +871,13 @@
                       ></div>
                     </div>
                   </div>
-                </template>
 
                 <!-- Windows/ChromeOS: No frame, title bar directly on content -->
-                <template x-if="!windowStyle.includes('macos')">
-                  <div>
+                <div x-show="!windowStyle.includes('macos')">
                     <!-- Title Bar -->
                     <div :style="titleBarStyle">
                       <!-- Windows 11 -->
-                      <template x-if="windowStyle === 'windows-11'">
-                        <div class="flex items-center justify-between" style="padding: 0 16px 0 16px; height: 40px;">
+                      <div x-show="windowStyle === 'windows-11'" class="flex items-center justify-between" style="padding: 0 16px 0 16px; height: 40px;">
                           <div class="flex items-center gap-3">
                             <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 16 16">
                               <path d="M1.75 1.75v5.5h5.5v-5.5h-5.5zm7 0v5.5h5.5v-5.5h-5.5zm-7 7v5.5h5.5v-5.5h-5.5zm7 0v5.5h5.5v-5.5h-5.5z"/>
@@ -905,11 +904,9 @@
                             </button>
                           </div>
                         </div>
-                      </template>
 
                       <!-- Windows 10 -->
-                      <template x-if="windowStyle === 'windows-10'">
-                        <div class="flex items-center justify-between" style="padding: 0 8px 0 8px; height: 32px;">
+                      <div x-show="windowStyle === 'windows-10'" class="flex items-center justify-between" style="padding: 0 8px 0 8px; height: 32px;">
                           <div class="flex items-center gap-2">
                             <svg class="w-4 h-4 text-gray-600" fill="currentColor" viewBox="0 0 16 16">
                               <path d="M14 2H2v12h12V2zM4 4h8v2H4V4zm0 3h8v2H4V7zm0 3h5v2H4v-2z"/>
@@ -936,11 +933,9 @@
                             </button>
                           </div>
                         </div>
-                      </template>
 
                       <!-- Chrome OS -->
-                      <template x-if="windowStyle === 'chromeos'">
-                        <div class="flex items-center justify-between py-2 px-4">
+                      <div x-show="windowStyle === 'chromeos'" class="flex items-center justify-between py-2 px-4">
                           <div class="flex items-center gap-3">
                             <svg class="w-4 h-4 text-gray-700" fill="currentColor" viewBox="0 0 16 16">
                               <circle cx="8" cy="8" r="6" fill="none" stroke="currentColor" stroke-width="1.5"/>
@@ -968,7 +963,6 @@
                             </button>
                           </div>
                         </div>
-                      </template>
                     </div>
 
                     <!-- Content Area -->
@@ -989,7 +983,6 @@
                       ></div>
                     </div>
                   </div>
-                </template>
               </div>
             </div>
           </div>
