@@ -230,7 +230,8 @@
   </style>
   
   <!-- Tailwind CSS - MUST load first (blocking) -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script>window.tailwind = { config: {} }</script>
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
   
   <!-- Preload critical scripts -->
   <link rel="preload" href="https://cdn.jsdelivr.net/npm/alpinejs@3.13.3/dist/cdn.min.js" as="script">
@@ -274,27 +275,24 @@
       animation: gradient 15s ease infinite;
     }
     
-    /* Markdown bullet points fix */
-    .preview-content ul {
-      list-style-type: disc !important;
-      padding-left: 1.5em !important;
+    /* Markdown bullet points fix - override Tailwind reset */
+    .preview-content ul,
+    .preview-content ol {
       margin: 0.5em 0 !important;
+      padding-left: 2em !important;
+    }
+    .preview-content ul {
+      list-style: disc outside !important;
     }
     .preview-content ol {
-      list-style-type: decimal !important;
-      padding-left: 1.5em !important;
-      margin: 0.5em 0 !important;
+      list-style: decimal outside !important;
     }
     .preview-content li {
       display: list-item !important;
       margin: 0.25em 0 !important;
     }
-    .preview-content ul ul {
-      list-style-type: circle !important;
-    }
-    .preview-content ul ul ul {
-      list-style-type: square !important;
-    }
+    .preview-content ul ul { list-style-type: circle !important; }
+    .preview-content ol ol { list-style-type: lower-alpha !important; }
     
     /* Focus indicators for accessibility */
     button:focus-visible,
@@ -319,6 +317,36 @@
     .skip-link:focus {
       top: 0;
     }
+    
+    /* Fullscreen mode */
+    .fullscreen-mode {
+      position: fixed !important;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 9999;
+      background: #1a1a2e;
+      padding: 1rem;
+      overflow: auto;
+    }
+    .fullscreen-mode .preview-wrapper {
+      max-width: 100% !important;
+      height: calc(100vh - 2rem);
+    }
+    
+    /* Print styles */
+    @media print {
+      body { background: white !important; }
+      .no-print { display: none !important; }
+      .preview-content { max-height: none !important; overflow: visible !important; }
+    }
+    
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+      .toolbar-buttons { flex-wrap: wrap; gap: 0.25rem; }
+      .toolbar-buttons button { padding: 0.375rem 0.5rem; font-size: 0.75rem; }
+      .toolbar-buttons button span { display: none; }
+      main { padding: 1rem !important; }
+      textarea { height: 200px !important; }
+    }
   </style>
 </head>
 <body>
@@ -328,12 +356,33 @@
   <div x-data="app()" x-init="init(); $nextTick(() => document.body.classList.add('loaded'))">
     <style x-html="styles"></style>
     
+    <!-- Toast Notification -->
+    <div 
+      x-show="toast.show" 
+      x-transition
+      class="fixed top-4 right-4 z-50 px-4 py-2 rounded-lg shadow-lg text-white text-sm"
+      :class="toast.type === 'error' ? 'bg-red-600' : 'bg-green-600'"
+      x-text="toast.message"
+    ></div>
+    
+    <!-- Loading Overlay -->
+    <div x-show="isExporting" class="fixed inset-0 bg-black/50 z-40 flex items-center justify-center">
+      <div class="bg-gray-800 px-6 py-4 rounded-lg text-white flex items-center gap-3">
+        <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+        </svg>
+        Exporting...
+      </div>
+    </div>
+    
     <main id="main-content" class="min-h-screen animated-bg p-8" role="main">
       <div class="max-w-7xl mx-auto">
         <div class="text-center mb-8">
           <h1 class="text-4xl font-bold text-white mb-2">SnapCode</h1>
           <p class="text-gray-300 text-lg italic">ngode-ngide kode ngadi-ngadi</p>
           <p class="text-gray-400 text-sm mt-2">Create beautiful images of your markdown</p>
+          <p class="text-green-400/60 text-xs mt-1" x-show="history.length > 0">✓ Auto-saved locally</p>
         </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
@@ -378,7 +427,8 @@
                   title="Copy markdown text"
                 >
                   <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 02 2h10a2 2 0 0 02-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 02 2h2a2 2 0 0 02-2M9 5a2 2 0 0 1 2-2h2a2 0 012 2"></path>
+                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                   </svg>
                   Copy
                 </button>
@@ -388,7 +438,8 @@
             <textarea
               x-model="content"
               @drop.prevent="handleDrop"
-              @dragover.prevent
+              @dragover.prevent="$el.classList.add('ring-2', 'ring-purple-400')"
+              @dragleave="$el.classList.remove('ring-2', 'ring-purple-400')"
               class="w-full h-96 bg-gray-900 text-gray-100 p-4 rounded-lg font-mono text-sm resize-none focus:outline-none focus:ring-2 focus:ring-purple-500"
               placeholder="Start typing, paste content, or drop a file..."
               aria-label="Markdown content editor"
@@ -634,10 +685,10 @@
           </div>
 
           <!-- Preview -->
-          <div class="bg-gray-800 rounded-lg shadow-2xl p-6">
-            <div class="flex items-center justify-between mb-4">
+          <div class="bg-gray-800 rounded-lg shadow-2xl p-6" :class="{ 'fullscreen-mode': isFullscreen }">
+            <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
               <h2 class="text-xl font-semibold text-white">Preview</h2>
-              <div class="flex gap-2">
+              <div class="flex gap-2 toolbar-buttons">
                 <button
                   @click="copyImage"
                   class="px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition flex items-center gap-2 text-sm"
@@ -648,7 +699,7 @@
                     <circle cx="8.5" cy="8.5" r="1.5"></circle>
                     <polyline points="21 15 16 10 5 21"></polyline>
                   </svg>
-                  Copy Image
+                  <span>Copy Image</span>
                 </button>
                 <button
                   @click="exportImage"
@@ -660,7 +711,100 @@
                     <polyline points="7 10 12 15 17 10"></polyline>
                     <line x1="12" y1="15" x2="12" y2="3"></line>
                   </svg>
-                  Export PNG
+                  <span>PNG</span>
+                </button>
+                <!-- Export SVG -->
+                <button
+                  @click="exportSVG"
+                  class="px-3 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition flex items-center gap-2 text-sm"
+                  title="Export as SVG"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                    <path d="M14 2v6h6"></path>
+                  </svg>
+                  <span>SVG</span>
+                </button>
+                <!-- Copy HTML -->
+                <button
+                  @click="copyHTML"
+                  class="px-3 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition flex items-center gap-2 text-sm"
+                  title="Copy as HTML"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M16 18l6-6-6-6M8 6l-6 6 6 6"></path>
+                  </svg>
+                  <span>HTML</span>
+                </button>
+                <!-- Share URL -->
+                <button
+                  @click="shareURL"
+                  class="px-3 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition flex items-center gap-2 text-sm"
+                  title="Copy shareable URL"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <circle cx="18" cy="5" r="3"></circle>
+                    <circle cx="6" cy="12" r="3"></circle>
+                    <circle cx="18" cy="19" r="3"></circle>
+                    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                    <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                  </svg>
+                  <span>Share</span>
+                </button>
+                <!-- Fullscreen -->
+                <button
+                  @click="toggleFullscreen"
+                  class="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition flex items-center gap-2 text-sm"
+                  :aria-label="isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'"
+                  :title="'Fullscreen (F11)'"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <template x-if="!isFullscreen"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></template>
+                    <template x-if="isFullscreen"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"></path></template>
+                  </svg>
+                </button>
+                <!-- Print -->
+                <button
+                  @click="window.print()"
+                  class="px-3 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded-lg transition flex items-center gap-2 text-sm"
+                  aria-label="Print preview"
+                  title="Print"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                    <rect x="6" y="14" width="12" height="8"></rect>
+                  </svg>
+                </button>
+              </div>
+              <!-- Undo/Redo row -->
+              <div class="flex items-center gap-2 no-print">
+                <button
+                  @click="undo"
+                  :disabled="historyIndex <= 0"
+                  class="px-2 py-1 bg-gray-700 hover:bg-gray-600 disabled:opacity-40 text-white rounded text-xs flex items-center gap-1"
+                  title="Undo (Ctrl+Z)"
+                >
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 10h10a5 5 0 0 1 5 5v2M3 10l4-4M3 10l4 4"></path></svg>
+                  Undo
+                </button>
+                <button
+                  @click="redo"
+                  :disabled="historyIndex >= history.length - 1"
+                  class="px-2 py-1 bg-gray-700 hover:bg-gray-600 disabled:opacity-40 text-white rounded text-xs flex items-center gap-1"
+                  title="Redo (Ctrl+Y)"
+                >
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10H11a5 5 0 0 0-5 5v2M21 10l-4-4M21 10l-4 4"></path></svg>
+                  Redo
+                </button>
+                <span class="text-gray-500 text-xs ml-2" x-show="history.length > 1">
+                  <span x-text="historyIndex + 1"></span>/<span x-text="history.length"></span>
+                </span>
+                <button
+                  @click="if(confirm('Clear saved content?')) clearSaved()"
+                  class="px-2 py-1 bg-red-700/50 hover:bg-red-600 text-white rounded text-xs ml-auto"
+                  title="Clear saved data"
+                >
+                  Clear
                 </button>
               </div>
             </div>
@@ -710,7 +854,7 @@
                     <!-- Content Area -->
                     <div 
                       x-ref="preview"
-                      class="content-scroll relative"
+                      class="content-scroll relative preview-content"
                       :class="theme === 'github' ? 'theme-github' : ''"
                       :style="`background-color: ${currentTheme.bg}; color: ${currentTheme.fg}; font-size: ${fontSize}px; padding: 24px 32px; max-height: 500px; overflow-y: auto;`"
                     >
@@ -830,7 +974,7 @@
                     <!-- Content Area -->
                     <div 
                       x-ref="preview"
-                      class="content-scroll relative"
+                      class="content-scroll relative preview-content"
                       :class="theme === 'github' ? 'theme-github' : ''"
                       :style="`background-color: ${currentTheme.bg}; color: ${currentTheme.fg}; font-size: ${fontSize}px; padding: 24px 32px; max-height: 500px; overflow-y: auto;`"
                     >
@@ -934,6 +1078,17 @@
         useFiraCode: true,
         useMermaid: true,
         useKatex: true,
+        
+        // UX Polish features
+        isFullscreen: false,
+        history: [],
+        historyIndex: -1,
+        maxHistory: 50,
+        autoSaveTimer: null,
+        
+        // Loading & Toast
+        isExporting: false,
+        toast: { show: false, message: '', type: 'success' },
 
         themes: {
           dracula: {
@@ -1340,73 +1495,210 @@
         },
 
         init() {
-          // Load default content
-          this.loadDefault();
+          // Load from URL, localStorage, or default
+          if (!this.loadFromURL()) {
+            const saved = localStorage.getItem('snapcode-content');
+            if (saved) {
+              this.content = saved;
+              this.pushHistory(saved);
+            } else {
+              this.loadDefault();
+            }
+          }
+          
+          // Load saved settings
+          const settings = localStorage.getItem('snapcode-settings');
+          if (settings) {
+            const s = JSON.parse(settings);
+            Object.assign(this, { theme: s.theme, windowStyle: s.windowStyle, fontSize: s.fontSize, useFiraCode: s.useFiraCode });
+          }
           
           // Keyboard shortcuts
           document.addEventListener('keydown', (e) => {
-            // Ctrl/Cmd + E: Export PNG
             if ((e.ctrlKey || e.metaKey) && e.key === 'e') {
               e.preventDefault();
               this.exportImage();
             }
-            // Ctrl/Cmd + Shift + C: Copy Image
             if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'c') {
               e.preventDefault();
               this.copyImage();
             }
-            // Ctrl/Cmd + Shift + T: Copy Text
             if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 't') {
               e.preventDefault();
               this.copyText();
             }
+            // Undo: Ctrl+Z
+            if ((e.ctrlKey || e.metaKey) && e.key === 'z' && !e.shiftKey) {
+              e.preventDefault();
+              this.undo();
+            }
+            // Redo: Ctrl+Shift+Z or Ctrl+Y
+            if ((e.ctrlKey || e.metaKey) && (e.key === 'y' || (e.shiftKey && e.key === 'z'))) {
+              e.preventDefault();
+              this.redo();
+            }
+            // Fullscreen: F11 or Ctrl+Shift+F
+            if (e.key === 'F11' || ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'f')) {
+              e.preventDefault();
+              this.toggleFullscreen();
+            }
+            // Escape to exit fullscreen
+            if (e.key === 'Escape' && this.isFullscreen) {
+              this.isFullscreen = false;
+            }
           });
           
-          // Initialize Mermaid
-          mermaid.initialize({ 
-            startOnLoad: false,
-            theme: 'default',
-            securityLevel: 'loose'
+          // Watch content for autosave and history
+          this.$watch('content', (val, oldVal) => {
+            // Autosave with debounce
+            clearTimeout(this.autoSaveTimer);
+            this.autoSaveTimer = setTimeout(() => {
+              localStorage.setItem('snapcode-content', val);
+            }, 500);
+            
+            // Push to history (debounced)
+            if (oldVal !== undefined && val !== this.history[this.historyIndex]) {
+              this.pushHistory(val);
+            }
+            
+            if (this.useMermaid && window.mermaid) {
+              this.$nextTick(() => mermaid.run({ querySelector: '.mermaid' }));
+            }
+            if (this.useKatex && window.renderMathInElement) {
+              this.$nextTick(() => this.renderKatex());
+            }
           });
           
-          // Watch for content/mermaid changes and re-render
-          this.$watch('content', () => {
+          // Save settings on change
+          ['theme', 'windowStyle', 'fontSize', 'useFiraCode'].forEach(key => {
+            this.$watch(key, () => this.saveSettings());
+          });
+          
+          this.$watch('useMermaid', async () => {
             if (this.useMermaid) {
-              this.$nextTick(() => {
-                mermaid.run({
-                  querySelector: '.mermaid'
-                });
-              });
-            }
-            if (this.useKatex) {
-              this.$nextTick(() => {
-                this.renderKatex();
-              });
+              await loadMermaid();
+              this.$nextTick(() => mermaid.run({ querySelector: '.mermaid' }));
             }
           });
           
-          this.$watch('useMermaid', () => {
-            if (this.useMermaid) {
-              this.$nextTick(() => {
-                mermaid.run({
-                  querySelector: '.mermaid'
-                });
-              });
-            }
-          });
-          
-          this.$watch('useKatex', () => {
+          this.$watch('useKatex', async () => {
             if (this.useKatex) {
-              this.$nextTick(() => {
-                this.renderKatex();
-              });
+              await loadKatex();
+              this.$nextTick(() => this.renderKatex());
             }
           });
+        },
+        
+        // Autosave settings
+        saveSettings() {
+          localStorage.setItem('snapcode-settings', JSON.stringify({
+            theme: this.theme, windowStyle: this.windowStyle, fontSize: this.fontSize, useFiraCode: this.useFiraCode
+          }));
+        },
+        
+        // Undo/Redo
+        pushHistory(content) {
+          if (this.historyIndex < this.history.length - 1) {
+            this.history = this.history.slice(0, this.historyIndex + 1);
+          }
+          this.history.push(content);
+          if (this.history.length > this.maxHistory) this.history.shift();
+          this.historyIndex = this.history.length - 1;
+        },
+        
+        undo() {
+          if (this.historyIndex > 0) {
+            this.historyIndex--;
+            this.content = this.history[this.historyIndex];
+          }
+        },
+        
+        redo() {
+          if (this.historyIndex < this.history.length - 1) {
+            this.historyIndex++;
+            this.content = this.history[this.historyIndex];
+          }
+        },
+        
+        // Fullscreen
+        toggleFullscreen() {
+          this.isFullscreen = !this.isFullscreen;
+        },
+        
+        // Clear saved data
+        clearSaved() {
+          localStorage.removeItem('snapcode-content');
+          localStorage.removeItem('snapcode-settings');
+          this.loadDefault();
+          this.showToast('Saved data cleared', 'success');
+        },
+        
+        // Toast notification
+        showToast(message, type = 'success') {
+          this.toast = { show: true, message, type };
+          setTimeout(() => this.toast.show = false, 3000);
+        },
+        
+        // Share via URL
+        shareURL() {
+          const encoded = btoa(encodeURIComponent(this.content));
+          const url = `${location.origin}${location.pathname}?c=${encoded}`;
+          navigator.clipboard.writeText(url).then(() => {
+            this.showToast('Share URL copied!', 'success');
+          });
+        },
+        
+        // Load from URL if present
+        loadFromURL() {
+          const params = new URLSearchParams(location.search);
+          const encoded = params.get('c');
+          if (encoded) {
+            try {
+              this.content = decodeURIComponent(atob(encoded));
+              this.pushHistory(this.content);
+              return true;
+            } catch(e) {}
+          }
+          return false;
+        },
+        
+        // Copy as HTML
+        copyHTML() {
+          const html = this.$refs.preview.innerHTML;
+          navigator.clipboard.writeText(html).then(() => {
+            this.showToast('HTML copied!', 'success');
+          });
+        },
+        
+        // Export SVG
+        async exportSVG() {
+          this.isExporting = true;
+          try {
+            const preview = this.$refs.preview;
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="800" height="${preview.scrollHeight}">
+              <foreignObject width="100%" height="100%">
+                <div xmlns="http://www.w3.org/1999/xhtml" style="background:${this.currentTheme.bg};color:${this.currentTheme.fg};padding:24px;font-family:monospace;">
+                  ${preview.innerHTML}
+                </div>
+              </foreignObject>
+            </svg>`;
+            const blob = new Blob([svg], { type: 'image/svg+xml' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${this.filename.replace(/\.[^.]+$/, '')}.svg`;
+            a.click();
+            URL.revokeObjectURL(url);
+            this.showToast('SVG exported!', 'success');
+          } catch(e) {
+            this.showToast('Export failed', 'error');
+          }
+          this.isExporting = false;
         },
 
         renderKatex() {
           const element = this.$refs.preview;
-          if (!element) return;
+          if (!element || !window.renderMathInElement) return;
           
           renderMathInElement(element, {
             delimiters: [
@@ -1420,31 +1712,29 @@
         },
 
         handleDrop(e) {
+          e.target.classList.remove('ring-2', 'ring-purple-400');
           const file = e.dataTransfer.files[0];
           if (file) {
             const reader = new FileReader();
-            reader.onload = (e) => this.content = e.target.result;
+            reader.onload = (ev) => this.content = ev.target.result;
             reader.readAsText(file);
           }
         },
 
         async exportImage() {
+          this.isExporting = true;
           try {
             const contentElement = this.$refs.preview;
             const osBackground = contentElement.parentElement.parentElement;
             
-            // Store original styles
             const originalMaxHeight = contentElement.style.maxHeight;
             const originalOverflow = contentElement.style.overflowY;
             
-            // Remove scroll constraints
             contentElement.style.maxHeight = 'none';
             contentElement.style.overflowY = 'visible';
             
-            // Wait for reflow
             await new Promise(resolve => setTimeout(resolve, 300));
             
-            // Capture with html2canvas
             const canvas = await html2canvas(osBackground, {
               scale: 2,
               useCORS: true,
@@ -1452,42 +1742,28 @@
               backgroundColor: null,
             });
             
-            // Restore original styles
             contentElement.style.maxHeight = originalMaxHeight;
             contentElement.style.overflowY = originalOverflow;
             
-            // Convert to blob and download
             canvas.toBlob((blob) => {
               const url = URL.createObjectURL(blob);
               const link = document.createElement('a');
-              link.download = `beautifier-${Date.now()}.png`;
+              link.download = `${this.filename.replace(/\.[^.]+$/, '')}-${Date.now()}.png`;
               link.href = url;
               link.click();
               URL.revokeObjectURL(url);
+              this.showToast('PNG exported!', 'success');
             });
           } catch (err) {
-            console.error('Export failed:', err);
-            alert('Export failed: ' + (err.message || 'Unknown error'));
+            this.showToast('Export failed: ' + err.message, 'error');
           }
+          this.isExporting = false;
         },
 
         copyText() {
-          const btn = event.target.closest('button');
-          const originalHTML = btn.innerHTML;
-          
           navigator.clipboard.writeText(this.content)
-            .then(() => {
-              btn.innerHTML = '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16"><path d="M13.5 2l-7.5 7.5-3.5-3.5-1.5 1.5 5 5 9-9z"/></svg>';
-              btn.classList.add('bg-green-600', 'hover:bg-green-700');
-              btn.classList.remove('bg-gray-700', 'hover:bg-gray-600');
-              
-              setTimeout(() => {
-                btn.innerHTML = originalHTML;
-                btn.classList.remove('bg-green-600', 'hover:bg-green-700');
-                btn.classList.add('bg-gray-700', 'hover:bg-gray-600');
-              }, 2000);
-            })
-            .catch(() => alert('Failed to copy text'));
+            .then(() => this.showToast('Text copied!', 'success'))
+            .catch(() => this.showToast('Failed to copy', 'error'));
         },
 
         async loadDefault() {
@@ -1639,9 +1915,7 @@
         },
 
         async copyImage() {
-          const btn = event.target.closest('button');
-          const originalHTML = btn.innerHTML;
-          
+          this.isExporting = true;
           try {
             const contentElement = this.$refs.preview;
             const osBackground = contentElement.parentElement.parentElement;
@@ -1669,23 +1943,15 @@
                 await navigator.clipboard.write([
                   new ClipboardItem({ 'image/png': blob })
                 ]);
-                
-                btn.innerHTML = '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 16 16"><path d="M13.5 2l-7.5 7.5-3.5-3.5-1.5 1.5 5 5 9-9z"/></svg>';
-                btn.classList.add('bg-green-600', 'hover:bg-green-700');
-                btn.classList.remove('bg-gray-700', 'hover:bg-gray-600');
-                
-                setTimeout(() => {
-                  btn.innerHTML = originalHTML;
-                  btn.classList.remove('bg-green-600', 'hover:bg-green-700');
-                  btn.classList.add('bg-gray-700', 'hover:bg-gray-600');
-                }, 2000);
+                this.showToast('Image copied!', 'success');
               } catch (err) {
-                alert('Copy image not supported in this browser. Use Export instead.');
+                this.showToast('Copy not supported, use Export', 'error');
               }
             });
           } catch (err) {
-            alert('Failed to copy image: ' + err.message);
+            this.showToast('Failed: ' + err.message, 'error');
           }
+          this.isExporting = false;
         },
       }
     }
